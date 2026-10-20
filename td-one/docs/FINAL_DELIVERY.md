@@ -79,6 +79,16 @@ news never moves the best guess.
 - Learned combination weights, learned regimes, kitchen-sink ensembling, "high" reasoning effort (exp42, exp45, exp51, exp48).
 - Pooling variants inside exp81: per-side scores, residual-scale normalization, similarity gating — each diagnosed and closed in the exp81 report.
 
+## Future directions (full text in the report, Section 6)
+
+- **The pooled router** — exp79's router starved fitted per series (at most 13 backtest records); exp81 proved pooling works, so fit the router on pooled cross-series backtests as the segment center.
+- **Macro signals on a stormy window** — exp76's macro ablation was inconclusive on a calm window (27 origins; inflation signal strength still tracked error, rho +0.41); backfill the signal store into 2021–2023 and retest.
+- **Competitor spread at loan level** — the aggregate channel closed as a regime artifact (exp71b); the Freddie Mac loan-level cross-section is the remaining shot.
+- **Shift-proof conformal** — calibration banks are blind at shock onset (exp74; exp80a missed its fresh-seed shock bar); changepoint-triggered bank resets are untested.
+- **Chronos-2 as segment engine** — best absolute error in 6 of 8 shift worlds (exp67); never tried as the segment forecaster's center.
+- **The manager report, run end to end** — every piece is tested separately; the news-citation path has never run with articles flowing in.
+- **Segment scout, scored** — LLM-proposed segments scored by ARI against the planted cohorts; SHAP clustering (ARI 0.091) is the incumbent to beat.
+
 ## Where everything lives
 
 - **Final report (HTML, deck of record):** [slides/TD-One-Slides.html](slides/TD-One-Slides.html), with its context doc [slides/TD-One-Context.md](slides/TD-One-Context.md)
