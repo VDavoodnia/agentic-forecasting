@@ -54,6 +54,7 @@ For each `(month, category)`:
 
 - **exp70 calibration:** 7/9 anchored categories live over 5 rounds (fx corr +0.63 holdout 0.79; food_prices holdout 0.82; inflation rescued-by-timing R2=0.93; wars_geopolitics via smoothing; services_costs via strong-only). Dead: basic_needs (anti-correlated, sign-inversion hypothesis recorded not applied), central_bank_rates (structurally silent, n=1). 13 categories unanchored. Certainty does not calibrate. Full table: [exp70 report](exp70_macro_signal_report.md).
 - **exp71 SMM integration:** ❌ honest negative — 7 rounds all NEGLIGIBLE (effect ~1e-7 CRPS; effect-size floor ≥1% enforced). Diagnosis: signal dilution (mean |stress| 0.167) + a structural block — all 28 SMM origins in the signal window label 'calm' (stressed months were 2022, pre-coverage), so the router is degenerate and both regime experts collapse to one model. The signal store itself is live; Food CPI integration is the open next test. Full log: [exp71 report](exp71_macro_signal_report.md).
+- **exp77 Food CPI integration:** ❌ honest negative — the same structural block: all 33 signal-window origins (2023-11..2026-07) label 'calm', the v1/v2 router is degenerate in all 5 folds, and both regime experts collapse to the LLM expert, so the modulation moves probability mass between identical experts (CRPS diff ~1e-16, all arms). 6 diagnostic rounds (live-minus-food_prices, per-category learned features, holdout-window-only, drop-one) all null; reproduction of exp64 bit-exact (0.5321591). The engine hypothesis (Food CPI spans non-degenerate regimes) is refuted — the calibration question itself remains *untested*, not refuted: no signal can move a forecast through this router on a uniformly calm window. Full log: [exp77 report](../experiments/exp77_report.md).
 
 ## Coverage (Phase 1 — complete)
 
@@ -65,4 +66,4 @@ See Results above and [exp70 report](exp70_macro_signal_report.md); data in `exp
 
 ## Integration verdict (Phase 4 — complete)
 
-❌ honest negative on SMM (mechanism-blocked); signal store stays a live research artifact. See Results above and [exp71 report](exp71_macro_signal_report.md).
+❌ honest negative on **both** integration targets tested (mechanism-blocked); signal store stays a live research artifact. SMM (exp71-MS): dilution + single-regime window. Food CPI (exp77): all 33 signal-window origins label 'calm', router degenerate, experts collapse — the calibration question remains untested because the channel is closed on uniformly calm windows. See Results above and [exp71 report](exp71_macro_signal_report.md) / [exp77 report](../experiments/exp77_report.md). Recommended next use: the calibrated signal vector as an *uncertainty* feature (exp74/exp76 line), where narrative features are already proven to carry signal.

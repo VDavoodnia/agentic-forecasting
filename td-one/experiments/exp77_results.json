@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-20T04:23:21.904382+00:00",
+  "reproduction": {
+    "v2_all_origins": 0.5321591236198281,
+    "exp64": 0.5322,
+    "exp64_raw_match": true,
+    "reproduced": true
+  },
+  "live": [
+    "inflation",
+    "services_costs",
+    "food_prices",
+    "labour",
+    "fx",
+    "housing",
+    "wars_geopolitics"
+  ],
+  "n_origins": 33,
+  "diagnostics": {
+    "news_used_frac": 1.0,
+    "expert_flip_frac": 0.0,
+    "mean_abs_stress": 0.20346320346320343,
+    "experts_with_news": {
+      "llm": 31,
+      "naive": 2
+    }
+  },
+  "rounds": [
+    {
+      "design": "R1 arm B: v2 + live signals",
+      "mean_B": 0.3696924408522859,
+      "mean_A": 0.36969244085228253,
+      "mean_diff": 3.3651532738827663e-15,
+      "rel": 9.102575281563237e-15,
+      "p": 0.5516689283449788,
+      "win_rate": 0.3333333333333333,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 1
+    },
+    {
+      "design": "R1 arm C: v2 + ALL 22 categories",
+      "mean_B": 0.3696924408522843,
+      "mean_A": 0.36969244085228253,
+      "mean_diff": 1.7729925272044166e-15,
+      "rel": 4.795858208831618e-15,
+      "p": 0.4584128658131291,
+      "win_rate": 0.12121212121212122,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 1
+    },
+    {
+      "design": "R1 arm D: v1 + live signals",
+      "mean_B": 0.8704197790006466,
+      "mean_A": 0.8704197790006427,
+      "mean_diff": 3.893350288628674e-15,
+      "rel": 4.472957051939647e-15,
+      "p": 0.45520920940098125,
+      "win_rate": 0.24242424242424243,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 1
+    },
+    {
+      "design": "R2 arm B': v2 + live ex-food_prices",
+      "mean_B": 0.36969244085228437,
+      "mean_A": 0.36969244085228253,
+      "mean_diff": 1.8915845321075585e-15,
+      "rel": 5.116643791111153e-15,
+      "p": 0.633248666240147,
+      "win_rate": 0.24242424242424243,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 2,
+      "taught": "does the effect survive removing the target-calibrated category?"
+    },
+    {
+      "design": "R3 arm F: v2 + per-category signal features (router learns)",
+      "mean_B": 0.36969244085228253,
+      "mean_A": 0.36969244085228253,
+      "mean_diff": 0.0,
+      "rel": 0.0,
+      "p": NaN,
+      "win_rate": 0.0,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 3,
+      "taught": "learned use of the signal via the router vs fixed modulation"
+    },
+    {
+      "design": "R5 holdout-window origins only (n=13)",
+      "mean_B": 0.48951217913572087,
+      "mean_A": 0.4895121791357233,
+      "mean_diff": -2.4446256984534698e-15,
+      "rel": -4.994003832079665e-15,
+      "p": 0.7801615564268337,
+      "win_rate": 0.3076923076923077,
+      "n": 13,
+      "verdict": "NEGLIGIBLE",
+      "round": 5,
+      "taught": "removes the calibration-train overlap (2023-10..2025-06)"
+    },
+    {
+      "design": "R6 drop-services_costs",
+      "mean_B": 0.36969244085227865,
+      "mean_A": 0.36969244085228253,
+      "mean_diff": -3.8962940618000284e-15,
+      "rel": -1.0539285176666257e-14,
+      "p": 0.30657621396695045,
+      "win_rate": 0.30303030303030304,
+      "n": 33,
+      "verdict": "NEGLIGIBLE",
+      "round": 6,
+      "taught": "which category drives the result"
+    }
+  ],
+  "final": "NEGATIVE"
+}
