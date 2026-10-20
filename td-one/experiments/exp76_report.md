@@ -141,7 +141,8 @@ survives its one-month-lookahead correction, at reduced strength.
 
 Same UQ arms in numeric-feature form (no story pipeline on these
 benchmarks), Chronos native forecasts generated fresh
-(`experiments/exp76_forecasts.json`, 778 rows). CRPS is in raw series
+(`experiments/exp76_forecasts_{a,b}.json`, 778 rows; split for the
+push size limit, values at 4 significant figures). CRPS is in raw series
 units — compare within a row family only. Δ and p are paired vs
 native; cov80 native→CQR.
 

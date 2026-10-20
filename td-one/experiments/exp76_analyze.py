@@ -68,6 +68,8 @@ COMPARISONS = [
     ("pooled_food", "cqr_meta_level_h3", "cqr"),
     ("pooled_food", "cqr_meta_level_wide", "cqr"),
     ("pooled_food", "cqr_conditional_shrunk", "cqr"),
+    ("pooled_food", "cqr_conditional_shrunk25", "cqr"),
+    ("pooled_all", "cqr_conditional_shrunk25", "cqr"),
     ("pooled_food", "cqr_meta_level_h3", "cqr_meta_level"),
     ("pooled_food", "cqr_meta_level_wide", "cqr_meta_level"),
     ("pooled_food", "cqr_conditional_shrunk", "cqr_conditional"),
@@ -96,6 +98,11 @@ def paired(cases: list[dict], scope, arm_a: str, arm_b: str) -> dict:
     a = np.array([p[0]["crps"] for p in pairs])
     b = np.array([p[1]["crps"] for p in pairs])
     t, p = stats.ttest_rel(a, b)
+    def _side_mean(side: int, key: str) -> float:
+        vals = [p_[side].get(key) for p_ in pairs]
+        vals = [v for v in vals if v is not None]
+        return float(np.mean(vals)) if vals else float("nan")
+
     return {
         "n": float(len(pairs)),
         "mean_a": float(a.mean()),
@@ -104,18 +111,35 @@ def paired(cases: list[dict], scope, arm_a: str, arm_b: str) -> dict:
         "t": float(t),
         "p": float(p),
         "win_rate": float(np.mean(a < b)),
-        "cov80_a": float(np.mean([p[0]["coverage80"] for p in pairs])),
-        "cov80_b": float(np.mean([p[1]["coverage80"] for p in pairs])),
-        "cov90_a": float(np.mean([p[0]["coverage90"] for p in pairs])),
-        "cov90_b": float(np.mean([p[1]["coverage90"] for p in pairs])),
-        "width_a": float(np.mean([p[0]["width_ratio"] for p in pairs])),
-        "width_b": float(np.mean([p[1]["width_ratio"] for p in pairs])),
+        "cov80_a": _side_mean(0, "coverage80"),
+        "cov80_b": _side_mean(1, "coverage80"),
+        "cov90_a": _side_mean(0, "coverage90"),
+        "cov90_b": _side_mean(1, "coverage90"),
+        "width_a": _side_mean(0, "width_ratio"),
+        "width_b": _side_mean(1, "width_ratio"),
     }
 
 
 def main() -> None:
     payload = json.loads(RESULTS.read_text())
-    cases = payload["cases"]
+    if "cases" in payload:
+        cases = payload["cases"]
+    else:
+        # Compact committed format: CRPS pivot only (coverage/width live
+        # in the battery summary, not per case).
+        cases = []
+        for key, per_arm in payload["crps_pivot"].items():
+            cfg, origin, h = key.rsplit("|", 2)
+            for arm, crps in per_arm.items():
+                cases.append(
+                    {
+                        "config_id": cfg,
+                        "origin": int(origin),
+                        "h": int(h),
+                        "arm": arm,
+                        "crps": crps,
+                    }
+                )
     out: dict[str, dict] = {}
     print("| scope | A | B | n | CRPS A | CRPS B | Δ% | p | win | cov80 A/B |")
     print("|---|---|---|---|---|---|---|---|---|---|")

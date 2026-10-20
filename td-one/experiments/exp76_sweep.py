@@ -1,6 +1,6 @@
 """exp76 Part B: benchmark sweep for the UQ layer.
 
-Loads experiments/exp76_forecasts.json (Chronos forecasts for Tourism,
+Loads experiments/exp76_forecasts_{a,b}.json (Chronos forecasts for Tourism,
 M3, M4 subsets + OSFI runoff segments + SMM) and runs the best UQ
 configurations from Part A: native, plain CQR, regime-gated ACI, the
 meta model (numeric), and both fusion designs in their numeric-feature
@@ -15,6 +15,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from exp76_generate_data import load_all_rows  # noqa: E402
+
 from td_one.uq import fusion as uqf
 from td_one.uq import methods as uq_methods
 from td_one.uq.evaluate import build_cases, run_study, summarize
@@ -22,7 +24,6 @@ from td_one.uq.evaluate import build_cases, run_study, summarize
 M = uq_methods
 
 HERE = Path(__file__).resolve().parent
-FORECASTS = HERE / "exp76_forecasts.json"
 OUT = HERE / "exp76_sweep_results.json"
 
 FEATS_NUM = M.META_FEATURES_NUMERIC
@@ -54,8 +55,7 @@ def family_of(config_id: str) -> str:
 
 
 def main() -> None:
-    doc = json.loads(FORECASTS.read_text())
-    rows = doc["rows"]
+    rows = load_all_rows()
     cases_by_config = build_cases(rows)
 
     arms = {
@@ -79,17 +79,25 @@ def main() -> None:
         cid: summarize(results, lambda r, c=cid: r.config_id == c)
         for cid in sorted(cases_by_config)
     }
-    # Per-case payload is a compact CRPS pivot (config|origin|h -> arm ->
-    # crps): the full row dump exceeds the push connector's file-size
+    # Per-case payload is a factored CRPS array (config index + per-arm
+    # values): the full row dump exceeds the push connector's body-size
     # limit; coverage/width aggregates live in the summaries above.
-    pivot: dict[str, dict[str, float]] = {}
+    configs = sorted(cases_by_config)
+    ci = {c: i for i, c in enumerate(configs)}
+    arm_names = list(arms)
+    seen: dict[tuple[int, int, int], list] = {}
     for r in results:
-        pivot.setdefault(f"{r.config_id}|{r.origin}|{r.h}", {})[r.arm] = r.crps
+        key = (ci[r.config_id], r.origin, r.h)
+        row = seen.setdefault(key, [key[0], key[1], key[2], [None] * len(arm_names)])
+        row[3][arm_names.index(r.arm)] = float(f"{r.crps:.6g}")
+    crps_rows = [seen[k] for k in sorted(seen)]
     payload = {
-        "config": {"n_rows": len(rows), "arms": list(arms)},
+        "config": {"n_rows": len(rows), "arms": arm_names},
         "summary_by_family": summary,
         "per_config": per_config,
-        "crps_pivot": pivot,
+        "configs": configs,
+        "crps_rows": crps_rows,
+        "crps_rows_format": "[config_idx, origin, h, [crps per config.arms order]]",
     }
     OUT.write_text(json.dumps(payload, indent=1))
     print(f"wrote {OUT} ({len(results)} case-results)")

@@ -2,7 +2,7 @@
 
 Tourism (subset), M3 (subset), M4 (subset), OSFI runoff segments, SMM —
 everything the UQ sweep needs, computed once and cached in
-``experiments/exp76_forecasts.json``.
+``experiments/exp76_forecasts_{a,b}.json`` (split for push size limits).
 
 Resume-safe: appends rows and skips (config, origin) pairs already present.
 
@@ -22,7 +22,23 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-OUT = HERE / "exp76_forecasts.json"
+# Forecasts are split into two files: the push connector 413s on bodies
+# above ~4MB, and a single dump with full contexts exceeds that.
+PART_A = HERE / "exp76_forecasts_a.json"  # tourism + m3
+PART_B = HERE / "exp76_forecasts_b.json"  # m4 + osfi + smm
+OUT = HERE / "exp76_forecasts.json"  # legacy monolith; parts preferred
+PART_A_FAMILIES = {"tourism", "m3"}
+
+
+def load_all_rows() -> list[dict]:
+    """Forecast rows from both part files (or the legacy monolith)."""
+    rows: list[dict] = []
+    for p in (PART_A, PART_B):
+        if p.exists():
+            rows.extend(json.loads(p.read_text())["rows"])
+    if not rows and OUT.exists():
+        rows.extend(json.loads(OUT.read_text())["rows"])
+    return rows
 
 
 def load_tsf(path: Path) -> list[tuple[str, np.ndarray]]:
@@ -64,13 +80,16 @@ def origins_for(n_vals: int, horizon: int, n: int, step: int) -> list[int]:
 
 
 def load_existing() -> dict:
-    if OUT.exists():
-        return json.loads(OUT.read_text())
-    return {"config": {}, "rows": []}
+    rows = load_all_rows()
+    return {"config": {}, "rows": rows}
 
 
 def save(doc: dict) -> None:
-    OUT.write_text(json.dumps(doc))
+    # Split by family so each part stays well under the push size limit.
+    a = [r for r in doc["rows"] if r["config_id"].split(":")[0] in PART_A_FAMILIES]
+    b = [r for r in doc["rows"] if r["config_id"].split(":")[0] not in PART_A_FAMILIES]
+    PART_A.write_text(json.dumps({"config": doc.get("config", {}), "rows": a}))
+    PART_B.write_text(json.dumps({"config": doc.get("config", {}), "rows": b}))
 
 
 def run_forecasts(
