@@ -498,6 +498,23 @@ planted answer key) has never been run in that agent form.
   reader (ranges only). Dropped roles include: number adjuster, tool
   agent forecaster, group inventor, anticipatory overlay, mini-agent
   orchestrator, LLM combiner.
+- Future-directions wave (exp82 to exp88, all landed 2026-10-20;
+  provenance for the answered Section 6, the refreshed Slide 8, and
+  the corrected Slide 7): exp82 pooled router control +0.0060
+  (p=0.0052), S1 +0.0131 (p=1.1e-05), starvation rejected; exp83
+  story + signed inflation -1.10% (CI [-2.09%, -0.25%]), champion
+  -0.53% (CI [-0.91%, -0.20%]), best stormy 2.2179 / cov80 0.854,
+  store 899 signals 2021-01 to 2026-09; exp84 spread coefficients
+  +0.563 / +0.487 / +1.055 per 100bp, cross-era OOS AUC positive 6/6;
+  exp85 BC family Food CPI 1.2062 to 1.2106 vs CQR 1.2824, fresh S1
+  cov80 0.828 to 0.839, straddle 0.611 fresh, group testbed best
+  0.658; exp86 control 0.09024 vs champion 0.08849 member-weighted,
+  unweighted win seed noise, pooled-conformal coverage repair 0.82
+  to 0.83; exp87 contract 100% (45/45), news citations 100% of
+  flagged, judge 20/20 RELEVANT on the full-corpus round, leakage
+  audit clean; exp88 scout ARI 0.204 / 0.454 / 0.424 (mean 0.361),
+  flash 0.397, SHAP context 0.052, outcome rates 0.077. News corpus
+  count at the exp87 run: 21,234 articles.
 
 ## 5. What changed in this edition
 
@@ -600,9 +617,13 @@ planted answer key) has never been run in that agent form.
    on branch `mehrazin/work` with fork main as a clean mirror of
    upstream. The merge-back path for any code work is undecided.
 5. Queued program work that may reach the deck later: BoC MPR summary
-   ingestion into the signal service; loan-level (Freddie Mac SFLLD)
-   revisit of the competitor-spread question; the unannounced-shock
-   synthesis test (exp69b caveat).
+   ingestion into the signal service; the unannounced-shock synthesis
+   test (exp69b caveat). The loan-level (Freddie Mac SFLLD) revisit of
+   the competitor-spread question has landed (exp84, passed; see the
+   wave fold-in pass below). Two wave follow-ups are also queued:
+   exogenous widening triggers for the group forecaster's bank-empty
+   origins (exp85 successor) and borrower-level vote merging for the
+   segment scout's self-consistency (exp88 follow-up).
 
 **Deck fix pass (2026-10-20, later the same day).** Four surgical
 fixes were applied to `TD-One-Slides.html`. (1) News framing: the
@@ -711,6 +732,43 @@ et al., "FFORMA: Feature-based forecast model averaging,"
 International Journal of Forecasting 36(1), 86-92, 2020. These
 citations come from the papers, not from the repo; the HTML
 flags each one with that provenance and date.
+
+**Wave fold-in pass (2026-10-20, after the future-directions wave).**
+exp82 to exp88 all landed, so the seven future directions are now
+answered everywhere they appear. (1) HTML Section 6 is retitled
+"Future Directions, Answered": each item keeps its evidence / test /
+bar structure and gains a verdict paragraph with the key numbers and
+a pointer to its experiment report. (2) Slide 8 is retitled "Future
+Work: Seven Questions, Answered" with all seven blocks rewritten as
+verdicts; the only still-open items (exp85's exogenous widening
+triggers; exp88's borrower-level vote merging) are named in their
+blocks. (3) Slide 7's "Mock-up, not output" header is corrected:
+exp87 ran the news citation path end to end (contract 100%, news
+citations in 100% of flagged explanations, judged relevance 20/20
+on the full-corpus round, leakage audit clean); the card is now
+labeled the original illustrative example and the real samples are
+pointed to (experiments/exp87_samples). Slide 6 gained three
+one-cell updates where its "kept" column had gone stale (spread,
+macro signals, LLM grouper). (4) The shipped range layer now reads:
+CQR default, pooled banks, fusion champion feature set = story +
+signed inflation macro signal (exp83), BC family as the documented
+shift-regime option (exp85) — in Section 1, the models table (new
+rows: BC family, pooled router, segment scout), Appendix A (exp83
+retest row, exp85 rounds block, exp88 grouping row), Appendix B
+(new parameter rows), and the glossary (ARI, bias-corrected
+conformal). (5) exp84's loan-level spread result has a datasets row
+(Freddie Mac loan-level panel, 7,320,258 FRM 30-year loans) and a
+results table in Section 4. (6) Appendix D gained rows for exp82,
+exp85 (group testbed), exp86, and exp88's input-variant negatives,
+and three stale lessons were corrected (exp76 S8, exp71/71b spread,
+exp66 grouper); the program-status footer now reads exp1 to exp88.
+(7) docs/FINAL_RESULTS.md and docs/FINAL_DELIVERY.md carry the same
+wave (FINAL_DELIVERY's shipped / killed / future-directions lists
+rewritten as answered; the pre-existing exp85 paragraph in
+FINAL_RESULTS was extended, not duplicated). Em dash count in the
+HTML remains 0; the file parses with balanced tags. All numbers from
+experiments/exp82 to exp88 reports, cross-checked across the three
+living docs in the consolidation audit.
 
 ## 7. Repo pointers (relative to `td-one/`)
 

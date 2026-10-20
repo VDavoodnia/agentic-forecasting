@@ -148,6 +148,17 @@ predict how wrong a forecast may be, not where it should move. Raw-news
 routing into the forecaster stays dead (exp71-MS, exp77 — mechanism-blocked
 on calm-regime data; see [PHASE2_UPDATE.md](PHASE2_UPDATE.md)).
 
+**Manager risk reports now run end to end (exp87).** The risk
+reporter's news-citation path — wired since Track 1 but never run with
+articles flowing in — ran end to end on real data (OSFI M4 segments and
+Freddie Mac SMM, 60 segment-months): citation contract pass **100%**
+(45 of 45 flagged explanations), news citations in **100%** of flagged
+explanations (the bar was 50%), judged topical relevance **20 of 20**
+on the fresh full-corpus round, and a clean point-in-time leakage
+audit. Three real monthly sample reports are committed under
+`experiments/exp87_samples/`. News found its working home: report text
+with enforced citations, not forecast inputs.
+
 ---
 
 ## Layer-2 Decision Stage (exp73)
@@ -194,6 +205,52 @@ portfolio fallback — pooled CRPS improves in every world (control
 p=0.0078), dead-group cells improve 0.1317 → 0.0961 (−27%), and
 pure-death cells score exactly 0.0000.
 
+**exp82: the pooled router, rejected as the center.** exp79's
+diagnosis was that the per-series router starved (at most 13 backtest
+records). exp82 fitted one router on backtest records pooled across
+all panel series (about 8x the records) and it still lost in both
+worlds (control +0.0060, p=0.0052; rate shock +0.0131, p=1.1e-05,
+coverage worse): **the starvation hypothesis is rejected**. The
+binding mechanisms are level anchoring (router center bias +0.012 to
++0.014 vs the trailing mean's −0.002) and scale-dominated expert
+selection (the stressed-regime winner flips from ETS to naive once
+errors are made scale-free). Six design rounds never cleared the bar;
+the pooled router ships as a research option
+(`pooled_router_forecaster_fn`); the trailing mean stays the default.
+
+**exp86: Chronos-2 as the segment engine, rejected.** Zero-shot
+Chronos-2 inside the group forecaster lost the pre-registered
+member-weighted endpoint (control 0.09024 vs champion 0.08849) and
+degraded more under the rate shock (+0.0336 vs +0.0291); its
+unweighted win on the typical cell (−0.00526, p=0.026) was seed noise
+— on fresh seeds it flips (+0.00200, p=0.357). Chronos-2's strength in
+this program is at portfolio level, not segment level. One replicable
+positive: exp81's pooled conformal over Chronos-2 repairs its coverage
+to 0.82–0.83 in both seed sets — the pairing to keep if a foundation
+model is ever deployed at portfolio level.
+
+### Segment discovery: the scout joins SHAP clustering (exp88)
+
+Planted-cohort recovery on the synthetic book: SHAP-space clustering
+was the incumbent (ARI 0.091, about 2x raw-feature clustering). The
+**LLM segment scout** (exp88) — given point-in-time feature statistics
+plus a generic policy brief and point-in-time news/macro context —
+recovers the cohorts at mean **ARI 0.361** across seeds 7/42/123
+(0.204 / 0.454 / 0.424), about 4x the incumbent; the flash-model
+variant reaches **0.397**, and planted rules come back verbatim on
+some seeds (the `low_rate` rule exactly on seed 7; the `osfi_exempt`
+conjunction exactly on seed 42). The caveat is part of the result: the
+simulator's cohorts mimic real Canadian market structure and the brief
+describes that same market, so the scout wins **when the domain prior
+matches the segment logic**, not universally. Two honest negatives
+ride along: SHAP analyst context *hurts* the scout (mean ARI 0.052),
+and per-cell outcome rates fail as a proposal signal (0.077) —
+outcome rates should validate segments, not propose them. The scout
+(`src/td_one/agent/segment_scout.py`) is the discovery front-end when
+a matching prior exists; SHAP clustering remains the prior-free
+analyst-kit method. Grouping stays an explainability layer; the
+global model remains forecaster of record.
+
 ---
 
 ## Uncertainty Layer — CQR, fused with the uncertainty signal (exp74, exp76)
@@ -218,7 +275,8 @@ and the fusion gain does not transfer to many-series benchmarks with
 short per-series histories. Adaptive conformal (ACI) remains a
 regime-gated option for volatile subsets. Macro news signals, tested
 as uncertainty features, add nothing measurable over story features
-in the current (calm) window.
+in the calm window tested there — exp83 below resolves that open
+question on a stormy window.
 
 **exp81: pooled conformal banks for many-series benchmarks.** The
 sweep's binding constraint was per-series bank size (M4's conformal
@@ -255,7 +313,52 @@ reset): a per-origin decomposition attributes ~55% of the
 shortfall to origins whose banks are structurally empty of
 post-shift evidence (conformal not yet engaged, or holding only
 pre-shift scores) — the wall is the bank's information content,
-not its tuning. No default changes on either testbed.
+not its tuning. No default changes on either testbed. On Food CPI
+the BC family's absolute scores are **1.2062–1.2106** — past the
+exp76 fusion champion (1.2587) — and the fresh-seed straddle
+ceiling rises to **0.611**, the first arms past exp74's 0.444 wall;
+the group testbed's adaptive modes ship as options only
+(`conformal_adaptive`), and the named successor is exogenous
+widening triggers (e.g. the Macro Signal risk channel) for the
+bank-empty origins.
+
+**exp83: macro signals on a stormy window — the open question,
+answered.** The signal store was backfilled into 2021–2023 (174 new
+signals; **899 total**, spanning 2021-01→2026-09) and the exp76
+ablation reran on Food CPI's inflation-shock origins (133–164).
+Story features plus the inflation signal's **signed direction** beat
+story-only by **−1.10% CRPS** (origin-cluster bootstrap 95% CI
+[−2.09%, −0.25%]); on the shipped fusion champion the gain is
+**−0.53%** (CI [−0.91%, −0.20%]), and the best stormy configuration
+is the champion with the inflation feature: **CRPS 2.2179, coverage
+0.854**. The quiet-window control shows no effect (+0.15% / +0.40%,
+n.s.): exp76's null was the window, not the feature. The ingredient
+is the sign, not the magnitude — raw signed direction reproduces the
+win exactly, while per-category magnitudes harm (+0.38%) and live-7
+aggregates dilute (−0.63%, n.s.). **The champion's feature set is now
+story + `mac_inflation` (signed) wherever signal coverage exists.**
+
+---
+
+## Loan-Level Spread: the Aggregate Negative Reverses (exp84)
+
+The competitor-spread channel, killed at aggregate level (exp71b),
+was retested where exp71b itself pointed: the loan-level
+cross-section. On the Freddie Mac Single-Family Loan-Level panel
+(**7,320,258** FRM 30-year loans, vintages 2021Q1–2026Q1), the
+origination spread (loan rate minus the Freddie Mac survey rate)
+predicts 24-month prepayment with the **same positive sign in all
+three eras**: coefficient per 100bp **+0.563** (2021, p=6.7e-161),
+**+0.487** (2022–23, p≈0), **+1.055** (2024+, p≈0) — the magnitude
+grows in the high-rate era, as the refinance-incentive mechanism
+predicts. Trained on one era and tested on another, the spread model
+improves AUC in **all 6 era pairs** (mean +0.078) and log-loss in 5
+of 6 (mean +0.0563; the sixth is a −0.0001 tie). Robust across
+horizons (H=12, H=36), reference choice, and vintage fixed effects;
+the time-varying incentive hazard confirms the mechanism live. The
+claim is **predictive, not causal** — spread partly prices borrower
+risk. The aggregate verdict stands; the signal's home is loan-level
+attrition and SMM features.
 
 ---
 
@@ -272,7 +375,7 @@ not its tuning. No default changes on either testbed.
 
 ## What Didn't Work (Honest Negatives)
 
-We publish negatives with the same rigor as positives. Killed tracks: macro features for classical models, news-as-predictor, LLM-as-combiner, learned combination weights, learned regimes, kitchen-sink ensembling, high reasoning effort, the fitted v2 router as the group forecaster's center (per-series records too few, exp79).
+We publish negatives with the same rigor as positives. Killed tracks: macro features for classical models, news-as-predictor, LLM-as-combiner, learned combination weights, learned regimes, kitchen-sink ensembling, high reasoning effort, the fitted v2 router as the group forecaster's center (per-series records too few, exp79), the pooled router as that center (pooling did not rescue it, exp82), and Chronos-2 as the segment engine (member-weighted loss; its strength is portfolio level only, exp86).
 
 Each was tested with proper significance testing and closed on evidence, not intuition.
 
@@ -280,7 +383,7 @@ Each was tested with proper significance testing and closed on evidence, not int
 
 ## How We Got Here
 
-The full experiment-by-experiment story — 63 experiments plus the 6-rung LLM integration ladder — lives in:
+The full experiment-by-experiment story — 88 experiments plus the 6-rung LLM integration ladder — lives in:
 
 - [Methodology](METHODOLOGY.md) — the complete research narrative
 - [Manager Report](reports/MANAGER_REPORT.md) — the story for a general audience
