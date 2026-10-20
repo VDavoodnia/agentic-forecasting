@@ -10,7 +10,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 |---|---|
 | [FINAL_DELIVERY.md](FINAL_DELIVERY.md) | **The final delivery note (2026-10-20).** What the finished package is, the final architecture in one paragraph, the headline results, what shipped vs what was killed, and pointers to everything below. |
 | [FINAL_RESULTS.md](FINAL_RESULTS.md) | Final numbers only — no experiment codes, human-readable names, benchmarks in tables. Includes Layer-2 (exp73), the uncertainty layer through pooled banks (exp74–exp81), and the settled group forecaster (exp78–exp80). |
-| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark, Macro Signal Service — mortgage-framed. All experiments landed (through exp81). |
+| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark, Macro Signal Service — mortgage-framed. All experiments landed (through exp88). |
 | [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference spine. |
 | [PROPOSED_METHOD.md](PROPOSED_METHOD.md) | The exp47 method: architecture, implementation (`src/td_one/agent/proposed_method.py`), verdict. |
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
@@ -32,7 +32,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [UQ_SURVEY.md](UQ_SURVEY.md) | Uncertainty quantification for TSFMs (2024+): conformal-for-time-series families, TSFM calibration, error-prediction meta-models; shortlist behind exp74. |
 | [SELF_AUDIT.md](SELF_AUDIT.md) | Adversarial self-review: multiple comparisons, M4 development bias, BoC-discrete downgrade, PIT re-verification, CRPS verification. Headlines survive; margins disclosed. |
 | [DIAGRAMS.md](DIAGRAMS.md) | Architecture and experiment diagrams (mermaid — renders on GitHub). |
-| [../experiments/README.md](../experiments/README.md) | Full experiment index (exp1–exp81) with verdicts and report links. |
+| [../experiments/README.md](../experiments/README.md) | Full experiment index (exp1–exp88) with verdicts and report links. |
 | [../experiments/REPRODUCIBILITY.md](../experiments/REPRODUCIBILITY.md) | Reproduce any experiment: environment, weights, commands. |
 
 ## The story (dated finals — 2026-10-19 close-outs)
