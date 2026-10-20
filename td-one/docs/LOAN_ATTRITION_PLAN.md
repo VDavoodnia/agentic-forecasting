@@ -100,8 +100,11 @@ Two tracks, eventually combined:
   explanations. Forecasting is part of the agent's toolkit.
 - **Track 2 (exp67/68):** Red-team Chronos-2/TimesFM-2.5 on loan-domain
   distributional shifts; build an agentic guard; evaluate on held-out shifts.
-- **Real data (exp70/71):** OSFI M4 runoff benchmark (exp70) and competitor
-  spread covariate (exp71) — both honest negatives.
+- **Real data (exp70/71/71b):** OSFI M4 runoff benchmark (exp70) and
+  competitor spread covariate (exp71 pilot, exp71b at full coverage:
+  BoC posted backbone 622m + Wayback RateHub broker bests 54m) —
+  all honest negatives (71b settled: the in-sample spread relation is a
+  regime artifact).
 - **Layer-2 (exp73):** meta-router over v2 on OSFI runoff — validation
   gating ties naive, repairs v2's harms (partial positive, kept as the
   do-no-harm wrapper); lock-in correction adds nothing (dead). See
