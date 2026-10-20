@@ -1,6 +1,6 @@
 # exp75: Mini-Agent + Orchestrator Decision Engine — Report
 
-**Status: PRE-REGISTERED (design frozen; results pending).**
+**Status: COMPLETE (Rounds 1–5; verdict below).**
 
 ## Architecture
 
@@ -193,9 +193,43 @@ winner support — the monthly macro readings are too coarse to
 override the validation gate. The synthesis channel is empty, not
 just diluted.
 
-**Standing rule status (4–5 rounds)**: R1 design+diagnosis, R2
-ablation+naive-reference, R3 param search, R4 max-family variant,
-R5 confirmation+arm C. Not killed before Round 5.
+### Arm C — LLM orchestrator (2026-10-20)
+
+| subset | C vs A | verdict |
+|---|---|---|
+| OSFI pooled (240) | **+4.4%** (C 0.004174, B 0.003855) | C worse than both |
+| Food CPI h=1 (47) | **−19.1%, p=3e-11** | ⭐ C beats A and B big |
+| Shifts S3 (24) | +2.5%/0.0% | C ≈ A |
+
+- On OSFI the LLM misbehaves exactly as in exp69c: picks v2 71×
+  (deterministic picked it 0×), attaches a shift on 240/240 calls,
+  and pays for it.
+- On Food CPI h=1 the SAME behavior is a triumph: chose naive 32× /
+  v2 15×, shifted on 40/47 origins with **shift-sign accuracy
+  39/40 (97.5%)**, mean |shift| 0.29 CPI points. Candidates on this
+  series are ≈identical (A ≈ naive), so the entire gain is the
+  directional shift, correctly signed by reading the factor signals.
+- **The deterministic pressure sign matches it**: sign(world_pressure)
+  vs realized move direction on the same 47 origins = **46/47
+  (97.9%)**. The LLM contributes no directional knowledge beyond the
+  mini-agent bundle's sign — its value was exposing the *shift
+  mechanism*, which the deterministic orchestrator can run cheaply.
+  → Round 4b: **arm E (deterministic shift)**: shift the base grid by
+  sign(P) × 0.5 × validation-resid-SD whenever |P| ≥ tau_low.
+- C vs B pooled over the pre-registered prioritized set (OSFI 240 +
+  Food 47 + S3 24): dominated by OSFI → C does NOT justify its cost
+  as a general orchestrator. It wins exactly one bed — the one where
+  the factor corpus describes the target (food-price news → food
+  prices) and the series is smooth. Bed-specific, not general.
+
+### Simulator bed (Round 1)
+
+B −28.0% vs the group-forecaster base (p=0.099, win 0.61, n=36; all
+abstains-to-naive), driven by S3_4 units (−49% diverged, −45%
+portfolio) — but **+10.5% harm on S1_4/diverged** (naive is worse
+than the group forecaster on the rate-shocked group), a pre-
+registered segment-harm flag. D ≡ A (validation coverage ≥ target →
+(0,0) under the new fit).
 
 _(to be filled as rounds land)_
 
@@ -203,14 +237,90 @@ _(to be filled as rounds land)_
 
 _(pending)_
 
+### Round 5 — confirmation with final code (2026-10-20)
+
+All beds re-run with the final implementation (Round-2 uncertainty
+fit, arm E added). Arm E = **deterministic shift** (sign(P) × 0.5 ×
+validation resid SD when |P| ≥ tau_low) — the mechanism arm C
+exposed, without the LLM.
+
+| Bed | A CRPS | B vs A | D vs A | E vs A | C vs A |
+|---|---|---|---|---|---|
+| OSFI (240) | 0.003998 | −3.59%, p=0.087 | +0.51%, p=0.065 | **+7.9%, p=0.019** | +4.4% pooled |
+| Food h=1 (47) | 0.6354 | +0.0% | +0.76%, n.s. | **−22.8%, p=1.9e-14** | −19.1%, p=3e-11 |
+| Food h=6 (43) | 3.2064 | −28.8%, p=0.007 | −7.3%, p=3e-19 | +6.8%, n.s. | — |
+| SMM (38) | 0.000594 | −0.5%, n.s. | −1.1%, n.s. | +0.9%, n.s. | — |
+| Shifts (72) | 0.04760 | −1.4%, n.s. | +0.0%, n.s. | +0.0% | +2.6/0.0/+2.5/0.0 |
+| Sim (36) | 0.2207 | −28.0%, p=0.099 | +0.0% | +0.0% | — |
+
+- **E replicates and beats C on Food h=1** (−22.8% vs −19.1%): the
+  LLM's only win is fully explained by a deterministic sign(P) shift.
+  On OSFI both shift arms (C +4.4%, E +7.9% p=0.019) hurt — pressure
+  signs are noise there. Shifts are a sharp, bed-specific tool,
+  never a default.
+- **D with the Round-2 fit**: OSFI harm eliminated (+0.51% n.s. vs
+  +1.42% p=0.011 before); Food h=6 rescue intact (−7.3%, p=3e-19,
+  coverage 0.174→0.407, width 1.52× — marginally over the 1.5× bar);
+  SMM/shifts/sim neutral. D keeps its rescue role.
+- **B segment-harm check**: sim S1_4/diverged +10.5% point estimate
+  but p=0.82 (n=9) → not a flag under the pre-registered bar; noted.
+
 ## Ablation
 
-_(per-family ablation + top-factor individual ablation; pending)_
+- **Per-family (OSFI, R2)**: dropping any one of prices / housing /
+  labour / policy / external leaves B vs A unchanged at −3.59% ± 0.09pp.
+  All five families: dead weight (for the abstain mechanism).
+- **Per-factor (OSFI, 22 categories incl. rent/climate RAG)**: every
+  single drop leaves B vs A unchanged (−3.59%±0.09). No individual
+  factor carries OSFI signal.
+- **Per-diagnostic (OSFI)**: stability −3.55% (veto redundant with
+  the validation-margin gate); disagreement/seasonality/group
+  unchanged.
+- **Where signal DID exist**: prices family on the Food CPI bed —
+  sign(P) matched realized h=1 move direction 46/47 (97.9%). The
+  signal is *target-aligned direction*, visible only to the shift
+  arms (E/C); the routing arms (B) never touch it.
+- **LLM cost accounting**: factor signals are month-stamped and
+  cached (one read per month per target; the shared
+  `exp75_factor_cache.json` covers all beds/origins) — the marginal
+  cost per origin is ONLY the orchestrator call: 0 for B/D/E, 1 for C
+  (287 calls total for the whole experiment; ≈$0 on flash-lite).
+  24 factor agents × origins would have been ~7,000 calls uncached.
 
 ## Verdict
 
-_(pending)_
+**The mini-agent + orchestrator architecture, as a general decision
+engine over a strong base forecaster, is a negative.** Five rounds of
+diagnosis, ablation, search, and variants converge:
 
-Files: `experiments/exp75_orchestrator.py`, `experiments/exp75_results.json`,
-`src/td_one/agent/factor_agents.py`, `src/td_one/agent/orchestrator.py`,
-`tests/test_factor_agents.py`, `tests/test_orchestrator.py`.
+1. **Routing (B) adds nothing beyond exp73's Layer-2 gate.** Every B
+   "win" is exactly reproduced by naive-alone; ablation shows all 24
+   factor agents and all 4 diagnostics individually *and* jointly
+   inert for routing. The valuable part — validation-margin gating
+   with abstention to naive — is a *validation statistic*, not a
+   mini-agent.
+2. **The LLM orchestrator (C) is dominated by a deterministic
+   variant of its own mechanism.** Arm E (sign(P) shift, zero LLM
+   calls) beats C on C's best bed (−22.8% vs −19.1% on Food h=1)
+   and C hurts everywhere else (OSFI +4.4%, S3 +2.6%). The
+   pre-registered bar (C must beat B pooled, p<0.05) is not met.
+   There is no bed where C is the best arm.
+3. **One genuine positive survives — the directional shift, on the
+   one target-aligned bed.** sign(P) is a near-perfect h=1 direction
+   oracle for Food CPI (97.9%) because the factor corpus (food-price
+   news) describes the target. Arm E should ship as an *opt-in*
+   module gated by a validation sign-accuracy test (enable only when
+   sign(P) has predicted validation moves at >70% with ≥10 origins),
+   mirroring how v2's LLM expert was gated to Food CPI in exp59.
+   On attrition targets the same pressure is noise (OSFI E +7.9%,
+   p=0.019) — it must stay OFF there by default.
+4. **Uncertainty mode (D) survives as a rescue tool** with the
+   Round-2 fit: it no longer harms calibrated bases and rescues
+   badly-miscalibrated ones (Food h=6 −7.3%, p=3e-19).
+
+Net architectural lesson: decomposition into 24 narrow factor
+agents produced an auditable, cached, PIT-safe signal bundle whose
+*direction* is occasionally gold and whose *synthesis* is worthless
+— the orchestrator that matters is still a validation statistic
+(the exp73 gate) plus one calibrated scalar (the shift). The agents
+are a feature store, not a decision engine.

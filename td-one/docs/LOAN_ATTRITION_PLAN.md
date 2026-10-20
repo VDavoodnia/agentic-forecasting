@@ -123,6 +123,12 @@ Two tracks, eventually combined:
   `docs/REAL_DATA_INTEGRATION.md`.
 - **Integration (exp72):** Track 2's shift scenarios stress-test Track 1's
   group forecaster. S3 (regional divergence) is the meeting point.
+- **Orchestrator (exp75):** mini-agent + orchestrator decision engine over
+  all 6 beds (OSFI, Food CPI h=1/h=6, SMM, shifts, SimulatorV2). Routing
+  (B) ≡ naive on every bed (agents inert per ablation); LLM orchestrator
+  (C) dominated by deterministic shift (E: Food h=1 −22.8%, p=1.9e-14).
+  Surviving modules: E (opt-in directional shift, gated on validation
+  sign accuracy), D (uncertainty rescue for miscalibrated bases).
 
 ## Track 1 — LLM Grouping + Group-Level Forecasting (exp66)
 

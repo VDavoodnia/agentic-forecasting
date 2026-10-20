@@ -380,7 +380,9 @@ def bed_sim() -> BedData:
         for label, gid in (("diverged", div_gid), ("portfolio", "__portfolio__")):
             gs = groups[gid]
             values = np.asarray(gs.attrition_rate, dtype=float)
-            origins = list(range(24, 47))
+            # Group series span 29 months in this build; origins from 12
+            # give the validation history enough room (burnin 8).
+            origins = [o for o in range(12, len(values)) if o < len(values)]
             v2_g: list[np.ndarray] = []
             naive_g: list[np.ndarray] = []
             actuals: list[np.ndarray] = []
@@ -412,7 +414,7 @@ def bed_sim() -> BedData:
         "attrition",
         units,
         base_name="v2",
-        burnin=12,
+        burnin=8,
         group_series_by_unit=group_payloads,
     )
     _store_bed("sim", bed)
@@ -472,7 +474,7 @@ def run_unit(
     drop_diags: set[str] | None = None,
     factor_cache: FactorCache | None = None,
     group_series_by_index: dict[int, dict[str, np.ndarray]] | None = None,
-    arms: tuple[str, ...] = ("A", "B", "D"),
+    arms: tuple[str, ...] = ("A", "B", "D", "E"),
     burnin: int = BURNIN,
 ) -> UnitResults:
     """Walk-forward evaluation of arms A/B/D for one bed unit."""
@@ -521,9 +523,9 @@ def run_unit(
         p, _ = world_pressure(bundle, cfg.family_weights, cfg.pressure_agg)
         ps.append(abs(p))
 
-    arm_crps: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D")}
-    arm_cov: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D")}
-    arm_width: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D")}
+    arm_crps: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D", "E")}
+    arm_cov: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D", "E")}
+    arm_width: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D", "E")}
     traces_b: list[dict[str, Any]] = []
 
     for i in range(burnin, n):
@@ -574,8 +576,18 @@ def run_unit(
             )
             m, _t = orch.decide_uncertainty(diags_all[i], sigs_all[i], alpha, beta)
             _emit("D", orch.apply_multiplier(base_grid, m), act)
+        # Arm E (Round 4b): deterministic shift — the LLM arm's mechanism
+        # (sign(world_pressure) * 0.5 * validation resid SD) without the LLM.
+        if "E" in arms:
+            p_e, _ = world_pressure(sigs_all[i], cfg.family_weights, cfg.pressure_agg)
+            resid_e = np.array(
+                [float(base_g[j][4, 0]) - float(actuals[j][0]) for j in val_idx], dtype=float
+            )
+            sd_e = float(np.std(resid_e)) if len(resid_e) > 1 else 0.0
+            shift_e = float(np.sign(p_e)) * 0.5 * sd_e if abs(p_e) >= cfg.tau_low else 0.0
+            _emit("E", base_grid + shift_e, act)
 
-    used = [a for a in ("A", "B", "C", "D") if arm_crps[a]]
+    used = [a for a in ("A", "B", "C", "D", "E") if arm_crps[a]]
     return UnitResults(
         arm_crps={a: arm_crps[a] for a in used},
         arm_cov={a: arm_cov[a] for a in used},
@@ -716,6 +728,7 @@ def bed_report(bed: BedData, results: dict[str, UnitResults]) -> dict[str, Any]:
             "width": {a: float(np.mean(v)) for a, v in r.arm_width.items()},
             "B_vs_A": paired(r.arm_crps["B"], r.arm_crps["A"]) if "B" in r.arm_crps else None,
             "D_vs_A": paired(r.arm_crps["D"], r.arm_crps["A"]) if "D" in r.arm_crps else None,
+            "E_vs_A": paired(r.arm_crps["E"], r.arm_crps["A"]) if "E" in r.arm_crps else None,
             "factor_avail_rate": r.factor_avail_rate,
             "mean_abs_p": r.mean_abs_p,
             "choices_B": pd.Series([t["choice"] for t in r.traces_b]).value_counts().to_dict()
@@ -729,6 +742,7 @@ def bed_report(bed: BedData, results: dict[str, UnitResults]) -> dict[str, Any]:
             "coverage": {},
             "B_vs_A": paired(pooled["B"], pooled["A"]) if "B" in pooled else None,
             "D_vs_A": paired(pooled["D"], pooled["A"]) if "D" in pooled else None,
+            "E_vs_A": paired(pooled["E"], pooled["A"]) if "E" in pooled else None,
         }
         cov_pool: dict[str, list[float]] = {}
         wid_pool: dict[str, list[float]] = {}
@@ -748,7 +762,7 @@ def bed_report(bed: BedData, results: dict[str, UnitResults]) -> dict[str, Any]:
 
 def run_bed_arms(
     bed: BedData,
-    arms: tuple[str, ...] = ("A", "B", "D"),
+    arms: tuple[str, ...] = ("A", "B", "D", "E"),
     config: OrchestratorConfig | None = None,
     drop_families: set[str] | None = None,
     drop_factors: set[str] | None = None,
