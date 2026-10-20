@@ -57,7 +57,7 @@ gates and conformal calibration. v2 adds a gated LLM expert (Gemini Flash).
 | Dataset | Series | v2 | Equal weights | Best single model | Improvement |
 |---|---|---|---|---|---|
 | M4 Monthly | 100 series | **0.1451** | 0.1507 | 0.1505 | −3.6%, p=7.8e-11 |
-| Tourism Monthly | 366 series | **0.1288** | 0.1869 | 0.1387 (seasonal naive) | −7.6%, p=2.6e-34 |
+| Tourism Monthly | 366 series | **0.1282** | 0.1869 | 0.1387 (seasonal naive) | −7.6%, p=2.6e-34 |
 | M3 Monthly | 1,428 series | **0.1476** | 0.1641 | 0.1630 (ETS) | −9.4%, p=3.5e-35 |
 | Food CPI | 59 origins | **0.5322** | — | 0.9661 (v1) | −45%, p=4.3e-06 |
 

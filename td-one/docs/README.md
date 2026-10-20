@@ -12,6 +12,13 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
 | [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark — mortgage-framed, final + in-flight split. |
 
+## Presentations
+
+| Doc | What you get |
+|---|---|
+| [slides/TD-One-Slides.html](slides/TD-One-Slides.html) | The Final Deck (HTML, deck of record): 8 exec-report slides covering the solution, results, honest negatives, manager mock, future work. Updated 2026-10-20. |
+| [slides/TD-One-Context.md](slides/TD-One-Context.md) | Full context for continuing the deck work: ground truth, verdicts, messaging rules, what changed, open work. |
+
 ## The story (for new readers)
 
 | Doc | What you get |
