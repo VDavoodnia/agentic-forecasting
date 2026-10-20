@@ -12,14 +12,19 @@ In production this is :func:`v2_forecaster_fn` (trailing-mean center +
 Gaussian spread, exp78/exp79; an exp80 conformal layer is available
 behind a flag, not the default — exp80's S1 replication failed its
 pre-registered bar); the real fitted v2 router is available
-as :func:`router_forecaster_fn` (exp79: evaluated, not the default).
-In tests a stub.
+as :func:`router_forecaster_fn` (exp79: evaluated, not the default),
+and a cross-series **pooled** router fit as
+:func:`pooled_router_forecaster_fn` (exp82: evaluated across six
+designs — pooling, scale-free expert selection, shrinkage, partial
+pooling — and it does not beat the trailing-mean center on the
+SimulatorV2 harness; available as a research option, not the
+default). In tests a stub.
 """
 
 from __future__ import annotations
 
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
@@ -208,7 +213,7 @@ def _trailing_vol(series: np.ndarray) -> float:
     return float(np.std(diffs)) if len(diffs) > 1 else 0.0
 
 
-def _conformal_offsets(
+def _conformal_offsets(  # noqa: PLR0913 - parameter object would obscure the exp80/85 knobs
     series: np.ndarray,
     *,
     center: str,
@@ -217,6 +222,13 @@ def _conformal_offsets(
     min_bank: int,
     conditional: bool,
     level: float = CONFORMAL_LEVEL,
+    adaptive: str = "none",
+    half_life: float = 6.0,
+    pre_factor: float = 0.25,
+    min_post: int = 5,
+    bias_lambda: float = 0.95,
+    bias_n0: float = 12.0,
+    detector: str = "scan",
 ) -> tuple[float, float]:
     """CQR-style conformal offsets (lo, hi) for the [q10, q90] interval.
 
@@ -235,30 +247,120 @@ def _conformal_offsets(
     they are widen-only. Fewer than ``min_bank`` cases -> ``(0, 0)``.
 
     ``conditional`` scales both offsets by the trailing-volatility
-    ratio ``clamp(vol_now / median(vol_bank), 0.5, 2.0)``.
-    """
-    from td_one.uq.methods import finite_quantile
+    ratio ``clamp(vol_now / median(vol_bank), 0.5, 2.0)`` (for the
+    bias modes below, the scale applies to the quantile parts only,
+    not to the center shift).
 
+    ``adaptive`` (exp85) makes the bank shift-aware; ``"none"`` is
+    exactly the exp80 behavior above:
+
+    - ``"reset"``: if a changepoint is detected in ``series``
+      (``td_one.uq.adaptive.detect_break_onset`` — Layer-2 scan gate
+      + CUSUM onset, both reading only this history), scores from
+      bank cases realized before the onset are dropped when at
+      least ``min_post`` post-break cases remain.
+    - ``"decay"``: score weights decay exponentially with age
+      (half-life ``half_life`` months); offsets are weighted
+      quantiles (no finite-sample correction — documented exp85
+      design call).
+    - ``"cp"``: ``"decay"`` plus an extra ``pre_factor`` multiplier
+      on pre-break scores when a break is detected.
+    - ``"bc"``: bias-corrected scores (BC-ACI family): a causal EWM
+      track of the signed one-step errors shifts each bank case's
+      interval before scoring; the returned offsets encode the
+      shrunk, half-width-clipped current bias as a center shift
+      (``off_lo = Q_lo - b``, ``off_hi = Q_hi + b``), so this mode
+      can *move* the interval, not only widen it.
+    - ``"cp_bc"``: ``"bc"`` restricted to the post-break bank when
+      a break is detected (same ``min_post`` rule as ``"reset"``).
+
+    ``detector`` selects the changepoint gate used by the surgery
+    modes: ``"scan"`` (Layer-2 triple gate; exp85 round 1 found it
+    never fires on noisy rate/ramp series) or ``"cusum"`` (CUSUM
+    alone; engages on gradual shifts, some false-positive risk).
+    """
+    from td_one.uq.methods import finite_quantile, weighted_quantile
+
+    ts: list[int] = []
+    lo_t: list[float] = []
+    hi_t: list[float] = []
+    err_t: list[float] = []
     s_lo: list[float] = []
     s_hi: list[float] = []
     vols: list[float] = []
     for t in range(CONFORMAL_START, len(series)):
         qb = _base_quantiles(series[:t], center, center_window, spread_method)
         y = float(series[t])
+        ts.append(t)
+        lo_t.append(float(qb[0]))
+        hi_t.append(float(qb[-1]))
+        err_t.append(y - float(qb[2]))
         s_lo.append(max(float(qb[0]) - y, 0.0))
         s_hi.append(max(y - float(qb[-1]), 0.0))
         vols.append(_trailing_vol(series[:t]))
     if len(s_lo) < min_bank:
         return 0.0, 0.0
-    off_lo = finite_quantile(np.array(s_lo), level)
-    off_hi = finite_quantile(np.array(s_hi), level)
+    s_lo_a = np.array(s_lo)
+    s_hi_a = np.array(s_hi)
+    vols_a = np.array(vols)
+    shift = 0.0
+
+    if adaptive == "none":
+        off_lo = finite_quantile(s_lo_a, level)
+        off_hi = finite_quantile(s_hi_a, level)
+    elif adaptive in ("reset", "decay", "cp", "bc", "cp_bc"):
+        from td_one.uq.adaptive import detect_break_onset
+
+        onset = (
+            detect_break_onset(series, gate=detector)
+            if adaptive in ("reset", "cp", "cp_bc")
+            else None
+        )
+        post_mask = np.array([t >= onset for t in ts]) if onset is not None else None
+        if adaptive == "reset":
+            if post_mask is not None and int(post_mask.sum()) >= min_post:
+                s_lo_a, s_hi_a, vols_a = s_lo_a[post_mask], s_hi_a[post_mask], vols_a[post_mask]
+            off_lo = finite_quantile(s_lo_a, level)
+            off_hi = finite_quantile(s_hi_a, level)
+        elif adaptive in ("decay", "cp"):
+            ages = np.array([len(series) - 1 - t for t in ts], dtype=float)
+            w = np.power(0.5, ages / half_life)
+            if adaptive == "cp" and post_mask is not None:
+                w = np.where(post_mask, w, w * pre_factor)
+            off_lo = weighted_quantile(s_lo_a, w, level)
+            off_hi = weighted_quantile(s_hi_a, w, level)
+        else:  # "bc" / "cp_bc"
+            idx = list(range(len(ts)))
+            if adaptive == "cp_bc" and post_mask is not None and int(post_mask.sum()) >= min_post:
+                idx = [i for i in idx if bool(post_mask[i])]
+                vols_a = vols_a[idx]
+            b = 0.0
+            corr_lo: list[float] = []
+            corr_hi: list[float] = []
+            for i in idx:
+                y = float(series[ts[i]])
+                corr_lo.append(max((lo_t[i] + b) - y, 0.0))
+                corr_hi.append(max(y - (hi_t[i] + b), 0.0))
+                b = bias_lambda * b + (1.0 - bias_lambda) * err_t[i]
+            n = len(idx)
+            b_eff = b * n / (n + bias_n0) if n + bias_n0 > 0 else 0.0
+            qb_now = _base_quantiles(series, center, center_window, spread_method)
+            half = (float(qb_now[-1]) - float(qb_now[0])) / 2.0
+            if half > 1e-12:
+                b_eff = float(np.clip(b_eff, -half, half))
+            shift = float(b_eff)
+            off_lo = finite_quantile(np.array(corr_lo), level) - shift
+            off_hi = finite_quantile(np.array(corr_hi), level) + shift
+    else:
+        raise ValueError(f"unknown conformal adaptive mode {adaptive!r}")
+
     if conditional:
-        vol_bank = float(np.median(vols)) if vols else 0.0
+        vol_bank = float(np.median(vols_a)) if len(vols_a) else 0.0
         vol_now = _trailing_vol(series)
         if vol_bank > 0.0:
             scale = min(max(vol_now / vol_bank, COND_SCALE_MIN), COND_SCALE_MAX)
-            off_lo *= scale
-            off_hi *= scale
+            off_lo = (off_lo + shift) * scale - shift
+            off_hi = (off_hi - shift) * scale + shift
     return off_lo, off_hi
 
 
@@ -273,6 +375,13 @@ def v2_forecaster_fn(
     conformal_conditional: bool = False,
     conformal_min_bank: int = CONFORMAL_MIN_BANK,
     conformal_level: float = CONFORMAL_LEVEL,
+    conformal_adaptive: str = "none",
+    conformal_half_life: float = 6.0,
+    conformal_pre_factor: float = 0.25,
+    conformal_min_post: int = 5,
+    conformal_bias_lambda: float = 0.95,
+    conformal_bias_n0: float = 12.0,
+    conformal_detector: str = "scan",
 ) -> Callable[[np.ndarray], np.ndarray]:
     """Build a group-series forecaster_fn: center + PIT-safe spread.
 
@@ -343,6 +452,30 @@ def v2_forecaster_fn(
     conformal_level:
         Calibration level for the offset quantile (default
         ``CONFORMAL_LEVEL`` = the [q10, q90] interval's own 0.8).
+    conformal_adaptive:
+        exp85 shift-adaptation mode for the conformal bank:
+        ``"none"`` (default; exact exp80 behavior), ``"reset"``
+        (drop pre-break scores at a detected changepoint),
+        ``"decay"`` (exponential age down-weighting), ``"cp"``
+        (decay + pre-break penalty), ``"bc"`` (bias-corrected
+        scores + center shift, BC-ACI family), ``"cp_bc"`` (reset,
+        then bias correction). Requires ``conformal=True``. See
+        :func:`_conformal_offsets`.
+    conformal_half_life:
+        Age half-life (months) for the ``"decay"``/``"cp"`` weights.
+    conformal_pre_factor:
+        Extra weight multiplier on pre-break scores in ``"cp"``.
+    conformal_min_post:
+        Minimum post-break bank size before a reset applies.
+    conformal_bias_lambda:
+        EWM decay for the bias track in the ``"bc"``/``"cp_bc"``
+        modes.
+    conformal_bias_n0:
+        Shrinkage prior count for the applied bias
+        (``b * n / (n + n0)``).
+    conformal_detector:
+        Changepoint gate for the surgery modes (exp85): ``"scan"``
+        (default) or ``"cusum"`` — see :func:`_conformal_offsets`.
 
     """
     if spread_method not in ("empirical", "gaussian"):
@@ -357,6 +490,27 @@ def v2_forecaster_fn(
         raise ValueError(f"conformal_level must be in (0, 1), got {conformal_level}")
     if conformal and not quantile_spread:
         raise ValueError("conformal=True requires quantile_spread=True (no point-mass bank)")
+    if conformal_adaptive not in ("none", "reset", "decay", "cp", "bc", "cp_bc"):
+        raise ValueError(
+            "conformal_adaptive must be one of 'none', 'reset', 'decay', "
+            f"'cp', 'bc', 'cp_bc', got {conformal_adaptive!r}"
+        )
+    if conformal_adaptive != "none" and not conformal:
+        raise ValueError("conformal_adaptive != 'none' requires conformal=True")
+    if conformal_half_life <= 0:
+        raise ValueError(f"conformal_half_life must be > 0, got {conformal_half_life}")
+    if not 0.0 < conformal_pre_factor <= 1.0:
+        raise ValueError(f"conformal_pre_factor must be in (0, 1], got {conformal_pre_factor}")
+    if conformal_min_post < 1:
+        raise ValueError(f"conformal_min_post must be >= 1, got {conformal_min_post}")
+    if not 0.0 < conformal_bias_lambda < 1.0:
+        raise ValueError(f"conformal_bias_lambda must be in (0, 1), got {conformal_bias_lambda}")
+    if conformal_bias_n0 < 0:
+        raise ValueError(f"conformal_bias_n0 must be >= 0, got {conformal_bias_n0}")
+    if conformal_detector not in ("scan", "cusum"):
+        raise ValueError(
+            f"conformal_detector must be 'scan' or 'cusum', got {conformal_detector!r}"
+        )
 
     def _forecast(series: np.ndarray) -> np.ndarray:
         s = np.asarray(series, dtype=float)
@@ -374,6 +528,13 @@ def v2_forecaster_fn(
                 min_bank=conformal_min_bank,
                 conditional=conformal_conditional,
                 level=conformal_level,
+                adaptive=conformal_adaptive,
+                half_life=conformal_half_life,
+                pre_factor=conformal_pre_factor,
+                min_post=conformal_min_post,
+                bias_lambda=conformal_bias_lambda,
+                bias_n0=conformal_bias_n0,
+                detector=conformal_detector,
             )
             q = q.copy()
             q[0] -= off_lo
@@ -558,5 +719,294 @@ def router_forecaster_fn(
         q9 = np.asarray(out.quantiles, dtype=float)[:, 0]
         q5 = np.interp(QUANTILE_LEVELS, _L9, q9)
         return np.clip(np.maximum.accumulate(q5), 0.0, 1.0)
+
+    return _forecast
+
+
+# ---------------------------------------------------------------------------
+# exp82: the pooled router — one fit across the whole panel
+# ---------------------------------------------------------------------------
+
+
+def _normalized_record(record: dict[str, Any]) -> dict[str, Any]:
+    """Copy a backtest record with its CRPS made scale-free (exp82 R2e).
+
+    Each expert's CRPS is divided by the record's naive-expert CRPS
+    (or the record's mean expert CRPS when naive is not among the
+    experts), so pooled expert selection weighs every series equally
+    instead of being dominated by the largest-scale series. Per-record
+    argmin labels are invariant to the scaling.
+    """
+    crps = record["crps"]
+    denom = float(crps.get("naive", 0.0))
+    if denom <= 0.0:
+        denom = float(np.mean(list(crps.values()))) if crps else 0.0
+    if denom <= 0.0:
+        return record
+    return {**record, "crps": {m: float(c) / denom for m, c in crps.items()}}
+
+
+class _PooledRouter:
+    """One v2 router fitted on backtest records pooled across a panel.
+
+    exp79's diagnosis of the per-series router (:func:`router_forecaster_fn`)
+    was starvation: a series' own rolling-origin backtest yields at most
+    ~13 records, while the router was designed for the pooled record
+    sets of exp47 (hundreds of records across series). This core fits
+    **one** :class:`ProposedForecasterV2` per forecast-origin length L
+    on the records of *every* panel series truncated to L — the same
+    record protocol as exp79 (prefixes t = ``backtest_start``..L-1,
+    10 canonical features, experts {naive, ets, arima}, pinball CRPS
+    vs the realized next value), pooled.
+
+    PIT safety: records at origin L use only prefixes ``s[:t]`` with
+    t < L of panel series truncated to L, so nothing at or after the
+    origin enters the fit (pinned by a prefix-invariance test).
+
+    ``target_weight`` > 1 gives partial pooling (exp82 R3): the target
+    series' own records are repeated ``target_weight`` times in the
+    fit — shrinkage between the pooled and per-series fits at the data
+    level. The default 1 is the pure pool.
+    """
+
+    def __init__(
+        self,
+        panel: Mapping[str, np.ndarray],
+        *,
+        regime_spec: str = "generic",
+        models: tuple[str, ...] = _ROUTER_MODELS,
+        backtest_start: int = BACKTEST_START,
+        features: tuple[str, ...] | None = None,
+        normalize_crps: bool = False,
+    ) -> None:
+        if regime_spec not in ("generic", "m4"):
+            raise ValueError(f"regime_spec must be 'generic' or 'm4', got {regime_spec!r}")
+        unknown = [m for m in models if m not in _ROUTER_MODELS]
+        if unknown:
+            raise ValueError(f"unknown router experts {unknown}; allowed {_ROUTER_MODELS}")
+        if backtest_start < 5:
+            raise ValueError(f"backtest_start must be >= 5, got {backtest_start}")
+        from td_one.agent.tools.data import SeriesFeatures
+
+        canonical = list(SeriesFeatures.model_fields)
+        if features is not None:
+            bad = [f for f in features if f not in canonical]
+            if bad or len(features) == 0:
+                raise ValueError(
+                    f"features must be a non-empty subset of {canonical}, got {features!r}"
+                )
+            self._feature_names = list(features)
+            self._feature_idx: list[int] | None = [canonical.index(f) for f in features]
+        else:
+            self._feature_names = canonical
+            self._feature_idx = None
+        self._canonical = canonical
+        self._normalize_crps = normalize_crps
+        self._panel = {str(k): np.asarray(v, dtype=float) for k, v in panel.items()}
+        self._regime_spec = regime_spec
+        self._models = models
+        self._backtest_start = backtest_start
+        # Prefix artifacts are pure functions of the prefix; rolling
+        # origins and pooled series revisit the same prefixes often.
+        self._artifact_cache: dict[bytes, tuple[list[float], dict[str, np.ndarray]]] = {}
+        self._records_cache: dict[
+            int, tuple[list[dict[str, Any]], dict[bytes, list[dict[str, Any]]]]
+        ] = {}
+        self._routers: dict[tuple[int, bytes | None], Any] = {}
+
+    # -- record building --------------------------------------------------
+
+    def _artifacts(self, hist: np.ndarray) -> tuple[list[float], dict[str, np.ndarray]]:
+        from td_one.agent.tools.data import series_features
+
+        key = np.asarray(hist, dtype=float).tobytes()
+        if key not in self._artifact_cache:
+            feats = series_features(hist).as_dict()
+            vec = [float(feats[k]) for k in self._canonical]
+            qs = {m: _expert_q9(m, hist).reshape(9, 1) for m in self._models}
+            self._artifact_cache[key] = (vec, qs)
+        return self._artifact_cache[key]
+
+    def _records(
+        self, length: int
+    ) -> tuple[list[dict[str, Any]], dict[bytes, list[dict[str, Any]]]]:
+        """Pooled backtest records for origin ``length`` (+ per-series split).
+
+        Returns (all records, {truncated-series bytes: that series'
+        records}) — the split exists for partial pooling.
+        """
+        from td_one.agent.layer2_tools import pinball_crps
+
+        if length in self._records_cache:
+            return self._records_cache[length]
+        pooled: list[dict[str, Any]] = []
+        by_series: dict[bytes, list[dict[str, Any]]] = {}
+        for s_full in self._panel.values():
+            s = s_full[:length]
+            if len(s) < self._backtest_start + 1:
+                continue
+            recs: list[dict[str, Any]] = []
+            for t in range(self._backtest_start, len(s)):
+                vec, qs = self._artifacts(s[:t])
+                if self._feature_idx is not None:
+                    vec = [vec[i] for i in self._feature_idx]
+                recs.append(
+                    {
+                        "features": vec,
+                        "quantiles": qs,
+                        "crps": {m: pinball_crps(qs[m], np.array([s[t]])) for m in self._models},
+                        "actual": np.array([s[t]]),
+                    }
+                )
+            by_series[np.asarray(s, dtype=float).tobytes()] = recs
+            pooled.extend(recs)
+        self._records_cache[length] = (pooled, by_series)
+        return pooled, by_series
+
+    # -- fitting / prediction ----------------------------------------------
+
+    def router(self, series: np.ndarray, *, target_weight: int = 1) -> Any:
+        """Return the pooled router fitted for ``len(series)`` (cached).
+
+        With ``target_weight`` > 1 the fit pool additionally repeats
+        the target series' own records ``target_weight - 1`` times.
+        Raises ``ValueError`` when the pool is empty at this length.
+        """
+        s = np.asarray(series, dtype=float)
+        length = len(s)
+        key = (length, s.tobytes() if target_weight > 1 else None)
+        if key not in self._routers:
+            from td_one.agent.proposed_method import generic_regime_spec, m4_regime_spec
+            from td_one.agent.proposed_method_v2 import ProposedForecasterV2
+
+            pooled, by_series = self._records(length)
+            if not pooled:
+                raise ValueError(
+                    f"pooled router: empty backtest pool at length {length} "
+                    f"(panel series shorter than backtest_start + 1 = "
+                    f"{self._backtest_start + 1}, or empty panel)"
+                )
+            pool = list(pooled)
+            if target_weight > 1:
+                pool += by_series.get(s.tobytes(), []) * (target_weight - 1)
+            if self._normalize_crps:
+                pool = [_normalized_record(r) for r in pool]
+            spec = generic_regime_spec() if self._regime_spec == "generic" else m4_regime_spec()
+            fc = ProposedForecasterV2(
+                h=1,
+                regime_spec=spec,
+                models=list(self._models),
+                use_llm_expert=False,
+            )
+            fc.fit(pool, self._feature_names)
+            self._routers[key] = fc
+        return self._routers[key]
+
+    def combined_q9(self, series: np.ndarray, *, target_weight: int = 1) -> np.ndarray:
+        """Return the pooled router's combined (9,) quantiles for ``series``."""
+        s = np.asarray(series, dtype=float)
+        if len(s) < self._backtest_start + 1:
+            raise ValueError(
+                f"pooled router needs a history of at least {self._backtest_start + 1} "
+                f"points, got {len(s)}"
+            )
+        fc = self.router(s, target_weight=target_weight)
+        vec, qs = self._artifacts(s)
+        feats = dict(zip(self._canonical, vec, strict=True))
+        out = fc.predict(s, qs, feats, self._feature_names)
+        return np.asarray(out.quantiles, dtype=float)[:, 0]
+
+    def center(self, series: np.ndarray, *, target_weight: int = 1) -> float:
+        """Return the pooled router's combined median — the forecast center."""
+        return float(self.combined_q9(series, target_weight=target_weight)[4])
+
+
+def pooled_router_forecaster_fn(
+    panel: Mapping[str, np.ndarray],
+    h: int = 1,
+    *,
+    regime_spec: str = "generic",
+    models: tuple[str, ...] = _ROUTER_MODELS,
+    backtest_start: int = BACKTEST_START,
+    features: tuple[str, ...] | None = None,
+    normalize_crps: bool = False,
+    spread_method: str = "gaussian",
+) -> Callable[[np.ndarray], np.ndarray]:
+    """Build a group-series forecaster_fn around the **pooled** v2 router.
+
+    exp82's candidate center: one :class:`ProposedForecasterV2` fitted
+    on rolling-origin backtest records **pooled across every series in
+    ``panel``** (the exp47 recipe), instead of exp79's per-series fit
+    (~13 records) that starved the router. **exp82's verdict: the
+    pooled router does not beat the shipped trailing-mean center on
+    the SimulatorV2 group harness** (control +0.0060 CRPS, p=0.005;
+    S1@4σ +0.0131, p=1.1e-05; five further designs — scale-free
+    selection, shrinkage, partial pooling, combinations — close but
+    never clear the gap; see experiments/exp82_report.md). This
+    factory remains available as a research option; it is **not** the
+    production default. The router's combined median
+    is the point-forecast center; exp78's Gaussian spread (the input
+    series' trailing naive one-step errors) supplies the intervals —
+    the same spread machinery as :func:`v2_forecaster_fn`, so pooled
+    vs trailing-mean comparisons isolate the center.
+
+    ``panel`` maps series keys (group ids, conventionally including
+    ``"__portfolio__"``) to their **full** histories; at each call the
+    panel is truncated to the input's length, so only data strictly
+    before the forecast origin enters the fit (PIT-safe; pinned by a
+    prefix-invariance regression test). The input series need not be a
+    panel member — the router generalizes through the features — but
+    in the group-forecaster harness it always is.
+
+    **No silent degradation:** there is deliberately no ``try/except``
+    around fit/predict. An empty pool (panel series all shorter than
+    ``backtest_start + 1``) raises ``ValueError``; any router failure
+    raises. The exp78 defect class must be impossible to reintroduce
+    silently.
+
+    Parameters
+    ----------
+    panel:
+        Fit pool: series key -> full history of attrition rates.
+    h:
+        Kept for call-site compatibility; returns the next-step vector.
+    regime_spec:
+        ``"generic"`` (default; exp79's frozen choice for short series)
+        or ``"m4"``. Other values raise ``ValueError``.
+    models:
+        Expert names; subset of {"naive", "ets", "arima"}.
+    backtest_start:
+        First inner backtest origin (prefix length).
+    features:
+        Optional subset of the 10 canonical ``series_features`` names
+        for the router's logistic fit (exp82 R2a variant); the regime
+        label rule always sees the full feature dict. Unknown names
+        raise ``ValueError``.
+    normalize_crps:
+        exp82 R2e variant (default off): divide each pooled record's
+        per-expert CRPS by that record's naive CRPS before fitting, so
+        expert selection is scale-free across heterogeneous series
+        (the raw pooled mean is dominated by the largest-scale series;
+        exp82's diagnosis found it inverts the stressed-regime expert).
+    spread_method:
+        ``"gaussian"`` (default) or ``"empirical"`` — as in
+        :func:`v2_forecaster_fn`.
+
+    """
+    if spread_method not in ("empirical", "gaussian"):
+        raise ValueError(f"spread_method must be 'empirical' or 'gaussian', got {spread_method!r}")
+    core = _PooledRouter(
+        panel,
+        regime_spec=regime_spec,
+        models=models,
+        backtest_start=backtest_start,
+        features=features,
+        normalize_crps=normalize_crps,
+    )
+
+    def _forecast(series: np.ndarray) -> np.ndarray:
+        s = np.asarray(series, dtype=float)
+        q = core.center(s) + _spread_offsets(s, spread_method)
+        return np.clip(np.maximum.accumulate(q), 0.0, 1.0)
 
     return _forecast
