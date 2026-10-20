@@ -1,6 +1,9 @@
 # exp85: Shift-Proof Conformal Calibration — Changepoint Banks + Bias-Corrected ACI
 
-**Status: IN PROGRESS (2026-10-20).** Pre-registration below is FROZEN
+**Status: COMPLETE (2026-10-20) — split verdict: testbed 1 (Chronos-2
+UQ) bar CLEARED, BC family ships as documented option; testbed 2 (group
+forecaster) bar NOT cleared after 5 rounds, adaptive modes ship as
+options only; no default flips.** Pre-registration below is FROZEN
 before any exp85 run. Results and the iteration log are appended as
 rounds complete.
 
