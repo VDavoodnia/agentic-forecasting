@@ -316,4 +316,598 @@ table.score td.bar-cell{width:34%}
 </div>
 <p class="foot" style="margin-top:16px">One correction on the range layer work: an earlier test (exp74) reported that story features from news improved range estimates (p=2.0e-11). exp76 found a one-month keying offset in that test, a lookahead that inflated the figure. With the offset fixed, the gain is real but smaller: story features beat numbers-only features by 2.8% (p=1.9e-06). The deck cites the corrected size.</p>
 <p class="foot" style="margin-top:16px">TD-One &middot; Agentic Solutions for Loan Attrition Prediction &middot; deck updated 2026-10-20 &middot; source: td-one/docs/slides/TD-One-Slides.html</p>
-</div></div></body></html>
+</div><style>
+.pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.5;background:var(--mutbg);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;white-space:pre-wrap;word-break:break-word;margin:8px 0 14px}
+.paper h3{font-size:16.5px;margin:18px 0 6px}
+.paper h3:first-child{margin-top:2px}
+.paper h4{font-size:14.5px;margin:14px 0 4px}
+.paper p{font-size:13.5px;line-height:1.55;margin:0 0 10px}
+.paper table{margin-bottom:14px}
+.paper td,.paper th{font-size:12.8px}
+.paper .src{font-size:12px;color:var(--mut);margin:-6px 0 12px}
+.divider{background:var(--ink);color:var(--surf);border-radius:16px;padding:30px;margin-bottom:22px}
+.divider h2{font-size:26px;margin:0 0 6px}
+.divider p{font-size:14px;line-height:1.55;margin:0;opacity:0.85}
+.divider .k{font-size:11.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;opacity:0.7}
+.gloss td:first-child{width:22%;font-weight:700}
+.stackbar{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0 4px}
+.stackbar i{display:block;height:100%}
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (max-width:760px){.kv{grid-template-columns:1fr}}
+</style>
+<div class="divider"><div class="k">Part II</div><h2>The Paper: Method, Data, Models, Results</h2><p>The eight slides above are the executive summary. What follows is the same work written the way a paper writes it: the general architecture, every dataset with its metadata, every model with its citation, one final-results table per dataset, and visualizations of inputs, middle layers, and outputs. Ablations, prompts, parameters, a glossary, and the full register of failed experiments are in the appendices. Every number is traceable to the experiment report named in its caption. Two test worlds are kept separate throughout: World A (synthetic mortgage book) and World B (public and real data).</p></div>
+<div class="slide paper"><div class="k">Section 1</div><h2>Architecture (General, Benchmark-Independent)</h2>
+<p class="sub">The figure on Slide 3 is the architecture. This section states the design principles that hold on every benchmark, and the evidence behind each component.</p>
+<h3>Design principles</h3>
+<div class="grid2">
+<div class="blk"><h3>1. Point-in-time safety is a gate, not a guideline</h3><p>No feature, label, or context may use information dated after the forecast origin. Enforced in code (the point-in-time store and its as-of accessors) and audited by a leakage checker. A leak is treated like a failing test, not a follow-up. Source: docs/AGENTS.md, rule 1.</p></div>
+<div class="blk"><h3>2. The language model never outputs numbers</h3><p>Language models emit structure only: regime labels, confidences, selections, directions, explanations. Every number in a forecast comes from statistical code. Source: docs/AGENTS.md, research conventions.</p></div>
+<div class="blk"><h3>3. Gates before complexity</h3><p>Every added component must first pass a gate that can refuse it: the do-nothing gate in the committee, the validation gate in Layer-2, the directional-accuracy gate in the signal service. When evidence is weak, the system falls back to the simple option. Source: exp6, exp32, exp73, exp70-MS.</p></div>
+<div class="blk"><h3>4. The significance filter</h3><p>A component ships only if it beats the current best significantly on paired tests. exp51 (the kitchen sink) is the validation: recombining all nonsignificant positives made the method worse everywhere, so the filter was keeping out noise, not gains.</p></div>
+<div class="blk"><h3>5. Honest ranges</h3><p>Ranges are calibrated conformally and reported with their width. Coverage without width is not a result; width without coverage is not either. Source: exp5, exp10, exp74, exp76.</p></div>
+<div class="blk"><h3>6. Kill criteria are tripwires, not executions</h3><p>A failed gate triggers diagnosis and 4 to 5 improvement rounds (ablations, parameter search, prompt tuning) before anything is called dead. The iteration log ships with each report. Source: docs/MACRO_SIGNAL.md; standing instruction 2026-10-19.</p></div>
+</div>
+<h3>Components and their evidence (the committee)</h3>
+<table>
+<tr><th style="width:26%">Component</th><th style="width:16%">Source</th><th>Evidence</th></tr>
+<tr><td>Regime-probability router</td><td>exp43</td><td>M4 Monthly 0.1282 vs equal weights 0.1295, p=0.018. The backbone: hand-written regimes, logistic regression to regime probabilities, one expert per regime, soft combination.</td></tr>
+<tr><td>Trust flag (EASY / HARD)</td><td>exp32</td><td>Easy cases beat climatology by more, hard cases do not: a +7.2 percentage point gap. Forecasts carry the flag so users know when to trust them.</td></tr>
+<tr><td>Do-nothing gate</td><td>exp6 + decision policy</td><td>Falls back to the global best single model when the router is uncertain and evidence is weak. Fires on about 5% of M4 origins.</td></tr>
+<tr><td>Conformal calibration</td><td>exp5 / exp10</td><td>Coverage 0.671 to 0.914 on the classical track; volatility floor on interval widths.</td></tr>
+<tr><td>News modulation (gated, off by default)</td><td>exp44</td><td>Mechanism proven on synthetic data (p=0.0068); closed on real data by exp46. Kept in the design as a gated, disabled module.</td></tr>
+<tr><td>LLM sensor (gated)</td><td>exp11</td><td>3.59 vs 4.82 against the baseline of its test; blends 50/50 only when confidence is at least 0.75.</td></tr>
+<tr><td>Gated LLM expert (v2)</td><td>exp55 to exp59, exp64</td><td>Gemini Flash as a direct quantile forecaster, admitted only by the series-type gate (Appendix B). Wins on Food CPI, gated off on seasonal data.</td></tr>
+<tr><td>Layer-2 validation gate</td><td>exp73</td><td>Deterministic analyst toolbox plus walk-forward gating over any base forecaster. Repairs harm (OSFI uninsured +10.7% to +0.8%) and protects the group forecaster under shifts (exp72, p below 1e-8).</td></tr>
+<tr><td>Range layer (CQR)</td><td>exp74, exp76</td><td>Conformalized quantile regression is the default uncertainty layer. A story-feature fusion improves it where long histories exist (Food CPI). Full treatment in Section 5 and Appendix A.</td></tr>
+</table>
+<p class="src">Source: docs/METHODOLOGY.md sections 7.1 and 7.2; docs/PHASE2_UPDATE.md.</p>
+</div>
+<div class="slide paper"><div class="k">Section 2</div><h2>Datasets</h2>
+<p class="sub">Every dataset the program touched, with source and size. "Origins" are forecast dates; "cases" are scored forecasts. Where the repo does not record a field, it says so.</p>
+<h3>Public and real data (World B)</h3>
+<table>
+<tr><th style="width:15%">Dataset</th><th style="width:24%">What it is</th><th style="width:13%">Source</th><th style="width:20%">Size</th><th style="width:9%">Freq.</th><th style="width:9%">Horizon</th><th>Origins / cases</th></tr>
+<tr><td><b>M4 Monthly</b></td><td>Monthly series from the M4 forecasting competition (mixed topics), the classical track's main test bed</td><td>Monash forecasting repository subset</td><td>100 series; n=600 scored cases in blocked 5-fold cross-validation</td><td>Monthly</td><td>Blocked CV</td><td>600 cases (exp47); 100-series subset for news tests (exp62)</td></tr>
+<tr><td><b>Tourism Monthly</b></td><td>Monthly tourism series from the Monash repository</td><td>Monash forecasting repository</td><td>366 series</td><td>Monthly</td><td>h=24</td><td>Full ladder on all 366 (exp60); 30-series subsample for the LLM test (exp59); 20-series UQ sweep subset (exp76)</td></tr>
+<tr><td><b>M3 Monthly</b></td><td>Monthly series from the M3 forecasting competition</td><td>Monash forecasting repository</td><td>1,428 series</td><td>Monthly</td><td>h=18</td><td>Full ladder (exp61); 30-series LLM subsample (exp59); 20-series UQ subset (exp76)</td></tr>
+<tr><td><b>Food CPI</b></td><td>US CPI-U for Food, seasonally adjusted. The one benchmark where the LLM expert earns its keep. Earlier internal docs mislabeled it Canadian; the series never changed.</td><td>FRED series CPIUFDSL</td><td>1 series, 2010-01 to 2026-09 (201 monthly values)</td><td>Monthly</td><td>h=1 (ladder); up to h=6 (UQ)</td><td>59 origins (ladder, exp52 to exp58); 666 scored cases in the UQ battery (exp74, exp76)</td></tr>
+<tr><td><b>BoC decisions</b></td><td>Bank of Canada policy rate decisions (hold / hike / cut) with macro features known at each meeting</td><td>Bank of Canada, assembled in benchmarks/boc_rates</td><td>119 meetings, 2009 to 2023 (corrected 2026-10-19: 24 stale post-2023 rows removed); 23 non-hold decisions</td><td>Event</td><td>Next meeting</td><td>119 meetings scored as accuracy</td></tr>
+<tr><td><b>WTI oil</b></td><td>West Texas Intermediate crude oil price, the energy use-case series. A near random walk at this horizon; kept as a no-signal diagnostic.</td><td>benchmarks/energy_oil</td><td>1 series (length not recorded in the repo)</td><td>Not recorded</td><td>Short</td><td>Agent abstained on 92% of origins</td></tr>
+<tr><td><b>Freddie Mac SMM</b></td><td>Single monthly mortality: the monthly rate at which loans leave a US mortgage portfolio (prepayment plus attrition)</td><td>Freddie Mac Single-Family Loan-Level Dataset, aggregated (local only, cannot redistribute)</td><td>63 months, Jan 2021 to Mar 2026</td><td>Monthly</td><td>h=1</td><td>50 origins (exp18b, exp65); 27 in the early proposed-method test (exp47)</td></tr>
+<tr><td><b>OSFI M4 runoff</b></td><td>Canadian chartered-bank mortgage balances and runoff by segment: insured, uninsured, variable insured, variable uninsured. Not related to the M4 competition.</td><td>OSFI M4 return via Statistics Canada table 10100006</td><td>484 balance rows, 480 runoff rows; 4 segments; 121 months, 2016-07 to 2026-07. Point-in-time rule: observed as of month + 2</td><td>Monthly</td><td>h=1, 3, 6</td><td>n=300 pooled cases at h=1 (exp70, exp73)</td></tr>
+</table>
+<h3>Synthetic data and data assets (World A and shared assets)</h3>
+<table>
+<tr><th style="width:15%">Dataset</th><th style="width:24%">What it is</th><th style="width:13%">Source</th><th style="width:20%">Size</th><th style="width:9%">Freq.</th><th style="width:9%">Horizon</th><th>Origins / cases</th></tr>
+<tr><td><b>SimulatorV2 mortgage book</b></td><td>Synthetic Canadian mortgage book with planted borrower cohorts (low_rate, osfi_exempt, family_squeeze, control), so group-recovery and forecasting claims can be scored against ground truth</td><td>Built in-repo: src/td_one/data_gen (MortgageSimulatorV2)</td><td>10,000 loans x 66 months (base simulator); segment panels per run</td><td>Monthly</td><td>h=6 panels; h=1 scoring in the group harness</td><td>Group harness: seeds 7/42/123 plus fresh 2024/555/9001, 207 scored cells per world (exp78, exp79, exp80)</td></tr>
+<tr><td><b>Shift battery</b></td><td>Seven planted distribution shifts applied to simulator series: S1 rate shock, S2 policy intervention, S3 regional divergence, S4 seasonal break, S5 correlation breakdown, S6 volatility regime, S7 composition drift</td><td>Built in-repo: src/td_one/data_gen/shift_scenarios.py</td><td>Severities 0.5 to 4 sigma; onset month 30 of 48</td><td>Monthly</td><td>h=6</td><td>9 rolling origins (3 pre, 3 straddle, 3 post); placebo (no-shift) control, pre-shift degradation +0% in all 28 cells (exp67)</td></tr>
+<tr><td><b>News corpus</b></td><td>Dated news articles backing the news tool, the story pipeline, and the signal service. Stored locally (database is gitignored; a snapshot is distributed with the repo)</td><td>GDELT (free) and Perplexity (paid) backfills into data/news/news_2026.db</td><td>17,906 articles; 544 with full text bodies; 27 fetch topics (12 demographic, 15 macro)</td><td>Monthly cells</td><td>n/a</td><td>Consumed point-in-time only (articles visible as of the origin)</td></tr>
+<tr><td><b>Macro signal store</b></td><td>Monthly structured signals read from the news corpus by a language model: direction (-2 to +2), risk level, certainty, per category</td><td>Macro Signal Service: src/td_one/news/macro_signal.py</td><td>725 signals; 22 categories x 36 months (2023-10 to 2026-09); 792 cells fetched, 67 zero-article cells</td><td>Monthly</td><td>n/a</td><td>Calibration: 9 anchored categories against FRED series (exp70-MS)</td></tr>
+<tr><td><b>Competitor rates</b></td><td>Posted and broker mortgage rates, tested as a refinancing-pressure covariate for runoff</td><td>Bank of Canada Valet (posted, 622 months 1975 to 2026); RateHub snapshots via the Wayback Machine (54 usable broker months, 2022-01 to 2026-09)</td><td>622 posted months; 54 broker months</td><td>Monthly</td><td>n/a</td><td>53 in-sample months; settled negative out of sample (exp71b)</td></tr>
+</table>
+<p class="src">Sources: docs/FINAL_RESULTS.md; docs/METHODOLOGY.md sections 5 and 9; docs/PHASE2_UPDATE.md (data assets); docs/MACRO_SIGNAL.md (coverage); benchmarks/ READMEs; experiments/exp67_report.md (protocol).</p>
+</div>
+<div class="slide paper"><div class="k">Section 3</div><h2>Models</h2>
+<p class="sub">Every model used anywhere in the program: inside our method, as a benchmark, or as a competitor. Citations are as recorded in the repo's surveys (docs/LITERATURE_SURVEY.md, docs/UQ_SURVEY.md, docs/METHODOLOGY.md). Where the repo does not record a citation, the cell says so rather than guessing.</p>
+<table>
+<tr><th style="width:17%">Model</th><th style="width:33%">What it is</th><th style="width:15%">Role here</th><th>Citation (as recorded)</th></tr>
+<tr><td><b>Naive (last value)</b></td><td>Forecast equals the last observed value, with ranges from past one-step errors</td><td>Baseline; center candidate in the group forecaster (exp79)</td><td>Standard baseline; no citation recorded</td></tr>
+<tr><td><b>Seasonal naive</b></td><td>Forecast equals the value from the same month last year</td><td>Expert (seasonal regime); best single model on Tourism</td><td>Standard baseline; Hyndman and Athanasopoulos, Forecasting: Principles and Practice (reference list)</td></tr>
+<tr><td><b>ETS</b></td><td>Exponential smoothing state-space models: level, trend, and seasonal components fitted per series, with proper predictive distributions</td><td>Expert (trending and noisy regimes); best single model on M3; the fair classical baseline on SMM</td><td>Hyndman and Athanasopoulos, Forecasting: Principles and Practice, 2nd ed.</td></tr>
+<tr><td><b>ARIMA</b></td><td>Autoregressive integrated moving average models fitted per series</td><td>Expert (seasonal regime in the original router spec)</td><td>Standard method; Hyndman and Athanasopoulos (reference list)</td></tr>
+<tr><td><b>M0: Jeffreys Beta-Binomial</b></td><td>Bayesian rate model: per-segment Beta posterior with Jeffreys prior over trailing windows (m0_w3 is the 3-month variant); predictive quantiles from the posterior predictive</td><td>The honest floor on attrition panels; reference arm in exp79</td><td>In-house baseline (experiments/README.md, model ladder)</td></tr>
+<tr><td><b>LogScaleCalibrator</b></td><td>Maps a foundation model's raw quantiles to calibrated intervals in log space</td><td>Component: calibration for TSFM forecasts (exp18b)</td><td>In-house: src/td_one/models/tsfm_calibration.py</td></tr>
+<tr><td><b>Chronos-2</b></td><td>Pretrained time-series foundation model (455.8 MB of weights), used zero-shot; emits native quantiles</td><td>Benchmark and red-team subject; base forecaster of the uncertainty layer (exp67, exp74)</td><td>Model card in models/MANIFEST.json; paper citation not recorded in the repo. Conformal behavior studied in Achour et al. 2025 (below)</td></tr>
+<tr><td><b>TimesFM-2.5</b></td><td>Pretrained time-series foundation model (882.3 MB of weights), used zero-shot</td><td>Benchmark; strongest single model on SMM and Tourism</td><td>Paper citation not recorded in the repo</td></tr>
+<tr><td><b>TimesFM-1.0</b></td><td>The earlier TimesFM release, as a published row in the Monash benchmark table (Nov 2024)</td><td>Published comparison only (Tourism MASE 2.273)</td><td>Monash benchmark table, via docs/FINAL_RESULTS.md</td></tr>
+<tr><td><b>DeepAR</b></td><td>Published baseline in the Monash benchmark table</td><td>Published comparison only (Tourism MASE 1.409, the table's best)</td><td>Monash benchmark table, via docs/FINAL_RESULTS.md</td></tr>
+<tr><td><b>Gemini Flash (gemini-3.5-flash)</b></td><td>Google language model reached through the Vector Institute proxy; elicited as an 11-level quantile forecaster with the V1 prompt</td><td>The gated LLM expert in v2; the ladder's forecaster (exp55 to exp59)</td><td>Proxy model convention: repo AGENTS.md (LITE_MODEL / ADVANCED_MODEL)</td></tr>
+<tr><td><b>Gemini Flash-Lite (gemini-3.1-flash-lite-preview)</b></td><td>The cheaper proxy model; runs the high-volume reading jobs</td><td>Signal extraction (Macro Signal Service), story pipeline, factor/orchestrator calls (exp70-MS, exp74, exp75)</td><td>Proxy model convention: repo AGENTS.md</td></tr>
+<tr><td><b>Groq gpt-oss-120b</b></td><td>Open-weight language model on Groq, reached through a vault-surrogate client (the key never enters the process)</td><td>Agent experiments, diagnostics, and the LLM-as-combiner test (exp48, exp63)</td><td>In-house client: src/td_one/agent/groq_client.py</td></tr>
+<tr><td><b>Vector LastValuePredictor</b></td><td>The bootcamp's floor baseline: last value as the forecast</td><td>Competitor baseline (exp52: we beat it by 11.8%, p=7.1e-04)</td><td>Vector Institute bootcamp codebase (VectorInstitute/agentic-forecasting)</td></tr>
+<tr><td><b>Vector QuantileGridLLMPredictor</b></td><td>The bootcamp's LLM predictor: quantile-grid elicitation from a language model</td><td>Competitor (exp53: it beat our method by 45% on Food CPI, p=5.4e-05; our prompts replicate its shape, docs/PROMPT_LEAKAGE_AUDIT.md)</td><td>Vector Institute bootcamp codebase; prompt lineage documented in src/td_one/llm_rungs/prompts.py</td></tr>
+<tr><td><b>Equal weights</b></td><td>Simple average of all experts' quantiles</td><td>The baseline every combination must beat</td><td>The forecast combination puzzle: Smith and Wallis 2009 (cited in docs/METHODOLOGY.md)</td></tr>
+<tr><td><b>Best single</b></td><td>The best individual expert, picked with hindsight per dataset</td><td>Baseline (an oracle-flavored bar: it uses test-set knowledge to pick)</td><td>n/a</td></tr>
+<tr><td><b>FFORMA-lite</b></td><td>Gradient-boosted meta-learner over 10 series features, learning combination weights</td><td>Benchmark (exp42: honest negative, p=0.156)</td><td>FFORMA-style, per experiments/README.md; the original FFORMA citation is not recorded in the repo. Data scale context (about 100k series) from docs/METHODOLOGY.md</td></tr>
+<tr><td><b>Proposed method v1</b></td><td>Regime-probability router plus trust flag, do-nothing gate, and conformal calibration over classical experts</td><td>Our method, classical form (exp47)</td><td>This work: src/td_one/agent/proposed_method.py; docs/PROPOSED_METHOD.md</td></tr>
+<tr><td><b>Proposed method v2</b></td><td>v1 plus the gated LLM expert (Gemini Flash, V1 prompt), admitted by a dataset-level and series-level gate</td><td>Our method, shipped form (exp64)</td><td>This work: src/td_one/agent/proposed_method_v2.py</td></tr>
+<tr><td><b>Layer-2 gate (meta-router)</b></td><td>Walk-forward validation gating with a deterministic analyst toolbox: accept the base forecaster only if it beats naive by a margin beyond noise, with changepoint, volatility, and coverage vetoes</td><td>Component: deployment wrapper on single-series targets (exp73)</td><td>This work: src/td_one/agent/meta_router.py and layer2_tools.py</td></tr>
+<tr><td><b>CQR</b></td><td>Conformalized quantile regression: widen a model's native quantile interval by a calibrated exceedance score from past origins</td><td>Component: the default range layer (exp74)</td><td>Romano et al., "Conformalized Quantile Regression," NeurIPS 2019</td></tr>
+<tr><td><b>ACI</b></td><td>Adaptive conformal inference: the target level updates online after each hit or miss</td><td>Component: regime-gated option for volatile subsets (exp74)</td><td>Gibbs and Candes, "Adaptive Conformal Inference under Distribution Shift," NeurIPS 2021</td></tr>
+<tr><td><b>EnbPI-style rolling conformal</b></td><td>Interval from a sliding window of past absolute residuals</td><td>Baseline arm in the UQ battery (exp74, arm S3)</td><td>Xu and Xie, "Conformal Prediction Interval for Dynamic Time-Series (EnbPI)," ICML 2021</td></tr>
+<tr><td><b>Weighted conformal</b></td><td>Conformal with residuals weighted by recency and similarity to current conditions</td><td>UQ battery arm (exp74, S5): best Food CPI CRPS but failed the coverage bar</td><td>WCP family: Tibshirani et al. 2019; Guan 2023; Ghosh 2023; Mao et al. 2024 (as recorded in docs/UQ_SURVEY.md)</td></tr>
+<tr><td><b>Meta error model (GBM)</b></td><td>A gradient-boosted model that predicts the percentile of the coming forecast error from pre-origin features (numeric, or numeric plus story features), used to modulate the conformal level</td><td>Component: the fusion that wins on Food CPI (exp74 S7/S8, exp76 F1)</td><td>Closest published match: selective forecasting via metalearning, arXiv 2606.23448 (docs/UQ_SURVEY.md)</td></tr>
+<tr><td><b>MNLogit</b></td><td>Multinomial logistic regression for the three-way BoC decision</td><td>Benchmark (exp30: killed, the simple rule beats it)</td><td>Standard method; no citation recorded</td></tr>
+<tr><td><b>James-Stein shrinkage</b></td><td>Shrinks agent adjustments toward zero by an amount set by their noise; also tested to shrink group forecasts toward the global forecast (exp72 tau sweep)</td><td>Component of the decision policy (exp6); ablation in exp72</td><td>Classical estimator; used as recorded in docs/LITERATURE_SURVEY.md (shrinkage k=0.5)</td></tr>
+</table>
+<p class="src">Theta note: a Theta forecaster is not recorded anywhere in the repo's code or docs, so it does not appear above. It was not one of the shipped experts.</p>
+</div>
+<div class="slide paper"><div class="k">Section 4</div><h2>Results by Dataset (Final Results Only)</h2>
+<p class="sub">One table per dataset. Final configurations only; ablations and variants are in Appendix A. CRPS is the score unless marked (lower is better). Bold marks the winner of each table. P-values are paired tests against the row named.</p>
+<h3>M4 Monthly (World B, public; 100 series, n=600 blocked-CV cases)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td><b>Proposed v2 (= v1 here, LLM gate off)</b></td><td><b>0.1451</b></td><td>Beats equal weights (p=6.5e-09), best single (p=7.8e-11), and the router alone (p=6.7e-10)</td></tr>
+<tr><td>Router alone (exp43 architecture)</td><td>0.1490</td><td>The gates and conformal add real value beyond routing</td></tr>
+<tr><td>Best single model</td><td>0.1505</td><td></td></tr>
+<tr><td>Equal weights</td><td>0.1507</td><td></td></tr>
+<tr><td>Proposed with news module on (exp62)</td><td>0.1450</td><td>No material change; the news gate fires on 97% of origins and moves nothing</td></tr>
+<tr><td>Chronos-2 / TimesFM-2.5 / naive (common 0.10 to 0.90 grid, raw units)</td><td>351.18 / 358.13 / 462.84</td><td>TSFMs beat naive by 24.1% / 22.6% on this grid (exp14/R2-4); different scale from the rows above</td></tr>
+</table>
+<p class="src">Source: exp47, exp62; docs/METHODOLOGY.md sections 3.2 and 7.3. On the smaller exp42/43 subsample the scale differs (router 0.1282 vs equal 0.1295); see Appendix A.</p>
+<h3>Tourism Monthly (World B, public; 366 series, h=24)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td>TimesFM-2.5 (zero-shot)</td><td><b>0.0965</b></td><td>Best overall; about 30% better than seasonal naive</td></tr>
+<tr><td>Chronos-2 (zero-shot)</td><td>0.0972</td><td></td></tr>
+<tr><td>Proposed with TSFMs in the zoo</td><td>0.0974</td><td>Ties the best single (p=0.42): when one model dominates, the router matches it and adds nothing</td></tr>
+<tr><td><b>Proposed v2 (classical zoo)</b></td><td><b>0.1282</b></td><td>Best of the classical zoo: beats equal (p=1.9e-68) and best single (p=2.6e-34)</td></tr>
+<tr><td>Best single (seasonal naive)</td><td>0.1387</td><td>Our seasonal naive's MASE is 1.080, better than every published Monash baseline (best: DeepAR 1.409)</td></tr>
+<tr><td>Equal weights</td><td>0.1869</td><td></td></tr>
+<tr><td>Proposed with news on</td><td>0.1288</td><td>No help (news-off: 0.1282)</td></tr>
+<tr><td>LLM as combiner (exp63, 60-series test)</td><td>0.1169</td><td>Significantly worse than the statistical router on the same test (0.0992, p=1.7e-08)</td></tr>
+</table>
+<p class="src">Source: exp60, exp62/63 line, docs/FINAL_RESULTS.md. Published MASE context: TimesFM-2.5 (ours, zero-shot) 0.996; TimesFM-1.0 in the 2024 Monash table 2.273. The gap is 19 months of model progress, not a methods claim.</p>
+<h3>M3 Monthly (World B, public; 1,428 series, h=18)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td><b>Proposed v2 (= v1, gate off)</b></td><td><b>0.1476</b></td><td>Beats equal weights (p=2.7e-44) and best single ETS (p=3.5e-35)</td></tr>
+<tr><td>Best single (ETS)</td><td>0.1630</td><td></td></tr>
+<tr><td>Equal weights</td><td>0.1641</td><td></td></tr>
+<tr><td>Proposed with news on</td><td>0.1472</td><td>No help (news-off: 0.1476)</td></tr>
+</table>
+<p class="src">Source: exp61; docs/FINAL_RESULTS.md. The LLM generalizability test on M3 is an ablation-class result (different protocol): Appendix A and Appendix D (exp59).</p>
+<h3>Food CPI (World B, public; FRED CPIUFDSL, 59 origins)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td>LLM expert alone, V1 prompt (exp57)</td><td><b>0.4262</b></td><td>The single best forecaster on this dataset</td></tr>
+<tr><td>Hybrid router, 4 LLM experts (exp58)</td><td>0.4289</td><td>Beats Vector (below) by 24.6%, paired p=0.009; loses to V1 alone</td></tr>
+<tr><td>Hybrid router, V1 experts (exp58)</td><td>0.4526</td><td>Beats Vector by 20.4%; loses to V1 alone (p=0.045)</td></tr>
+<tr><td>LLM expert, V2 prompt (exp57)</td><td>0.4599</td><td>Extra macro context hurt vs V1 (p=0.20, not significant)</td></tr>
+<tr><td>Proposed + LLM expert (exp55)</td><td>0.5057</td><td>Beats proposed (p=9.8e-07) and LLM-generic alone (p=0.037)</td></tr>
+<tr><td>LLM expert, generic prompt</td><td>0.5158</td><td></td></tr>
+<tr><td><b>Proposed v2 (shipped configuration)</b></td><td><b>0.5322</b></td><td>Beats v1 by 45% (p=4.3e-06). Against Vector's 0.5688 the 6.4% edge is directional, likely not significant at n=59; the deck states this caveat wherever the comparison appears</td></tr>
+<tr><td>Vector QuantileGridLLMPredictor</td><td>0.5688</td><td>Beat our then-current proposed method decisively in exp53 (0.5688 vs 1.0339, p=5.4e-05)</td></tr>
+<tr><td>Proposed v1 (classical)</td><td>0.9661</td><td></td></tr>
+<tr><td>Proposed (exp52 protocol)</td><td>1.0662</td><td>Beats Vector's LastValuePredictor 1.2091 by 11.8% (p=7.1e-04, 50/59 origins)</td></tr>
+</table>
+<p class="src">Source: exp52 to exp58, exp64; docs/FINAL_RESULTS.md (with its significance caveat). Range-layer results on this dataset (Chronos-2 base, n=666): native ranges 1.3035; plain CQR 1.2824 (p=1.7e-04); CQR plus story fusion, horizon-gated 1.2587 (p=2.0e-05). Source: exp74, exp76. The fusion is a range result, not a point-forecast result.</p>
+<h3>Bank of Canada decisions (World B, public; 119 meetings, accuracy, higher is better)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">Accuracy</th><th>Significance / note</th></tr>
+<tr><td><b>Simple rule (rate momentum + inflation gap)</b></td><td><b>72.2%</b></td><td>On the corrected 119-meeting set (2026-10-19)</td></tr>
+<tr><td>Climatology (historical frequencies)</td><td>69.4%</td><td></td></tr>
+<tr><td>Rule, EASY cases (n=62)</td><td>88.7%</td><td>vs climatology 85.5%: the trust flag separates cases the rule reads well</td></tr>
+<tr><td>Rule, HARD cases (n=81)</td><td>81.5%</td><td>vs climatology 82.7%: on hard cases the rule should not be trusted (split measured on the pre-correction 143-meeting set)</td></tr>
+<tr><td>Gated proposed method</td><td>85.3%</td><td>exp47 protocol on the 143-meeting set (rule alone 84.6%)</td></tr>
+<tr><td>MNLogit</td><td>83.5%</td><td>Does not beat the rule (84.3%): killed in exp30, overparameterized at this n</td></tr>
+</table>
+<p class="src">Source: exp30, exp31, exp32, exp47; benchmarks/boc_rates/README.md. The agent autonomously discovered the inflation-gap x rate-momentum interaction (exp31), the program's existence proof that agents can do real data science.</p>
+<h3>OSFI M4 runoff (World B, real mortgage; pooled h=1, n=300)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td><b>Naive</b></td><td><b>0.00369</b></td><td>Aggregate runoff is near a random walk; naive is the bar</td></tr>
+<tr><td>Layer-2 gated v2 (arm C)</td><td>0.00374</td><td>+1.2% vs naive (p=0.081): the do-no-harm gate holds. At h=3 the gated system beats v2 itself by 6.8% (p=0.015)</td></tr>
+<tr><td>Proposed v2 (ungated)</td><td>0.00381</td><td>Ties naive on total runoff (-0.2%, p=0.54) but harms the uninsured segment (+10.7%, p=0.030)</td></tr>
+<tr><td>Gated lock-in variant (D2)</td><td>0.00384</td><td>Gate correctly stays silent; adds nothing</td></tr>
+<tr><td>Lock-in correction (D, ungated)</td><td>0.00409</td><td>+10.7% vs naive (p=0.006): the lock-in level carries no signal here (in-sample |r| at most 0.043)</td></tr>
+<tr><td>Uninsured segment: v2 harm, then gated</td><td>+10.7% then +0.8%</td><td>p=0.030 before the gate; p=0.32 (not significant) after. The gate's clearest win is harm repair</td></tr>
+</table>
+<p class="src">Source: exp70, exp73; docs/PHASE2_UPDATE.md. OSFI runoff is the program's honest real-data null benchmark: claims must beat naive here, or be gated until they do no harm.</p>
+<h3>Freddie Mac SMM (World B, real mortgage; 63 months)</h3>
+<table>
+<tr><th style="width:34%">Benchmark</th><th style="width:14%">CRPS</th><th>Significance / note</th></tr>
+<tr><td>LLM expert alone (Gemini Flash, V1)</td><td><b>0.000492</b></td><td>Ties TimesFM-2.5 calibrated</td></tr>
+<tr><td>TimesFM-2.5 calibrated</td><td>0.000497</td><td>Beats ETS + residuals by 12.2% (p=0.076, not significant): the classical ceiling on this series</td></tr>
+<tr><td>Proposed v2 (gated LLM)</td><td>0.000508</td><td>vs v1 p=0.69: neutral</td></tr>
+<tr><td>Proposed v1</td><td>0.000512</td><td></td></tr>
+<tr><td>ETS + residuals</td><td>0.000566</td><td>The fair classical baseline</td></tr>
+<tr><td>M0 (m0_w3)</td><td>0.000613</td><td></td></tr>
+</table>
+<p class="src">Source: exp18b, exp65; docs/FINAL_RESULTS.md. Agent-discovered features added +1.21% (not significant); real BoC events hurt (-13.04%, already priced in): exp33, exp34.</p>
+<h3>SimulatorV2 group forecaster (World A, synthetic; final shipped configuration)</h3>
+<table>
+<tr><th style="width:34%">Configuration</th><th style="width:14%">CRPS / coverage</th><th>Significance / note</th></tr>
+<tr><td><b>Shipped: trailing 6-month mean center + Gaussian spread + dead-group fallback split</b></td><td><b>0.0899 (control, group scope)</b></td><td>Center settled in exp79; fallback split (exp80) improves pooled CRPS in every world (control -1.6%, p=0.0075; heavy drift -3.5%, p=0.0042; rate shock -1.4%, p=0.0078)</td></tr>
+<tr><td>Same, under S1 rate shock at 4 sigma</td><td>0.1193; cov80 0.713</td><td>vs naive center p=4.7e-07</td></tr>
+<tr><td>Naive center + Gaussian spread (exp78 fix)</td><td>0.1042; cov80 0.714</td><td>vs the point-mass defect p=4.2e-45, win rate 0.89</td></tr>
+<tr><td>Fitted v2 router as center (exp79)</td><td>0.0925; cov80 0.618</td><td>Rejected: significantly worse than the naive center on control (p=0.012). Available as an option, not the default</td></tr>
+<tr><td>M0 reference center (exp79)</td><td>0.0862</td><td>Not significantly different from the trailing-mean center (p=0.30); the simpler center ships</td></tr>
+<tr><td>Point-mass defect (pre-exp78)</td><td>0.1320; cov80 0.075</td><td>The router had never run; every forecast was the last value repeated</td></tr>
+<tr><td>Grouping cost (deterministic groups vs global)</td><td>+0.0018 CRPS</td><td>Re-measured on exp66c's own scoring with the settled center (exp79). The published +0.009 to +0.016 was mostly the point-mass artifact</td></tr>
+<tr><td>Group conformal layer (exp80a)</td><td>Not shipped</td><td>Hit nominal control coverage but failed the fresh-seed shock bar; available behind a flag. Appendix A and D</td></tr>
+</table>
+<p class="src">Source: exp78, exp79, exp80; docs/PHASE2_UPDATE.md. Cells: 207 seed x origin x group cells per world, member-weighted, seeds 7/42/123 with fresh-seed replication (2024/555/9001).</p>
+<h3>Shift battery (World A, synthetic; placebo-controlled CRPS change vs no-shift control)</h3>
+<table>
+<tr><th style="width:22%">Shift</th><th style="width:18%">At 1 sigma</th><th style="width:18%">At 4 sigma</th><th>Verdict</th></tr>
+<tr><td>S1 rate shock</td><td>+7 to 13%, n.s.</td><td><b>+185 to 228%</b>, p below 0.05</td><td>Universal killer. Coverage collapse: Chronos-2 0.89 to 0.53, M0 0.61 to 0.08</td></tr>
+<tr><td>S2 policy intervention</td><td>-1 to +4%, n.s.</td><td>+65 to 79%, p below 0.05</td><td>Breaks at 4 sigma only</td></tr>
+<tr><td>S3 regional divergence</td><td>-7 to -11%, n.s.</td><td>+30 to 59%, p below 0.05</td><td>Breaks at 4 sigma even though the portfolio aggregate barely moves</td></tr>
+<tr><td>S4 seasonal break</td><td>-10 to -13%, n.s.</td><td>-11 to -13%, n.s.</td><td>Never breaks; the break slightly helps</td></tr>
+<tr><td>S5 correlation breakdown</td><td>-5 to -11%, n.s.</td><td>-1 to -8%, n.s.</td><td>Never breaks; invisible to univariate models by construction</td></tr>
+<tr><td>S6 volatility regime</td><td>+16 to 29% (M0 significant)</td><td>+33 to 50% (M0 significant)</td><td>Partial: M0 breaks, TSFMs degrade without significance</td></tr>
+<tr><td>S7 composition drift</td><td>-1 to -5%, n.s.</td><td>+32 to 37%, n.s. (post-shift TSFMs +61 to 75%, significant)</td><td>Marginal at straddle origins; hurts after the shift</td></tr>
+</table>
+<p class="src">Source: exp67 (2 seeds x 9 rolling origins, h=6, onset month 30; pre-shift degradation +0% in all 28 cells, the leakage gate). Chronos-2 has the best absolute CRPS in 6 of 8 shift settings; in relative terms no model is more robust than another: everyone breaks together.</p>
+</div>
+<div class="slide paper"><div class="k">Section 5</div><h2>Visualizations: Inputs, Middle Layers, Outputs</h2>
+<p class="sub">HTML-native charts. Measured charts are captioned with their source experiment; the one schematic is labeled as a schematic.</p>
+<h3>Output: head-to-head CRPS by dataset (World B)</h3>
+<div class="brow"><div class="blab"><b>M4 Monthly</b><span>proposed vs equal vs best single</span></div><div>
+<div class="bbar"><i style="width:290px;background:#1d7a3a"></i><em>0.1451 proposed</em></div>
+<div class="bbar"><i style="width:301px;background:#9aa5b1"></i><em>0.1507 equal</em></div>
+<div class="bbar"><i style="width:301px;background:#9aa5b1"></i><em>0.1505 best single</em></div></div><div class="bchip">p=7.8e-11 vs best</div></div>
+<div class="brow"><div class="blab"><b>Tourism</b><span>classical zoo</span></div><div>
+<div class="bbar"><i style="width:257px;background:#1d7a3a"></i><em>0.1282 proposed</em></div>
+<div class="bbar"><i style="width:374px;background:#9aa5b1"></i><em>0.1869 equal</em></div>
+<div class="bbar"><i style="width:278px;background:#9aa5b1"></i><em>0.1387 best single</em></div></div><div class="bchip">p=2.6e-34 vs best</div></div>
+<div class="brow"><div class="blab"><b>M3 Monthly</b><span>classical zoo</span></div><div>
+<div class="bbar"><i style="width:295px;background:#1d7a3a"></i><em>0.1476 proposed</em></div>
+<div class="bbar"><i style="width:328px;background:#9aa5b1"></i><em>0.1641 equal</em></div>
+<div class="bbar"><i style="width:326px;background:#9aa5b1"></i><em>0.1630 best single</em></div></div><div class="bchip">p=3.5e-35 vs best</div></div>
+<div class="brow"><div class="blab"><b>Food CPI</b><span>v2 vs v1 classical (the gate's one win)</span></div><div>
+<div class="bbar"><i style="width:160px;background:#1d7a3a"></i><em>0.5322 v2</em></div>
+<div class="bbar"><i style="width:290px;background:#9aa5b1"></i><em>0.9661 v1</em></div>
+<div class="bbar"><i style="width:171px;background:#22577a"></i><em>0.5688 Vector LLM</em></div></div><div class="bchip">p=4.3e-06 vs v1</div></div>
+<p class="src">Bars are proportional within each row only (each dataset has its own scale). Source: exp47, exp60, exp61, exp64; docs/FINAL_RESULTS.md. The same four wins appear as bars on Slide 5.</p>
+<h3>Middle layer: what the router sees (Tourism, World B)</h3>
+<p style="font-size:13.5px;margin:0 0 4px">Regime composition of the 366 Tourism series under the router's hand-written rules. The seasonal regime dominates, which is why the seasonal-naive expert carries this dataset, and why the LLM (weak on seasonal data) is gated off.</p>
+<div class="stackbar"><i style="width:80.9%;background:#22577a"></i><i style="width:19.1%;background:#9aa5b1"></i></div>
+<p class="src">Seasonal regime: 296 of 366 series (80.9%). Remaining 70 series: trending and noisy regimes (the split is not recorded). Source: exp60; docs/METHODOLOGY.md section 9.2. On M3 the composition is balanced across the three experts instead, which is why the same router wins there by a different route.</p>
+<h3>Output layer: coverage repair across the UQ sweep (World B, Chronos-2 base)</h3>
+<p style="font-size:13.5px;margin:0 0 4px">Share of outcomes inside the 80% interval, native Chronos-2 ranges vs plain CQR. Black tick: the 0.80 target. CQR repairs coverage almost everywhere; it is not a CRPS engine (pooled CRPS +0.19%, p=0.057; its one outright CRPS win is OSFI, -1.28%, p=0.0012; on M4 it is an exact no-op because per-series banks of 8 origins starve it).</p>
+<div class="covrow"><div class="clab">Tourism (5,760 cases)<span>native 0.770</span></div><div class="covbar"><i style="width:78.2%;background:#1d7a3a"></i><i style="width:77.0%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.782</div></div>
+<div class="covrow"><div class="clab">M3 (3,600 cases)<span>native 0.759</span></div><div class="covbar"><i style="width:76.5%;background:#1d7a3a"></i><i style="width:75.9%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.765</div></div>
+<div class="covrow"><div class="clab">M4 (2,880 cases)<span>native 0.767; exact no-op</span></div><div class="covbar"><i style="width:76.7%;background:#1d7a3a"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.767</div></div>
+<div class="covrow"><div class="clab">OSFI runoff (864 cases)<span>native 0.749</span></div><div class="covbar"><i style="width:79.6%;background:#1d7a3a"></i><i style="width:74.9%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.796</div></div>
+<div class="covrow"><div class="clab">SMM (204 cases)<span>native 0.725</span></div><div class="covbar"><i style="width:74.5%;background:#1d7a3a"></i><i style="width:72.5%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.745</div></div>
+<div class="covrow"><div class="clab">Food CPI (666 cases)<span>native 0.799; fusion reaches 0.854</span></div><div class="covbar"><i style="width:82.4%;background:#1d7a3a"></i><i style="width:79.9%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.824</div></div>
+<p class="src">Green: CQR coverage. Grey: native coverage. Source: exp76 Part B sweep table (subsets: 20 series each for Tourism/M3/M4; OSFI 4 segments; SMM full). Follow-up in flight: exp81 pools calibration banks across series to fix the starvation; no results at the time of writing.</p>
+<h3>Input to output: the shape of one forecast (schematic)</h3>
+<div class="pbox" style="max-width:560px"><svg viewBox="0 0 560 240" width="100%" role="img"><line x1="40" y1="200" x2="540" y2="200" stroke="#ccc" stroke-width="0.7"/><line x1="40" y1="120" x2="540" y2="120" stroke="#ccc" stroke-width="0.5" opacity="0.6"/><line x1="40" y1="40" x2="540" y2="40" stroke="#ccc" stroke-width="0.5" opacity="0.6"/><polygon points="330,96 380,84 430,76 480,70 530,66 530,150 480,142 430,132 380,118 330,104" fill="#1d7a3a" opacity="0.14"/><polygon points="330,100 380,95 430,91 480,88 530,86 530,124 480,120 430,114 380,107 330,102" fill="#1d7a3a" opacity="0.22"/><polyline points="40,150 90,138 140,146 190,128 240,134 290,116 330,100" fill="none" stroke="#22577a" stroke-width="2.2"/><polyline points="330,101 380,101 430,103 480,104 530,105" fill="none" stroke="#1d7a3a" stroke-width="2" stroke-dasharray="6 4"/><line x1="330" y1="30" x2="330" y2="205" stroke="#999" stroke-dasharray="2 3"/><circle cx="380" cy="94" r="3.4" fill="#b3372f"/><circle cx="430" cy="112" r="3.4" fill="#b3372f"/><circle cx="480" cy="98" r="3.4" fill="#b3372f"/><circle cx="530" cy="118" r="3.4" fill="#b3372f"/><text x="40" y="20" font-size="12.5" font-weight="700" class="svgtext">History (input)</text><text x="330" y="20" font-size="12.5" font-weight="700" class="svgtext">Forecast (output)</text><text x="535" y="70" font-size="10.5" text-anchor="end" class="svgmut">outer band: 80% range</text><text x="535" y="132" font-size="10.5" text-anchor="end" class="svgmut">inner band: middle range</text><text x="330" y="228" font-size="10.5" text-anchor="middle" class="svgmut">origin: only data left of this line may be used</text><text x="480" y="228" font-size="10.5" text-anchor="middle" class="svgmut">red dots: what actually happened</text></svg></div>
+<p class="src">SCHEMATIC, not measured data. It shows the contract every forecaster in this report follows: history up to the origin, a median path, nested ranges sized by the range layer, and realized outcomes scored against them. Measured panels of exactly this shape (synthetic book) are on Slide 5.</p>
+</div>
+<div class="divider"><div class="k">Appendices</div><h2>Appendix: Ablations, Prompts, Glossary, Failures</h2><p>Appendix A: every ablation and parameter analysis, with numbers. Appendix B: the actual prompts and the parameter table. Appendix C: glossary of the program's conventions. Appendix D: the failed-experiments register. References close the report.</p></div>
+<div class="slide paper"><div class="k">Appendix A</div><h2>Ablations and Parameter Analyses</h2>
+<h3>Reasoning effort (exp48)</h3>
+<p>Groq gpt-oss-120b, 3 agent tasks x 3 seeds. "High" reasoning is 3.5 to 6 times slower with zero quality gain, and actively harmful on BoC discovery (1.000 to 0.333). Default is "low" for diagnostics.</p>
+<table>
+<tr><th>Task</th><th>Low</th><th>Medium</th><th>High</th></tr>
+<tr><td>Regime diagnosis (accuracy)</td><td>1.000 (2.2s)</td><td>1.000 (2.3s)</td><td>1.000 (7.9s)</td></tr>
+<tr><td>BoC discovery (hit rate)</td><td>1.000 (2.9s)</td><td>1.000 (4.1s)</td><td>0.333 (17.6s, 1 error)</td></tr>
+<tr><td>Changepoint (rubric score)</td><td>1.000 (2.5s)</td><td>1.000 (1.7s)</td><td>1.000 (4.7s)</td></tr>
+</table>
+<h3>Open extensions (exp50): 1 win, 3 confirmations that the design is already optimal</h3>
+<table>
+<tr><th style="width:30%">Extension</th><th>Verdict</th></tr>
+<tr><td>TSFM as 5th expert</td><td>Negative: 0% selection rate on M4 with real weights; no improvement</td></tr>
+<tr><td>BoC discrete variant</td><td>Win: EASY cases to the rule, HARD cases to climatology, per decision type. Now in the system</td></tr>
+<tr><td>Semi-supervised regimes (cluster on loss)</td><td>Negative: p=0.44, hand rules win</td></tr>
+<tr><td>Learned gate thresholds</td><td>Negative: p=0.32, hand values fine</td></tr>
+</table>
+<h3>Kitchen sink (exp51)</h3>
+<p>All 14 positive-but-nonsignificant components combined into one forecaster: worse than the proposed method everywhere it differs (M4 +0.00073, p=0.25; SMM win rate 0.26). Loss-regimes significantly hurt (p=0.0027, third confirmation). The significance filter was correct; nothing real had been skipped.</p>
+<h3>Combination trilogy on the M4 subsample (exp42, exp43)</h3>
+<table>
+<tr><th style="width:30%">Method</th><th>Result</th></tr>
+<tr><td>FFORMA-lite learned weights</td><td>0.1300 vs equal weights 0.1295 (p=0.156): the forecast combination puzzle at our scale</td></tr>
+<tr><td>Regime router (exp43)</td><td>0.1282 vs 0.1295 (p=0.018): the first method to beat equal weights significantly</td></tr>
+<tr><td>Learned regimes (exp45)</td><td>Flexibility loses to the constrained prior; hand rules win (p=0.00046)</td></tr>
+</table>
+<h3>LLM ladder ablations (exp55 to exp59)</h3>
+<table>
+<tr><th style="width:30%">Rung</th><th>Result</th></tr>
+<tr><td>LLM as calibrator (exp56)</td><td>Killed. Calibrated grid alone 1.1391; proposed + calibrated 1.1432 vs proposed 0.9661 (p=0.32, not significant, directionally worse). Methodology records the calibrator arm at 1.6729 vs naive 1.6915: the LLM is a worse calibrator than forecaster either way</td></tr>
+<tr><td>Prompt V1 vs V2 (exp57)</td><td>V1 (history statistics in words) 0.4262; V2 (V1 + macro lookup) 0.4599; generic 0.5158. V1 vs generic p=0.057; V2 vs V1 p=0.20. More context distracts</td></tr>
+<tr><td>Hybrid vs V1 alone (exp58)</td><td>Hybrid 0.4526 / 0.4289 (two expert sets) beats Vector 0.5688 but loses to V1 alone 0.4262 (p=0.045 / 0.058 across the two write-ups): the router is a variance tax when one expert dominates</td></tr>
+<tr><td>Generalizability (exp59)</td><td>Tourism: LLM 1691.17 vs classical 1030.05 (64% worse). M3: 199.53 vs 147.20 (36% worse). h=1, 30 series each. The Food CPI win is dataset-specific</td></tr>
+</table>
+<h3>The grouping chain (exp66 to exp66g), World A</h3>
+<table>
+<tr><th style="width:30%">Step</th><th>Result</th></tr>
+<tr><td>exp66: 4 grouping arms (member-weighted group CRPS, stub forecaster)</td><td>Global 0.00227 wins; random groups 0.00690; hand groups 0.01164; LLM groups 0.01705 (worst). Kill criterion triggered; the user reframed grouping as explainability</td></tr>
+<tr><td>exp66b: LLM grouper in the full pipeline</td><td>Works in isolation (5/5 valid) but flaky at scale (validator failures). Pivot adopted: deterministic grouping + LLM explanations</td></tr>
+<tr><td>exp66c: deterministic groups (KMeans + shallow tree rules)</td><td>10 reproducible groups, at most 4 plain-English conditions each; explanation citation pass 10/10. Risk-bin calibration honest negative: training-tertile bins inverted on test</td></tr>
+<tr><td>exp66d: planted-cohort recovery</td><td>ARI 0.010 (chance): the grouper finds real segments, not the planted cohorts</td></tr>
+<tr><td>exp66e: recovery tools</td><td>SHAP-space clustering ARI 0.091 (about 2x the raw-feature 0.046; low_rate F1 0.55): best recovery method, joins the analyst kit. SHAP interaction recall@10 = 0.000. Uplift (T-learner) ARI 0.002: shelved. Phase 2: tool context does not help the LLM grouper (ARI 0.025 vs 0.026)</td></tr>
+<tr><td>exp66f: classifier ablation, 3 seeds</td><td>exp66d's apparent LLM-classifier win was seed-42 noise: pooled delta +0.154, bootstrap CI [-0.378, +0.667]; news effect +0.031 [-0.447, +0.499]</td></tr>
+<tr><td>exp66g: counterfactual tool, 5 seeds, 5 rounds</td><td>Not confirmed: B vs A delta -0.0018, CI [-0.0106, +0.0079]. Shuffled-counterfactual control 0.0651 matches the real tool, so the content is inert as prompt context. Genuine positive in the same run: LLM + statistics beats deterministic bins (+0.0198, CI [+0.0054, +0.0345]) and is the risk classifier of record</td></tr>
+</table>
+<h3>Integration test (exp72): shifts x group forecaster, 5 seeds, placebo-controlled</h3>
+<table>
+<tr><th style="width:30%">Question</th><th>Result</th></tr>
+<tr><td>Q1: do groups isolate regional shocks?</td><td>Not supported. Group minus global at S3/4 sigma = -0.0021 (p=0.22); the oracle-geography ablation is identical (-0.0053, p=0.15). The bottleneck is the forecasting mechanism, not the groups</td></tr>
+<tr><td>Q2: is the min_group_n fallback a good safety valve?</td><td>Working but blunt: helps thin-but-alive groups (donor 0.121/0.086 vs no-fallback 0.143/0.120), fires on size not drift (about 70% even in control), and is wrong for dead groups (own trailing mean 0.0000 vs fallback 0.0751). Fixed in exp80</td></tr>
+<tr><td>Q3: does Layer-2 protect the group forecaster?</td><td>Supported in the thin-group regime: -0.021 to -0.031 (p below 1e-8, win rate 0.65 to 0.68) on control and all shifted worlds; the edge vanishes with 5 big province groups (+0.004, n.s.)</td></tr>
+<tr><td>James-Stein tau sweep (shrink group grid toward global grid)</td><td>Honest negative: no tau improved on the unshrunk group forecaster. Sweep closed</td></tr>
+</table>
+<h3>Mini-agent orchestrator (exp75): arms on 6 test beds</h3>
+<p>Arms: A = base forecaster; B = deterministic routing over 24 factor agents + 4 diagnostic agents; C = LLM orchestrator; D = uncertainty mode; E = deterministic shift, sign(P) x 0.5 x validation residual SD when |P| passes the low threshold, where P is the pooled factor pressure.</p>
+<table>
+<tr><th>Bed</th><th>A CRPS</th><th>B vs A</th><th>D vs A</th><th>E vs A</th><th>C vs A</th></tr>
+<tr><td>OSFI (240)</td><td>0.003998</td><td>-3.59%, p=0.087</td><td>+0.51%, p=0.065</td><td>+7.9%, p=0.019 (harmful)</td><td>+4.4% pooled</td></tr>
+<tr><td>Food CPI h=1 (47)</td><td>0.6354</td><td>+0.0%</td><td>+0.76%, n.s.</td><td><b>-22.8%, p=1.9e-14</b></td><td>-19.1%, p=3e-11</td></tr>
+<tr><td>Food CPI h=6 (43)</td><td>3.2064</td><td>-28.8%, p=0.007</td><td>-7.3%, p=3e-19 (rescue: coverage 0.174 to 0.407)</td><td>+6.8%, n.s.</td><td>not run</td></tr>
+<tr><td>SMM (38)</td><td>0.000594</td><td>-0.5%, n.s.</td><td>-1.1%, n.s.</td><td>+0.9%, n.s.</td><td>not run</td></tr>
+<tr><td>Shifts S1/S2/S3 (72)</td><td>0.04760</td><td>-1.4%, n.s.</td><td>+0.0%</td><td>+0.0%</td><td>S3 only: +2.5% / 0.0%</td></tr>
+<tr><td>SimulatorV2 (36)</td><td>0.2207</td><td>-28.0%, p=0.099</td><td>+0.0%</td><td>+0.0%</td><td>not run</td></tr>
+</table>
+<p>Ablations: per-family, per-factor, and per-diagnostic removal moved B vs A by at most 0.09 percentage points on OSFI; B equals naive-alone on every bed, so the synthesis layer contributed nothing to routing. The one carrier is the prices family on Food CPI h=1. Deterministic pressure-sign accuracy 46/47 (97.9%) vs the LLM orchestrator's 39/40. Arm E ships as opt-in only, gated on validation sign accuracy; arm D survives as a miscalibration rescue tool. The agents are a feature store, not a decision engine.</p>
+<h3>UQ battery and fusion (exp74, exp76), Food CPI unless noted</h3>
+<table>
+<tr><th style="width:30%">Arm</th><th>Result</th></tr>
+<tr><td>Native Chronos-2 ranges</td><td>CRPS 1.3035; cov80 0.799, cov90 0.884</td></tr>
+<tr><td>Plain CQR</td><td>1.2824 (p=1.7e-04 vs native); cov80 0.824, cov90 0.904; width ratio 1.078. The default range layer</td></tr>
+<tr><td>Weighted conformal</td><td>Best Food CPI CRPS of the exp74 battery (1.2782) but cov80 0.728 fails the coverage bar: not shipped</td></tr>
+<tr><td>ACI (adaptive conformal)</td><td>Conditional win on the volatile food subset: 1.6614 vs 1.7231 (p=3.6e-05, win rate 0.61, width 0.965). Regime-gated option. The bias-corrected variant (aci_bias) fails (p=7e-31): the bias estimate chases the regime</td></tr>
+<tr><td>F1 meta-level CQR, story features</td><td>1.2612 (-1.7% vs CQR, p=1.8e-04), cov80 0.856</td></tr>
+<tr><td>F1 horizon-gated (h at least 3), the champion</td><td>1.2587 (-1.8%, p=2.0e-05), cov80 0.854. The win is long-horizon (h at least 5: -2.5%, p=2e-04); it hurts at h at most 2 (+1.2%) and saturates under S1 at 4 sigma (+1.1%), which is why the gate exists</td></tr>
+<tr><td>F1 numeric-only features</td><td>1.2724 (-0.8%, p=0.032): story features carry the difference</td></tr>
+<tr><td>Story effect, corrected (exp76 re-measurement)</td><td>Story + numeric beats numeric-only by 2.8% (p=1.9e-06) after the one-month keying offset in exp74 was fixed. exp74's p=2.0e-11 was leak-inflated and is retired everywhere in this report</td></tr>
+<tr><td>F2 conditional CQR (3 variants)</td><td>Dead: 1.2957 / 1.2970 / 1.2987, all worse than plain CQR. Design flaw found in round 4: it pools exceedance scores across horizons while CQR conditions on horizon, biasing the offsets; more shrinkage made it worse</td></tr>
+<tr><td>S8 macro ablation (27 origins, 166 to 192)</td><td>Story + macro (7 live categories) vs story-only: +0.1% (p=0.885). All-22 categories: -0.2% (p=0.565). The window is signal-quiet (even the story effect vanishes there). One live wire: inflation signal magnitude tracks residual error, Spearman rho +0.41 (p=0.028, uncorrected); the inflation-only arm was the best macro arm (-0.3%, p=0.072), consistent but not conclusive</td></tr>
+<tr><td>Shift-onset coverage (exp74)</td><td>No residual-based method rescues S1 at 4 sigma straddle coverage (best cov80 0.444 vs the 0.80 target): the calibration bank is pre-shift by construction and structurally blind at onset</td></tr>
+</table>
+<h3>Group forecaster center (exp79), per-seed detail</h3>
+<p>Protocol seeds (7/42/123) pooled: trailing-mean center beats naive center on control (-0.0072 in paired cells, p=0.034) and S1 at 4 sigma (-0.0243, p=4.7e-07). Per-seed: the control win is seed-7-driven (-0.0231, p=0.0024; ties on 42 and 123), so a fresh-seed confirmation was run (2024/555/9001): control -0.0171 (p=1.6e-05, all three seeds individually p at most 0.048), S1 -0.0355 (p=1.0e-04). The trailing center never loses significantly on any of 6 seeds x 2 worlds. The router center loses to the trailing center by +0.0152 (p=6e-07) on control and p=7e-09 under S1. Mechanism check: per-cell trailing volatility does not explain the edge (Spearman rho about 0.01, p=0.84); level-estimation noise reduction is the plausible mechanism, recorded as unresolved rather than overclaimed. Arm G5X (exp72's level-residual spread variant) pools to 0.0872 but loses the paired cells to the shipped spread (p=1.7e-06).</p>
+<h3>Group conformal levels (exp80a)</h3>
+<table>
+<tr><th>Arm</th><th>Control cov80</th><th>S1 at 4 sigma cov80</th><th>CRPS vs base</th></tr>
+<tr><td>A: shipped forecaster (base)</td><td>0.762 (fresh seeds 0.767)</td><td>0.731 (fresh seeds 0.565)</td><td>reference</td></tr>
+<tr><td>B: conformal at level 0.80</td><td>0.773</td><td>0.769</td><td>+0.97% control</td></tr>
+<tr><td>C90: conditional conformal at 0.90</td><td>0.804 (fresh 0.824)</td><td>0.776 (fresh 0.652, fails the 0.77 bar)</td><td>+0.75% protocol; -3.2% on fresh S1</td></tr>
+<tr><td>R4: aggressive (level 0.95, vol clamp 3x)</td><td colspan="2">Coverage identical to C90 to 4 decimals</td><td>The gap is structural: bank offsets are bounded by the worst pre-shock miss</td></tr>
+</table>
+<p class="src">Sources for Appendix A: exp48, exp50, exp51, exp42/43/45, exp56 to exp59, exp66 series reports, exp72, exp75, exp76, exp79, exp80 reports; docs/METHODOLOGY.md sections 8 and 11; experiments/README.md.</p>
+</div>
+<div class="slide paper"><div class="k">Appendix B</div><h2>Prompts and Parameters</h2>
+<p class="sub">The exact prompt texts the language models see, and the parameter table with the experiment that set each value. Prompt blocks are verbatim from the code; the only change is that typographic dashes are rendered as plain hyphens so this report stays machine-readable.</p>
+<h3>B.1 LLM-forecaster system prompt (ladder rungs 2 and 4)</h3>
+<p class="src">Source: src/td_one/llm_rungs/prompts.py, system_prompt_forecaster(). The shape replicates Vector's QuantileGridLLMPredictor system prompt.</p>
+<div class="pre">You are a probabilistic time-series forecaster. Given a historical series and a task description, return calibrated predictive quantiles for every requested forecast step.
+
+Rules:
+- Return ONLY a JSON object of the form {"forecasts": [{"q05": ..., "q10": ..., "q20": ..., "q30": ..., "q40": ..., "q50": ..., "q60": ..., "q70": ..., "q80": ..., "q90": ..., "q95": ...}]}. No prose, no markdown.
+- The 'forecasts' array MUST have exactly the requested number of elements, one per forecast step in chronological order.
+- Each forecast object MUST contain q05, q10, q20, q30, q40, q50, q60, q70, q80, q90, and q95.
+- Quantiles must be in the same units as the input series.
+- Quantiles must be monotone non-decreasing within each forecast step.</div>
+<h3>B.2 Generic user prompt (rung 2; V1 appends the statistics block, V2 appends statistics plus macro context)</h3>
+<p class="src">Source: src/td_one/llm_rungs/prompts.py, user_prompt_generic(), user_prompt_v1(), user_prompt_v2().</p>
+<div class="pre">Task: {task_line}
+
+Series: {series_desc}
+Units: {units}
+Frequency: {frequency}
+
+History:
+{one YYYY-MM: value line per row, 2 decimals, cutoff at the origin}
+
+Forecast the next {n_steps} values ({forecast_start} through {forecast_end}).
+Return a JSON object with a 'forecasts' array of length {n_steps}; each item contains the standard quantile fields q05 through q95.</div>
+<h3>B.3 V1 "Recent behavior (in words)" block (rung 4)</h3>
+<p class="src">Source: words_stats_block() in the same file. Every number is computed from observations up to the origin; reference months are printed so a fallback to an earlier month is visible rather than silent.</p>
+<div class="pre">Recent behavior (in words) - all computed from observations up to {as_of}:
+- Last observed value: {last_value:.2f} ({last_date}).
+- 12-month change: {change_12m_pct:+.2f}% (vs {ref_12m}).
+- 3-month change: {change_3m_pct:+.2f}% (vs {ref_3m}).
+- Highest value in the last 12 months: {max_12m:.2f}; lowest: {min_12m:.2f}.</div>
+<h3>B.4 V2 macro-context block header (rung 4)</h3>
+<p class="src">Source: macro_context_block() in the same file. V2 (0.4599) lost to V1 (0.4262): the extra context distracted.</p>
+<div class="pre">Macro context - every fact is labeled with its as-of date; nothing here is newer than {as_of}:
+- {label}: {value} (as of {fact_as_of}; source: {source}).
+...</div>
+<h3>B.5 LLM-as-calibrator system prompt (rung 3, killed)</h3>
+<p class="src">Source: system_prompt_calibrator() in the same file. The user prompt adds the classical 9-quantile grid (levels 0.10 to 0.90) and asks for a calibrated 11-quantile grid back.</p>
+<div class="pre">You are a forecast calibrator. Below is a statistical model's quantile forecast for a monthly economic series, together with the observed history. Your job is to return a calibrated version of that forecast: keep what the statistical model gets right, and fix its spread and centering using the history.
+
+Rules:
+- Return ONLY a JSON object of the form {"forecasts": [{"q05": ..., ...}]}. No prose, no markdown.
+- The 'forecasts' array MUST have exactly the requested number of elements, one per forecast step in chronological order.
+- Each forecast object MUST contain q05, q10, q20, q30, q40, q50, q60, q70, q80, q90, and q95.
+- Quantiles must be in the same units as the input series.
+- Quantiles must be monotone non-decreasing within each forecast step.</div>
+<h3>B.6 Macro signal extraction prompt (the service)</h3>
+<p class="src">Source: src/td_one/news/macro_signal.py, _prompt(). The LLM is Gemini Flash-Lite via the Vector proxy, strict JSON, up to 15 headlines per cell. All 22 category rubrics follow the prompt.</p>
+<div class="pre">You are a macro analyst summarizing one month of news for a forecasting system.
+
+Month: {ym}
+Category: {category}
+Direction rubric: {per-category rubric}
+
+Headlines ({n} articles):
+- [{pub_date}] {title}
+...
+
+Task: synthesize these headlines into ONE structured signal for this month and category.
+- direction: integer from -2 to +2 per the rubric (0 = neutral/no signal).
+- risk: "low", "med", or "high" - macro risk to household finances in this category.
+- certainty: 0.0 to 1.0 - confidence. Few/contradictory headlines =&gt; low.
+- summary: 1-2 sentences citing specific headline titles in quotes.
+
+Respond with ONLY a JSON object:
+{"direction": int, "risk": "...", "certainty": float, "summary": "..."}</div>
+<p>Per-category direction rubrics (the full DIRECTION_GUIDE, same source):</p>
+<table>
+<tr><th>Category</th><th>What -2 / +2 means</th></tr>
+<tr><td>immigration_law</td><td>-2 = sharply loosening (more open), +2 = sharply tightening (restrictive)</td></tr>
+<tr><td>food_prices</td><td>-2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>basic_needs</td><td>Cost of living: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>income_tax</td><td>Household tax burden: -2 = falling fast (cuts/credits), +2 = rising fast</td></tr>
+<tr><td>minimum_wage</td><td>Wage floor: -2 = cuts/freezes, +2 = large broad increases</td></tr>
+<tr><td>salary_region</td><td>Wage direction: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>school_childcare</td><td>Cost/policy-burden: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>services_costs</td><td>Services prices: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>inflation</td><td>-2 = disinflating fast, +2 = accelerating fast</td></tr>
+<tr><td>elections_politics</td><td>Political disruption: -2 = strong stability/continuity, +2 = major disruption/shift</td></tr>
+<tr><td>wars_geopolitics</td><td>Conflict intensity: -2 = de-escalation, +2 = major escalation</td></tr>
+<tr><td>pandemics_health</td><td>Outbreak severity: -2 = subsiding, +2 = severe/worsening</td></tr>
+<tr><td>flight_prices</td><td>Fare direction: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>car_prices</td><td>Price direction: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>global_trade</td><td>Trade openness: -2 = opening up, +2 = barriers rising (tariffs/frictions)</td></tr>
+<tr><td>ai_startups</td><td>Sector momentum: -2 = bust, +2 = boom</td></tr>
+<tr><td>markets_sp500</td><td>Market direction: -2 = sharp selloff, +2 = strong rally</td></tr>
+<tr><td>central_bank_rates</td><td>Policy stance: -2 = strong dovish tilt (cuts), +2 = strong hawkish tilt (hikes)</td></tr>
+<tr><td>housing</td><td>Market heat: -2 = sharp cooling, +2 = strong heating</td></tr>
+<tr><td>labour</td><td>Unemployment direction: -2 = falling fast, +2 = rising fast</td></tr>
+<tr><td>fx</td><td>CAD direction: -2 = weakening fast, +2 = strengthening fast</td></tr>
+<tr><td>small_business</td><td>Business conditions: -2 = improving fast, +2 = deteriorating fast</td></tr>
+</table>
+<h3>B.7 Mini-agent orchestrator prompt (exp75, arm C)</h3>
+<p class="src">Source: src/td_one/agent/orchestrator.py, build_llm_prompt(). Factor agents themselves have no LLM prompt: each is a thin deterministic reader of one category in the macro_signals table (PIT: signal month strictly before the origin month), emitting {direction, confidence, pressure, reason} with no cross-category reasoning. The LLM surface in exp75 is this orchestrator prompt only.</p>
+<div class="pre">You are the ORCHESTRATOR of a forecasting decision engine, not a forecaster.
+Bed: {bed} / segment {segment}. Origin month: {asof_month}, horizon: {horizon}.
+Base forecasts (step-1 medians): naive={naive_q50}, v2={v2_q50}.
+Validation evidence: {val_summary}
+
+FACTOR AGENT SIGNALS (each owns one factor; synthesis is YOUR job):
+[family]
+- {category}: direction {d}/2, pressure {p:+.2f}, conf {c:.2f}. {reason}
+...
+
+DIAGNOSTIC AGENT SIGNALS (about the series/model):
+- {name}: direction {d}, conf {c:.2f}. {reason}
+...
+
+Decide: choose naive (safe), v2 (trust the statistical router), or blend (hedge). Optionally request a small shift of the chosen forecast's quantiles up/down (the shift SIZE is fixed by calibration, never by you).
+Prefer naive when signals are noisy, contradictory, or the world is unstable.
+Reply with ONLY this JSON object, no other text:
+{"choice": "naive" | "v2" | "blend", "shift": "none" | "up" | "down", "confidence": "low" | "medium" | "high", "reason": "one sentence"}</div>
+<h3>B.8 Risk-reporter citation contract (the explanations track)</h3>
+<p class="src">Source: src/td_one/agent/risk_reporter.py, build_explanation_prompt(). A post-hoc checker (check_citations) rejects any factual sentence without a citation; the tested runs passed 10/10.</p>
+<div class="pre">System: You write a short risk explanation for a borrower cohort. Every factual sentence MUST end with a citation: [stat] for a number from the statistics below, [url:N] for news article N. Sentences without a factual claim need no citation. Never invent numbers or events not listed here.
+
+User: Cohort {group_id}: {rule}
+
+Statistics:
+- {statistic}: {value} [stat]
+...
+
+News (published before the forecast origin):
+[{i}] {title} ({url}) [url:{i}]
+...
+
+Write 3-5 sentences explaining this cohort's attrition risk.</div>
+<h3>B.9 Parameter table</h3>
+<table>
+<tr><th style="width:26%">Parameter</th><th style="width:20%">Value</th><th>Set by</th></tr>
+<tr><td>Do-nothing gate: top regime probability</td><td>0.6 (GATE_TOP_P; EASY/HARD analysis split at 0.7)</td><td>exp6; exp32 (trust-flag analysis)</td></tr>
+<tr><td>Do-nothing gate: test statistic threshold</td><td>3.5 (GATE_T_STAT; tightened from 3.0 on 2026-10-17 after the WTI lesson)</td><td>exp6; decision policy C-nudge</td></tr>
+<tr><td>Do-nothing gate: minimum shift</td><td>0.03 (GATE_SHIFT; raised from 0.02 the same day)</td><td>exp6; decision policy C-nudge</td></tr>
+<tr><td>James-Stein shrinkage on adjustments</td><td>k = 0.5; agent adjustment bound [-0.75, +0.75]</td><td>exp6 (decision policy)</td></tr>
+<tr><td>LLM sensor admission</td><td>Confidence at least 0.75; blends 50/50 with the router</td><td>exp11</td></tr>
+<tr><td>v2 LLM expert gate</td><td>Off for datasets {tourism, m3, m4}; off when seasonal_strength at least 0.5</td><td>exp59; code constant LLM_SEASONAL_GATE = 0.5</td></tr>
+<tr><td>Corroboration gate (reactive agents)</td><td>|t| above 3.5, or news corroboration, before acting</td><td>decision_policy.py</td></tr>
+<tr><td>Layer-2 validation gate</td><td>margin 0.02 relative CRPS gain vs naive; noise floor 1.0 x paired standard error; minimum 12 validation origins; coverage floor 0.5; volatility abstain at ratio 3.0</td><td>exp73 (MetaRouterConfig)</td></tr>
+<tr><td>Group forecaster: trailing-mean center window</td><td>6 months (CENTER_WINDOW)</td><td>exp79</td></tr>
+<tr><td>Group forecaster: spread</td><td>Gaussian z-scores x SD of last 24 trailing one-step errors (floor 1e-4); clipped to [0, 1], monotone</td><td>exp78</td></tr>
+<tr><td>Group forecaster: min_group_n</td><td>200 (production default); 30 in the exp72/78/79/80 harness</td><td>Track-1 design; experiment harness</td></tr>
+<tr><td>Group forecaster: dead-group rule</td><td>dead_zero_months = 2 (recent 2 months of n_at_risk sum to 0 goes to own trailing mean); 0 reproduces pre-exp80 behavior exactly</td><td>exp80</td></tr>
+<tr><td>Group conformal layer (available, off by default)</td><td>Calibration level 0.80; conditional variant 0.90; minimum bank 8; backtest floor 8; volatility window 12; scale clamp [0.5, 2.0]</td><td>exp80 (not the default)</td></tr>
+<tr><td>CQR range layer</td><td>Target levels 0.80 / 0.90; meta-fusion horizon gate: h at least 3</td><td>exp74; exp76</td></tr>
+<tr><td>Macro signal gate</td><td>A category goes live only if train directional accuracy exceeds 55%</td><td>exp70-MS (pre-registered)</td></tr>
+<tr><td>LLM reasoning effort (diagnostics)</td><td>low</td><td>exp48 ("high" never helps, sometimes hurts)</td></tr>
+<tr><td>Groq call throttle</td><td>2.5 s between calls; patient retry with backoff on 429s</td><td>docs/AGENTS.md</td></tr>
+<tr><td>Quantile grids</td><td>11 levels elicited from the LLM (0.05 to 0.95); 9 levels scored (0.10 to 0.90)</td><td>Vector convention, src/td_one/llm_rungs/prompts.py</td></tr>
+<tr><td>exp75 arm E shift rule</td><td>sign(P) x 0.5 x validation residual SD, applied when |P| passes the low threshold</td><td>exp75 (opt-in only, gated on validation sign accuracy)</td></tr>
+</table>
+</div>
+<div class="slide paper"><div class="k">Appendix C</div><h2>Glossary</h2>
+<p class="sub">The program's conventions, in the words the program uses them. Abridged from docs/METHODOLOGY.md section 0 where marked.</p>
+<table class="gloss">
+<tr><td>CRPS</td><td>Continuous Ranked Probability Score: the primary accuracy metric. A proper score on the whole predicted distribution; lower is better. Rewards forecasts that are well-centered and honest about uncertainty.</td></tr>
+<tr><td>PIT / as-of</td><td>Point-in-time: a forecast for a date may use only information whose as-of date is on or before the forecast origin. Any feature, label, or context with observed_asof after the origin is a leak.</td></tr>
+<tr><td>Coverage</td><td>The share of realized outcomes that land inside a stated interval. A nominal 80% interval should cover about 80% of outcomes; coverage without the accompanying width is not a result.</td></tr>
+<tr><td>Conformal prediction</td><td>Methods that set interval widths from past forecast errors so that coverage hits a target, with no distributional assumptions.</td></tr>
+<tr><td>CQR</td><td>Conformalized quantile regression (Romano et al. 2019): calibrate a model's native quantile interval by adding a calibrated exceedance score computed on past origins. The default range layer in this report.</td></tr>
+<tr><td>ACI</td><td>Adaptive conformal inference (Gibbs and Candes 2021): the target level is updated online after each hit or miss. Long-run coverage converges even under arbitrary shift. Used here as a regime-gated option on volatile subsets.</td></tr>
+<tr><td>Calibration bank</td><td>The set of past rolling-origin forecasts and their realized outcomes that a conformal method draws its scores from. The binding constraint of this program: per-series banks of 8 to 12 origins starve the machinery. exp81 (in flight) pools banks across series.</td></tr>
+<tr><td>Regime</td><td>A mode of the data (seasonal, trending, noisy). Hand-written rules detect the regime; the router assigns one expert per regime and blends by regime probability.</td></tr>
+<tr><td>Gate / veto</td><td>A rule that can refuse a component: the do-nothing gate falls back to the global best single model; the Layer-2 gate vetoes a forecaster in favor of naive; the signal gate admits a macro category only above 55% train accuracy.</td></tr>
+<tr><td>Trust flag</td><td>EASY / HARD tag on a forecast: the system reports not only a forecast but whether the evidence supports trusting it. exp32 measured a 7.2-point gap between the two classes.</td></tr>
+<tr><td>Win rate</td><td>The fraction of scored origins (or series) where one method beats another head to head, reported alongside the paired p-value.</td></tr>
+<tr><td>Shrinkage</td><td>Pulling an estimate toward a safer value: James-Stein shrinkage (k=0.5) damps agent adjustments; the Layer-2 shrink arm blends a group forecast toward the global one. Neither always helps; both are tested.</td></tr>
+<tr><td>TSFM</td><td>Time-series foundation model: Chronos-2 or TimesFM-2.5 here. Pretrained on many series, used zero-shot, not fine-tuned.</td></tr>
+<tr><td>MASE</td><td>Mean absolute scaled error: the Monash table's metric for the Tourism benchmark (lower is better). Our seasonal naive scores 1.080 against published best DeepAR 1.409.</td></tr>
+<tr><td>Point mass</td><td>A degenerate forecast that puts all probability on one value: the exp72/exp78 defect, where the group forecaster tiled the last value across every quantile level (coverage 0.000).</td></tr>
+<tr><td>Lock-in</td><td>The difference between a borrower's existing rate and current market rates, tested as a runoff covariate in Layer-2. Carried no signal (|r| at most 0.043); the gated variant correctly stayed silent.</td></tr>
+<tr><td>SMM</td><td>Single monthly mortality: the monthly rate at which loans leave a mortgage portfolio. The Freddie Mac benchmark's target.</td></tr>
+<tr><td>Runoff</td><td>The decline in a mortgage portfolio's balances as loans mature, amortize, or prepay. The OSFI benchmark's target.</td></tr>
+<tr><td>Blocked CV</td><td>Cross-validation with contiguous time blocks as folds. Respects the arrow of time; no block tests on data its fold was trained on.</td></tr>
+<tr><td>Vincentization</td><td>Averaging experts' quantiles level by level (the soft combination used inside the regime router, exp43).</td></tr>
+<tr><td>World A / World B</td><td>The report's labeling of the two test worlds. World A: the synthetic mortgage book (SimulatorV2 and the shift battery). World B: public and real data (M4, M3, Tourism, Food CPI, BoC, WTI, SMM, OSFI). The two are never mixed in a table or chart.</td></tr>
+</table>
+</div>
+<div class="slide paper"><div class="k">Appendix D</div><h2>Failed Experiments and Negative Learnings</h2>
+<p class="sub">The full honest-negatives register. Each row: what was tried, the number that killed it, and the lesson. Nothing below is a rerun candidate without a new hypothesis.</p>
+<table>
+<tr><th style="width:26%">Tried</th><th style="width:24%">The killing number</th><th>Lesson</th></tr>
+<tr><td>exp2: Chronos-2 beats M0 by 20% on synthetic (early claim)</td><td>Retracted</td><td>The win was a circular-DGP artifact, caught by the critic audit. Retractions are public in this program.</td></tr>
+<tr><td>exp8/10/13/15: macro overlays on classical and TSFM forecasts</td><td>5-seed: macro worse by 0.19 CRPS (p=0.064 against); PIT-safe reruns reversed the apparent benefit</td><td>The macro track is closed. An early retraction was followed by a proper test and a definitive kill.</td></tr>
+<tr><td>exp12: LLM ensemble router (M5 v1)</td><td>Failed against the critic audit</td><td>The unconstrained router needed the critic-constrained v2 design; informed the gating philosophy.</td></tr>
+<tr><td>exp19: news for SMM</td><td>Frozen</td><td>News does not move SMM. The first of five news-as-input kills.</td></tr>
+<tr><td>exp21: LLM feature discovery</td><td>-21.6% held-out vs ETS</td><td>Discovered features lagged the news; motivated the news-leading DGP (Phase 3).</td></tr>
+<tr><td>exp23: diagnostic model selection</td><td>Equals random (p=0.80)</td><td>Selecting from backward diagnostics is a method problem, not a data problem: it failed on synthetic and replicated on real data.</td></tr>
+<tr><td>exp24: regime-aware selection</td><td>Wash (p=0.93)</td><td>Same lesson, with news-signal regimes.</td></tr>
+<tr><td>exp25: news at h=3</td><td>+25% worse (p=0.0013)</td><td>News is actively harmful further out.</td></tr>
+<tr><td>exp30: MNLogit on BoC</td><td>0.835 vs the simple rule 0.843</td><td>Overparameterized at n=143. Kill the complex model; keep the rule.</td></tr>
+<tr><td>exp42: FFORMA-lite learned combination</td><td>0.1300 vs equal 0.1295 (p=0.156)</td><td>The forecast combination puzzle is real at our scale (about 200x data-starved vs FFORMA).</td></tr>
+<tr><td>exp45: learned regimes</td><td>Hand rules win (p=0.00046)</td><td>Constrained structural priors beat flexible learning at small n.</td></tr>
+<tr><td>exp46: dense news</td><td>p=0.48 with 86% BoC news coverage</td><td>Sparsity was never the constraint. News-for-forecasting is closed definitively.</td></tr>
+<tr><td>exp48: "high" reasoning effort</td><td>1.000 to 0.333 on BoC discovery, 3.5 to 6x slower</td><td>More reasoning is not better reasoning for diagnostics. Default is low.</td></tr>
+<tr><td>exp51: kitchen sink</td><td>+0.00073 on M4 (p=0.25); SMM win rate 0.26</td><td>The significance filter was correct: nothing real was being skipped.</td></tr>
+<tr><td>exp53: our method vs Vector's LLM predictor</td><td>0.5688 vs 1.0339 (45%, p=5.4e-05) against us</td><td>Published as an honest loss. It motivated the entire LLM ladder, which the method then absorbed via gating.</td></tr>
+<tr><td>exp56: LLM as calibrator</td><td>1.1391 alone; 1.1432 combined vs 0.9661 (p=0.32)</td><td>The LLM is a worse calibrator than forecaster. Killed.</td></tr>
+<tr><td>exp59: LLM generalizability</td><td>64% worse on Tourism, 36% worse on M3</td><td>The Food CPI win is dataset-specific. The gate is the method's contribution: it knows when not to use the LLM.</td></tr>
+<tr><td>exp63: LLM as forecast combiner</td><td>0.1169 vs 0.0992 (p=1.7e-08)</td><td>The LLM subtracts value even with strictly more information; it spreads weight instead of trusting validation.</td></tr>
+<tr><td>exp66: LLM as grouper</td><td>LLM groups 0.01705 vs random 0.00690</td><td>The model can write about groups but cannot find them. Grouping is for explanation, not forecasting.</td></tr>
+<tr><td>exp66d: cohort recovery (revised)</td><td>ARI 0.010</td><td>Deterministic groups find real segments, not the planted cohorts.</td></tr>
+<tr><td>exp66f: LLM classifier (single-seed win)</td><td>Pooled delta +0.154, CI covers zero</td><td>Retracted: the exp66d win was seed-42 noise.</td></tr>
+<tr><td>exp66g: counterfactual tool as classifier context</td><td>Delta -0.0018, CI covers zero; shuffled control proves content inert</td><td>Killed after 5 iteration rounds. The tool stays as an analyst explanation device.</td></tr>
+<tr><td>exp68: agentic shift guard</td><td>+0.5% (p=0.824)</td><td>Correct detection is not benefit: context truncation hurt. Motivated the anticipatory line instead.</td></tr>
+<tr><td>exp69: anticipatory LLM overlay</td><td>+10.2% (p=0.231)</td><td>The oracle arm failed too (+11.4%), so timing precision, not news reading, is the limit.</td></tr>
+<tr><td>exp69b: broad synthesis</td><td>-5.0% (win rate 5.6%)</td><td>Corroborating context diluted timing precision. Unannounced-shock synthesis stays untested, not refuted.</td></tr>
+<tr><td>exp69c: anticipatory on real data</td><td>+23.7% (p=0.231)</td><td>Direction right, size overshot 2.6x, timing 1.5 months early. Motivated the uncertainty pivot.</td></tr>
+<tr><td>exp70: v2 on OSFI runoff</td><td>Ties naive; harms uninsured (+10.7%, p=0.030)</td><td>Aggregate runoff is the honest null benchmark. Repaired by the Layer-2 gate (exp73).</td></tr>
+<tr><td>exp71/71b: competitor spread</td><td>In-sample -0.345; out-of-sample +39.3% (p=0.019)</td><td>The exp71 correlation was a forward-fill artifact. A regime artifact of 2022-2023, not a data problem. Revisit only at loan level.</td></tr>
+<tr><td>exp73: lock-in correction</td><td>+10.7% vs naive (p=0.006)</td><td>The lock-in level carries no signal. The gated variant stayed silent, as designed.</td></tr>
+<tr><td>exp75 arm C: LLM orchestrator</td><td>Dominated by deterministic arm E everywhere</td><td>Decomposition into narrow agents produced an auditable signal bundle whose synthesis was worthless. The agents are a feature store, not a decision engine.</td></tr>
+<tr><td>exp76 F2: conditional CQR</td><td>+1.0 to +1.3% vs plain CQR</td><td>Design flaw: pooling exceedance scores across horizons biases the offsets. Killed.</td></tr>
+<tr><td>exp76 S8: macro signals as uncertainty features</td><td>+0.1% (p=0.885) in the tested window</td><td>Untested, not refuted: the window was calm. One live wire (inflation magnitude) is carried forward standalone.</td></tr>
+<tr><td>exp77: macro signals in the router (Food CPI)</td><td>All arms differ by about 1e-16</td><td>Mechanism-blocked: all 33 origins labeled calm, the router degenerate. The calibration question itself is untested.</td></tr>
+<tr><td>exp79: fitted v2 router as group center</td><td>+0.0080 vs naive (p=0.012)</td><td>Per-series self-fit gives at most 13 backtest records: too few for the regimes to separate. Same bank-starvation root cause as exp76.</td></tr>
+<tr><td>exp80a: group conformal layer</td><td>Fresh-seed S1 coverage 0.652 vs the 0.77 bar</td><td>Structural: bank offsets are bounded by the worst pre-shock miss. Available behind a flag, off by default.</td></tr>
+<tr><td>exp71-MS: macro signals in the router (SMM)</td><td>Effect about 1e-7 CRPS over 7 rounds</td><td>Dilution (7 live directions cancel) plus the same degenerate-router block as exp77.</td></tr>
+<tr><td>basic_needs category</td><td>Accuracy 0.35, correlation -0.28 vs its anchor</td><td>Anti-correlated with the same anchor inflation tracks: sign-inversion hypothesis recorded, not applied (a post-hoc flip would overfit).</td></tr>
+<tr><td>central_bank_rates category</td><td>n=1 live signal</td><td>The extractor was correctly silent: the BoC held rates through the whole window.</td></tr>
+<tr><td>News as direct forecast context (summary of the five tests)</td><td>exp19 frozen; exp21 -21.6%; exp25 +25% (p=0.0013); exp46 p=0.48; exp60/61/62 negligible</td><td>Real markets price in public news faster than monthly forecasting can exploit. News feeds explanations and (tested) the range layer, never the best guess.</td></tr>
+</table>
+<h3>In flight at the time of writing</h3>
+<div class="strip">
+<span class="chip">exp81: pooled conformal banks (fixes the bank-starvation binding constraint found by exp76 and exp79) - IN FLIGHT, no results yet</span>
+</div>
+<p class="foot">A later pass folds exp81 into the sweep tables and the Future Work block. Nothing above changes when it lands; exp81 extends the calibration-bank line, it does not revisit these verdicts.</p>
+</div>
+<div class="slide paper"><div class="k">References</div><h2>References</h2>
+<p class="sub">Only sources recorded in the repo's surveys are listed. Where the repo does not record a citation, the entry says so rather than guessing.</p>
+<table>
+<tr><th style="width:28%">Work</th><th>Where it is used</th></tr>
+<tr><td>Romano et al., "Conformalized Quantile Regression," NeurIPS 2019</td><td>The default range layer (CQR), exp74 and exp76</td></tr>
+<tr><td>Gibbs and Candes, "Adaptive Conformal Inference under Distribution Shift," NeurIPS 2021</td><td>ACI, the regime-gated option for volatile subsets (exp74)</td></tr>
+<tr><td>Xu and Xie, "Conformal Prediction Interval for Dynamic Time-Series (EnbPI)," ICML 2021</td><td>The rolling-residual baseline in the UQ battery (exp74)</td></tr>
+<tr><td>Angelopoulos et al., "Conformal PID Control for Time Series Prediction," NeurIPS 2023</td><td>Survey context for sequential conformal methods (docs/UQ_SURVEY.md)</td></tr>
+<tr><td>Achour et al., "Foundation models for time series forecasting: Application in conformal prediction," arXiv 2507.08858 (2025)</td><td>Motivation for the TSFM + conformal battery: TSFMs give more reliable conformal intervals in data-scarce settings</td></tr>
+<tr><td>"Beyond Accuracy: Are TSFMs Well-Calibrated?" ICLR 2026</td><td>Context: TSFMs start already decently calibrated; the layer fixes conditional miscalibration (docs/UQ_SURVEY.md)</td></tr>
+<tr><td>Smith and Wallis, 2009 (the forecast combination puzzle)</td><td>The exp42 FFORMA-lite verdict, via docs/METHODOLOGY.md</td></tr>
+<tr><td>Hyndman and Athanasopoulos, Forecasting: Principles and Practice, 2nd ed.</td><td>Classical experts (ETS, ARIMA, seasonal naive)</td></tr>
+<tr><td>Gruver et al., "Large Language Models Are Zero-Shot Time Series Forecasters," NeurIPS 2023</td><td>Survey context for the LLM track (docs/LITERATURE_SURVEY.md)</td></tr>
+<tr><td>Park et al., "Revisiting LLMs as Zero-Shot Time-Series Forecasters: Small Noise Can Break Large Models," 2025</td><td>Survey context: why the LLM is a specialist (docs/LITERATURE_SURVEY.md)</td></tr>
+<tr><td>Zhou et al., "Why Do Transformers Fail to Forecast Time Series In-Context?" 2025</td><td>Survey context (docs/LITERATURE_SURVEY.md)</td></tr>
+<tr><td>Selective forecasting via metalearning, arXiv 2606.23448</td><td>Closest published match to the error-percentile meta model (docs/UQ_SURVEY.md)</td></tr>
+<tr><td>BC-ACI, arXiv 2604.13253 (2026 preprint)</td><td>Context: bias-corrected ACI matches the exp69c failure mode (docs/UQ_SURVEY.md)</td></tr>
+<tr><td>Not recorded in the repo: Chronos-2, TimesFM-2.5 / TimesFM-1.0, and the original FFORMA papers</td><td>Models used throughout; their paper citations were never written into the repo's docs. The weights manifests and result tables are in models/MANIFEST.json and the experiment reports</td></tr>
+</table>
+<p class="foot" style="margin-top:6px">TD-One. Agentic Solutions for Loan Attrition Prediction. This report was extended with its paper sections on 2026-10-20. Source of record: td-one/docs/slides/TD-One-Slides.html. Experiment reports: td-one/experiments/. Code: td-one/src/td_one/.</p>
+</div>
+</div></body></html>

@@ -669,6 +669,34 @@ shipped default is precise: plain CQR everywhere, the h3-gated
 fusion where story features and a long bank exist. All numbers from
 `experiments/exp76_report.md`; em dash count in the HTML is 0.
 
+**Paper extension pass (2026-10-20, this edition):** at the user's
+direction the HTML file is now a full paper-style report, not only a
+deck. The 8 exec slides are unchanged (byte-identical prefix) and a
+"Part II" was appended in the same file and style: Section 1
+(architecture, general: design principles + component evidence
+table), Section 2 (datasets: every dataset with source, size,
+frequency, horizon, origins; Worlds A and B in separate tables),
+Section 3 (models: every model used, its role, and its citation as
+recorded in the repo; Chronos-2 / TimesFM / FFORMA original papers
+are marked "not recorded" rather than invented; Theta was never
+used and says so), Section 4 (results by dataset: one final-results
+table per dataset, ablations excluded), Section 5 (visualizations:
+per-dataset CRPS bars, the exp76 coverage-repair sweep chart,
+Tourism regime composition, one explicitly labeled schematic), and
+Appendices A (ablations and parameter analyses with numbers),
+B (the actual prompts verbatim from code: ladder forecaster/V1/V2/
+calibrator, the Macro Signal extraction prompt + all 22 direction
+rubrics, the exp75 orchestrator prompt with a note that factor
+agents have no LLM prompt of their own, the risk-reporter citation
+contract, plus the parameter table), C (glossary), D (the full
+failed-experiments register with killing numbers), and References
+(repo-recorded sources only). exp80 is folded in as landed
+(fallback split ships; group conformal does not ship: Appendix A
+levels table + Appendix D). exp81 (pooled conformal banks) is still
+running: it is marked in flight in Section 5, the glossary, and
+Appendix D, and a later pass folds it in. Em dash count in the
+HTML remains 0; the file parses with balanced tags.
+
 ## 7. Repo pointers (relative to `td-one/`)
 
 - `docs/slides/TD-One-Slides.html`: the deck of record (this
