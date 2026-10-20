@@ -85,11 +85,23 @@ cohorts.
   [−0.45, +0.50]; **exp66d's classifier result is downgraded to "no
   measurable advantage"**. Risk tools (`agent/risk_tools.py`: SHAP
   drivers, counterfactual sensitivity, news-risk alignment, uplift
-  amenability): only counterfactuals show a directional signal
-  (+0.348, 1 seed); news alignment hurts (−0.174).
+  amenability): only counterfactuals showed a directional signal
+  (+0.348, 1 seed) — **superseded by exp66g below**; news alignment
+  hurts (−0.174).
 - Verdict: SHAP analysis joins the analyst kit (explanation tool);
   uplift stays on the shelf; LLM grouper gets no tool context.
-- See `experiments/exp66e_report.md`.
+- **exp66g (2026-10-20):** multi-seed (5) confirmation of the
+  counterfactual tool as classifier context — **NOT confirmed**:
+  B vs A delta −0.0018, CI covers zero; a shuffled-flips control
+  arm scores identically (0.0651), proving the content inert. The
+  original 1-seed result was seed noise. Five iteration rounds
+  (prompt tuning, format, param search, guidance, control)
+  converge on inert. Counterfactuals remain a valid analyst
+  *explanation* device; dead as classifier prompt context. One
+  genuine positive: **LLM + stats (no tool context) is the
+  classifier of record** — beats deterministic bins pooled over 5
+  seeds (+0.0198 bin error, CI excludes zero).
+- See `experiments/exp66e_report.md` and `experiments/exp66g_report.md`.
 
 ## Direction
 
