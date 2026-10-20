@@ -216,3 +216,66 @@ series). The straddle ceiling (~0.61 fresh / ~0.47 dev) is
 documented as information-theoretic for origins whose context
 contains no post-shift observation, not as a tuning failure.
 
+### Round 1 — group forecaster, defaults (testbed 2, FRESH seeds)
+
+Harness fidelity first: arm A reproduces exp80's fresh-seed base
+exactly (S1 group cov80 **0.565**; exp80: 0.5652) and C90
+reproduces exp80's failed-bar number exactly (**0.652**). The
+exp85 arms at their defaults (level 0.80, no conditional scaling,
+scan detector):
+
+| fresh, group scope | A (ref) | C90 | RST | DEC | CP | BC | CPBC |
+|---|---|---|---|---|---|---|---|
+| S1@4σ cov80 | 0.565 | 0.652 | 0.594 | 0.594 | 0.594 | 0.582 | 0.582 |
+| S1@4σ CRPS | 0.16822 | 0.16283 | 0.16589 | 0.16610 | 0.16610 | 0.16622 | 0.16622 |
+| control cov80 | 0.767 | 0.824 | 0.796 | 0.781 | 0.781 | 0.770 | 0.770 |
+| control CRPS | 0.08657 | 0.08655 | 0.08629 | 0.08647 | 0.08647 | 0.08637 | 0.08637 |
+
+No arm clears the 0.77 bar; the adaptive arms sit between A and
+C90. The identities CP ≡ DEC and CPBC ≡ BC (every digit) say the
+changepoint machinery never engaged — the same signature as
+testbed 1 round 1, but the mechanism is different (round 4).
+
+### Round 2 — group forecaster, level/conditional matched to C90
+
+Adaptive arms at level 0.90 + conditional vol scaling (C90's own
+settings, isolating the adaptive contribution): **RST ≡ C90
+exactly** (the reset arm degenerates to plain conditional CQR —
+detector still silent), DEC = C90 on S1 cov80 (0.652) but worse on
+control (0.804 vs 0.824), BC slightly *below* C90 on S1 (0.639).
+At matched level/conditional, no adaptive mechanism adds anything
+on this testbed yet — because none of them are actually running.
+
+### Round 3 — group forecaster, CUSUM detector
+
+`--detector cusum` at level 0.90 + conditional: results **identical
+to round 2 in every digit**. A detector probe
+(`exp85_probe_detect.py`) on the real harness series settles why:
+no detector — scan, CUSUM at h=5, even CUSUM at h=3 — fires on any
+group or portfolio series at any post-onset origin. Two stacked
+causes, both structural:
+
+1. **Length starvation.** The exp72/80 worlds are 29 months long;
+   forecast histories are 12–21 points. `detect_break_onset`'s
+   length guard (baseline 24 + 3) returns None *unconditionally*
+   at those lengths. The surgery arms were never eligible to run
+   on testbed 2 — rounds 1–3 measured their fallback paths only.
+2. **Quantization noise.** The group series are small-n binomial
+   rates (0, 0.25, 0, 0.2, …): baseline MAD-of-diffs is as large
+   as the shift itself, so even a length-fitted series-level
+   detector has per-step SNR ≈ 1.
+
+### Round 4 — errors-surface detection + short-half-life decay (testbed 2)
+
+Design change (the diagnosis applied): detect on the bank's
+**signed-error sequence** (`error_onset_index`: CUSUM over the
+chronological one-step errors the conformal bank already computes;
+the forecaster's center lags the new level after a break, so
+post-break errors are persistently one-signed even when the raw
+series is too quantized to read). Plus: min_post 5 → 2 (post-onset
+origins in this harness have at most ~2 post-break bank cases —
+a count gate of 5 is a permanent disable), decay half-life 6 → 3.
+Series-level gates in the group path also got length-fitted
+windows so the length guard can no longer silently disable them.
+
+

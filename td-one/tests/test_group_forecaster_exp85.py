@@ -70,12 +70,13 @@ def test_cusum_detector_modes_valid_and_pit() -> None:
     """
     s = _shifted_series(30, 16)
     s_alt = np.concatenate([s[:36], np.full(10, 0.9)])
-    for mode in ("reset", "cp", "cp_bc"):
-        fn = v2_forecaster_fn(conformal=True, conformal_adaptive=mode, conformal_detector="cusum")
-        q = fn(s)
-        assert np.all(np.diff(q) >= 0), mode
-        for o in (28, 32, 36):
-            assert fn(s[:o]) == pytest.approx(fn(s_alt[:o])), (mode, o)
+    for det in ("cusum", "errors"):
+        for mode in ("reset", "cp", "cp_bc"):
+            fn = v2_forecaster_fn(conformal=True, conformal_adaptive=mode, conformal_detector=det)
+            q = fn(s)
+            assert np.all(np.diff(q) >= 0), (det, mode)
+            for o in (28, 32, 36):
+                assert fn(s[:o]) == pytest.approx(fn(s_alt[:o])), (det, mode, o)
 
 
 def test_adaptive_noop_below_min_bank() -> None:

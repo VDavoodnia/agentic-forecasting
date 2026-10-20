@@ -97,6 +97,46 @@ def _realized_time(case: ForecastCase) -> int:
     return case.origin + case.h - 1
 
 
+def error_onset_index(errors: np.ndarray, *, cusum_threshold: float = 5.0) -> int | None:
+    """Index where a CUSUM over signed errors places the break.
+
+    The bank's signed-error sequence is the natural detection
+    surface under shift: pre-break errors are centered, post-break
+    errors are persistently one-signed while the forecaster's center
+    lags the new level. Baseline = the first two-thirds of the
+    sequence (chronological bank, so the baseline is the oldest —
+    pre-break — segment whenever the break is in the last third).
+    Returns the index into ``errors`` of the first post-break case,
+    or None. PIT-safe: callers pass only already-realized errors.
+    """
+    from td_one.agent.shift_guard import GuardConfig, cusum_detect  # noqa: PLC0415
+
+    e = np.asarray(errors, dtype=float).ravel()
+    if len(e) < 9:
+        return None
+    bw = max(6, (2 * len(e)) // 3)
+    if bw >= len(e):
+        return None
+    det = cusum_detect(
+        e,
+        asof=len(e) - 1,
+        config=GuardConfig(baseline_window=bw, cusum_threshold_h=cusum_threshold),
+    )
+    if det.detected and det.onset_idx is not None:
+        return int(det.onset_idx)
+    return None
+
+
+def _error_onset(cases: list[ForecastCase], cusum_threshold: float) -> int | None:
+    """Break onset in realized-time units, from bank signed errors."""
+    idx = error_onset_index(
+        np.array([c.y - c.median for c in cases]), cusum_threshold=cusum_threshold
+    )
+    if idx is None or idx >= len(cases):
+        return None
+    return _realized_time(cases[idx])
+
+
 def _side_scores(cases: list[ForecastCase]) -> tuple[np.ndarray, np.ndarray]:
     """CQR exceedance scores (s_lo, s_hi) for a list of cases."""
     s_lo = np.array([max(c.interval_edges()[1] - c.y, 0.0) for c in cases])
@@ -113,6 +153,35 @@ def _cqr_scales(case: ForecastCase, cases: list[ForecastCase], level: float) -> 
     lo_adj = q10 - finite_quantile(s_lo, level)
     hi_adj = q90 + finite_quantile(s_hi, level)
     return scales_from_interval(case, lo_adj, hi_adj)
+
+
+def _detect_onset(
+    case: ForecastCase,
+    hb: list[ForecastCase],
+    *,
+    detector: str,
+    lookback: int,
+    baseline: int,
+    cusum_threshold: float,
+) -> int | None:
+    """Onset in realized-time units, via the chosen detector.
+
+    ``"scan"``/``"cusum"`` detect on the context series;
+    ``"errors"`` detects on the bank's signed-error sequence
+    (exp85 round 4 — the only surface that engages on short,
+    noisy, quantized series where series-level detectors starve).
+    """
+    if detector == "errors":
+        return _error_onset(hb, cusum_threshold)
+    if detector in ("scan", "cusum"):
+        return detect_break_onset(
+            case.context,
+            lookback=lookback,
+            baseline=baseline,
+            gate=detector,
+            cusum_threshold=cusum_threshold,
+        )
+    raise ValueError(f"detector must be 'scan', 'cusum' or 'errors', got {detector!r}")
 
 
 def arm_cqr_reset(
@@ -137,11 +206,12 @@ def arm_cqr_reset(
     hb = _hbank(bank, case.h)
     if len(hb) < min_bank:
         return 1.0, 1.0
-    onset = detect_break_onset(
-        case.context,
+    onset = _detect_onset(
+        case,
+        hb,
+        detector=detector,
         lookback=lookback,
         baseline=baseline,
-        gate=detector,
         cusum_threshold=cusum_threshold,
     )
     if onset is not None:
@@ -175,11 +245,12 @@ def arm_cqr_reset_pool(
     if len(bank) < min_bank:
         return 1.0, 1.0
     cases = list(bank)
-    onset = detect_break_onset(
-        case.context,
+    onset = _detect_onset(
+        case,
+        sorted(bank, key=lambda c: (c.origin, c.h)),
+        detector=detector,
         lookback=lookback,
         baseline=baseline,
-        gate=detector,
         cusum_threshold=cusum_threshold,
     )
     if onset is not None:
@@ -256,11 +327,12 @@ def arm_cqr_cp(
     hb = _hbank(bank, case.h)
     if len(hb) < min_bank:
         return 1.0, 1.0
-    onset = detect_break_onset(
-        case.context,
+    onset = _detect_onset(
+        case,
+        hb,
+        detector=detector,
         lookback=lookback,
         baseline=baseline,
-        gate=detector,
         cusum_threshold=cusum_threshold,
     )
     w = _decay_weights(case, hb, half_life, onset=onset, pre_factor=pre_factor)
@@ -416,11 +488,12 @@ def arm_cp_bc(
     hb = _hbank(bank, case.h)
     if len(hb) < min_bank:
         return 1.0, 1.0
-    onset = detect_break_onset(
-        case.context,
+    onset = _detect_onset(
+        case,
+        hb,
+        detector=detector,
         lookback=lookback,
         baseline=baseline,
-        gate=detector,
         cusum_threshold=cusum_threshold,
     )
     if onset is not None:

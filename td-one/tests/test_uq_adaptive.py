@@ -139,6 +139,36 @@ def test_reset_pool_uses_cross_horizon_evidence():
     assert r_pool[1] > r_perh[1]
 
 
+def test_error_onset_index_finds_sign_flip():
+    rng = np.random.default_rng(3)
+    errs = np.concatenate([0.05 * rng.standard_normal(14), 2.0 + 0.05 * rng.standard_normal(8)])
+    idx = A.error_onset_index(errs)
+    assert idx is not None and 10 <= idx <= 18
+    calm = 0.05 * rng.standard_normal(22)
+    assert A.error_onset_index(calm) is None
+
+
+def test_reset_with_errors_detector_engages():
+    """Bank errors flip sign at the break.
+
+    The errors detector must find the post-break scores even when
+    the context is uninformative. Post-break cases are a minority
+    (3/22), so the plain full-bank quantile still lands on a zero
+    score — the dilution the reset exists to fix.
+    """
+    flat = _flat_context()
+    case = _case(origin=40, h=1, context=flat)
+    bank = []
+    for i in range(19):  # pre-break: centered, cover (s_hi = 0)
+        y = 0.05 if i % 2 == 0 else 0.15
+        bank.append(_case(origin=10 + i, h=1, m=0.0, half=1.0, y=y, context=flat))
+    for i in range(3):  # post-break: persistent +3 misses
+        bank.append(_case(origin=29 + i, h=1, m=0.0, half=1.0, y=3.0, context=flat))
+    r_err = A.arm_cqr_reset(case, bank, min_post=3, detector="errors")
+    r_scan = A.arm_cqr_reset(case, bank, min_post=3, detector="scan")
+    assert r_err[1] > r_scan[1]
+
+
 # ---------------------------------------------------------------------------
 # Reset / decay arms
 # ---------------------------------------------------------------------------

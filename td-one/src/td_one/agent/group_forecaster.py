@@ -274,10 +274,16 @@ def _conformal_offsets(  # noqa: PLR0913 - parameter object would obscure the ex
     - ``"cp_bc"``: ``"bc"`` restricted to the post-break bank when
       a break is detected (same ``min_post`` rule as ``"reset"``).
 
-    ``detector`` selects the changepoint gate used by the surgery
-    modes: ``"scan"`` (Layer-2 triple gate; exp85 round 1 found it
-    never fires on noisy rate/ramp series) or ``"cusum"`` (CUSUM
-    alone; engages on gradual shifts, some false-positive risk).
+    ``detector`` selects the changepoint detector used by the
+    surgery modes: ``"scan"`` (Layer-2 triple gate), ``"cusum"``
+    (CUSUM alone on the series; engages on gradual shifts, some
+    false-positive risk), or ``"errors"`` (CUSUM over the bank's
+    signed errors — exp85 round 4: the only surface that engages
+    on the short, noisy, quantized histories this forecaster sees;
+    series-level gates starve there, first by a length guard —
+    histories of 12–21 points vs a 24+12 default window — and then
+    by quantization noise). Series-level detectors use a
+    length-fitted window (baseline = 2/3 of the history).
     """
     from td_one.uq.methods import finite_quantile, weighted_quantile
 
@@ -309,13 +315,26 @@ def _conformal_offsets(  # noqa: PLR0913 - parameter object would obscure the ex
         off_lo = finite_quantile(s_lo_a, level)
         off_hi = finite_quantile(s_hi_a, level)
     elif adaptive in ("reset", "decay", "cp", "bc", "cp_bc"):
-        from td_one.uq.adaptive import detect_break_onset
+        from td_one.uq.adaptive import detect_break_onset, error_onset_index
 
-        onset = (
-            detect_break_onset(series, gate=detector)
-            if adaptive in ("reset", "cp", "cp_bc")
-            else None
-        )
+        onset: int | None = None
+        if adaptive in ("reset", "cp", "cp_bc"):
+            if detector == "errors":
+                # CUSUM over the bank's signed errors (chronological);
+                # the onset is a series time via the bank case's t.
+                onset_idx = error_onset_index(np.array(err_t))
+                onset = ts[onset_idx] if onset_idx is not None and onset_idx < len(ts) else None
+            elif len(series) >= 12:
+                # Length-fitted window: the exp74 defaults (24 + 12)
+                # starve on the short series this forecaster sees
+                # (exp85 round 4: harness histories are 12-21 long,
+                # so the default gate returned None unconditionally).
+                det_baseline = min(24, max(6, (2 * len(series)) // 3))
+                det_lookback = min(12, len(series) - det_baseline)
+                if det_lookback >= 3:
+                    onset = detect_break_onset(
+                        series, gate=detector, baseline=det_baseline, lookback=det_lookback
+                    )
         post_mask = np.array([t >= onset for t in ts]) if onset is not None else None
         if adaptive == "reset":
             if post_mask is not None and int(post_mask.sum()) >= min_post:
@@ -474,8 +493,9 @@ def v2_forecaster_fn(
         Shrinkage prior count for the applied bias
         (``b * n / (n + n0)``).
     conformal_detector:
-        Changepoint gate for the surgery modes (exp85): ``"scan"``
-        (default) or ``"cusum"`` — see :func:`_conformal_offsets`.
+        Changepoint detector for the surgery modes (exp85):
+        ``"scan"`` (default), ``"cusum"``, or ``"errors"`` — see
+        :func:`_conformal_offsets`.
 
     """
     if spread_method not in ("empirical", "gaussian"):
@@ -507,9 +527,9 @@ def v2_forecaster_fn(
         raise ValueError(f"conformal_bias_lambda must be in (0, 1), got {conformal_bias_lambda}")
     if conformal_bias_n0 < 0:
         raise ValueError(f"conformal_bias_n0 must be >= 0, got {conformal_bias_n0}")
-    if conformal_detector not in ("scan", "cusum"):
+    if conformal_detector not in ("scan", "cusum", "errors"):
         raise ValueError(
-            f"conformal_detector must be 'scan' or 'cusum', got {conformal_detector!r}"
+            f"conformal_detector must be 'scan', 'cusum' or 'errors', got {conformal_detector!r}"
         )
 
     def _forecast(series: np.ndarray) -> np.ndarray:
