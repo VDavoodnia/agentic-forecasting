@@ -1,0 +1,352 @@
+{
+ "summary_by_family": {
+  "m3": {
+   "cqr": {
+    "n": 3600.0,
+    "coverage80": 0.7655555555555555,
+    "coverage90": 0.8941666666666667,
+    "width_ratio": 1.0273573703261811,
+    "crps": 383.79538532697677,
+    "crps_paired_t": -0.36599253857369723,
+    "crps_paired_p": 0.7143921542611831,
+    "crps_win_rate": 0.020277777777777777
+   },
+   "native": {
+    "n": 3600.0,
+    "coverage80": 0.7588888888888888,
+    "coverage90": 0.8908333333333334,
+    "width_ratio": 1.0,
+    "crps": 383.9208491573545,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 3600.0,
+    "coverage80": 0.7619444444444444,
+    "coverage90": 0.8805555555555555,
+    "width_ratio": 1.0081146562720438,
+    "crps": 384.6274063081801,
+    "crps_paired_t": 1.4073589748385167,
+    "crps_paired_p": 0.1594073256925514,
+    "crps_win_rate": 0.38333333333333336
+   },
+   "ship_n024": {
+    "n": 3600.0,
+    "coverage80": 0.7625,
+    "coverage90": 0.885,
+    "width_ratio": 1.0127404499865418,
+    "crps": 384.1590893285261,
+    "crps_paired_t": 0.5911021313927997,
+    "crps_paired_p": 0.5544891120333951,
+    "crps_win_rate": 0.3786111111111111
+   },
+   "ship_n04": {
+    "n": 3600.0,
+    "coverage80": 0.7561111111111111,
+    "coverage90": 0.8691666666666666,
+    "width_ratio": 1.0096619662577049,
+    "crps": 386.3531574200039,
+    "crps_paired_t": 3.639172934758143,
+    "crps_paired_p": 0.0002773566907350585,
+    "crps_win_rate": 0.37444444444444447
+   }
+  },
+  "m4": {
+   "cqr": {
+    "n": 2880.0,
+    "coverage80": 0.7680555555555556,
+    "coverage90": 0.8663194444444444,
+    "width_ratio": 1.0,
+    "crps": 417.33187775628306,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": 0.0
+   },
+   "native": {
+    "n": 2880.0,
+    "coverage80": 0.7680555555555556,
+    "coverage90": 0.8663194444444444,
+    "width_ratio": 1.0,
+    "crps": 417.33187775628306,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 2880.0,
+    "coverage80": 0.7972222222222223,
+    "coverage90": 0.8920138888888889,
+    "width_ratio": 1.1368031523769446,
+    "crps": 420.08582795299714,
+    "crps_paired_t": 2.321646825838679,
+    "crps_paired_p": 0.020321420770849457,
+    "crps_win_rate": 0.321875
+   },
+   "ship_n024": {
+    "n": 2880.0,
+    "coverage80": 0.8045138888888889,
+    "coverage90": 0.8930555555555556,
+    "width_ratio": 1.1544589929943918,
+    "crps": 419.79746150280624,
+    "crps_paired_t": 2.1939822545741157,
+    "crps_paired_p": 0.028316341512638052,
+    "crps_win_rate": 0.2916666666666667
+   },
+   "ship_n04": {
+    "n": 2880.0,
+    "coverage80": 0.790625,
+    "coverage90": 0.8861111111111111,
+    "width_ratio": 1.1259055880369078,
+    "crps": 421.8928522451313,
+    "crps_paired_t": 3.3388485768713414,
+    "crps_paired_p": 0.0008519710553955388,
+    "crps_win_rate": 0.3347222222222222
+   }
+  },
+  "osfi": {
+   "cqr": {
+    "n": 864.0,
+    "coverage80": 0.7974537037037037,
+    "coverage90": 0.9120370370370371,
+    "width_ratio": 1.1538585865460587,
+    "crps": 1709.8156866933423,
+    "crps_paired_t": -3.2475617867419735,
+    "crps_paired_p": 0.0012089163219902543,
+    "crps_win_rate": 0.18518518518518517
+   },
+   "native": {
+    "n": 864.0,
+    "coverage80": 0.75,
+    "coverage90": 0.8935185185185185,
+    "width_ratio": 1.0,
+    "crps": 1731.9715366473765,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 864.0,
+    "coverage80": 0.7974537037037037,
+    "coverage90": 0.9120370370370371,
+    "width_ratio": 1.1538585865460587,
+    "crps": 1709.8156866933423,
+    "crps_paired_t": -3.2475617867419735,
+    "crps_paired_p": 0.0012089163219902543,
+    "crps_win_rate": 0.18518518518518517
+   },
+   "ship_n024": {
+    "n": 864.0,
+    "coverage80": 0.7974537037037037,
+    "coverage90": 0.9120370370370371,
+    "width_ratio": 1.1538585865460587,
+    "crps": 1709.8156866933423,
+    "crps_paired_t": -3.2475617867419735,
+    "crps_paired_p": 0.0012089163219902543,
+    "crps_win_rate": 0.18518518518518517
+   },
+   "ship_n04": {
+    "n": 864.0,
+    "coverage80": 0.7974537037037037,
+    "coverage90": 0.9120370370370371,
+    "width_ratio": 1.1538585865460587,
+    "crps": 1709.8156866933423,
+    "crps_paired_t": -3.2475617867419735,
+    "crps_paired_p": 0.0012089163219902543,
+    "crps_win_rate": 0.18518518518518517
+   }
+  },
+  "smm": {
+   "cqr": {
+    "n": 204.0,
+    "coverage80": 0.7450980392156863,
+    "coverage90": 0.9068627450980392,
+    "width_ratio": 1.0378280494281775,
+    "crps": 0.0008301721461519537,
+    "crps_paired_t": -0.709294133120874,
+    "crps_paired_p": 0.4789558114459514,
+    "crps_win_rate": 0.19117647058823528
+   },
+   "native": {
+    "n": 204.0,
+    "coverage80": 0.7254901960784313,
+    "coverage90": 0.9019607843137255,
+    "width_ratio": 1.0,
+    "crps": 0.000831264408783847,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 204.0,
+    "coverage80": 0.7450980392156863,
+    "coverage90": 0.9068627450980392,
+    "width_ratio": 1.0378280494281775,
+    "crps": 0.0008301721461519537,
+    "crps_paired_t": -0.709294133120874,
+    "crps_paired_p": 0.4789558114459514,
+    "crps_win_rate": 0.19117647058823528
+   },
+   "ship_n024": {
+    "n": 204.0,
+    "coverage80": 0.7450980392156863,
+    "coverage90": 0.9068627450980392,
+    "width_ratio": 1.0378280494281775,
+    "crps": 0.0008301721461519537,
+    "crps_paired_t": -0.709294133120874,
+    "crps_paired_p": 0.4789558114459514,
+    "crps_win_rate": 0.19117647058823528
+   },
+   "ship_n04": {
+    "n": 204.0,
+    "coverage80": 0.7450980392156863,
+    "coverage90": 0.9068627450980392,
+    "width_ratio": 1.0378280494281775,
+    "crps": 0.0008301721461519537,
+    "crps_paired_t": -0.709294133120874,
+    "crps_paired_p": 0.4789558114459514,
+    "crps_win_rate": 0.19117647058823528
+   }
+  },
+  "tourism": {
+   "cqr": {
+    "n": 5760.0,
+    "coverage80": 0.7826388888888889,
+    "coverage90": 0.8914930555555556,
+    "width_ratio": 1.0457405762046559,
+    "crps": 859.0548256560843,
+    "crps_paired_t": 5.434343877904512,
+    "crps_paired_p": 5.7257525313139875e-08,
+    "crps_win_rate": 0.043055555555555555
+   },
+   "native": {
+    "n": 5760.0,
+    "coverage80": 0.7703125,
+    "coverage90": 0.8852430555555556,
+    "width_ratio": 1.0,
+    "crps": 852.6471908230819,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 5760.0,
+    "coverage80": 0.8006944444444445,
+    "coverage90": 0.9029513888888889,
+    "width_ratio": 1.0929841961061941,
+    "crps": 850.4057685184752,
+    "crps_paired_t": -1.2221029968123651,
+    "crps_paired_p": 0.22171869713839712,
+    "crps_win_rate": 0.35225694444444444
+   },
+   "ship_n024": {
+    "n": 5760.0,
+    "coverage80": 0.8060763888888889,
+    "coverage90": 0.9100694444444445,
+    "width_ratio": 1.1000914029746713,
+    "crps": 850.4572848271563,
+    "crps_paired_t": -1.6276967512881602,
+    "crps_paired_p": 0.10364390517787742,
+    "crps_win_rate": 0.3440972222222222
+   },
+   "ship_n04": {
+    "n": 5760.0,
+    "coverage80": 0.7956597222222223,
+    "coverage90": 0.8960069444444444,
+    "width_ratio": 1.0898610795397237,
+    "crps": 851.921016384301,
+    "crps_paired_t": -0.32199356878540725,
+    "crps_paired_p": 0.7474692535429494,
+    "crps_win_rate": 0.3550347222222222
+   }
+  },
+  "pooled_all": {
+   "cqr": {
+    "n": 13308.0,
+    "coverage80": 0.7752479711451759,
+    "coverage90": 0.8883378418996093,
+    "width_ratio": 1.0377669817382187,
+    "crps": 676.9624221184567,
+    "crps_paired_t": 1.9005398837796612,
+    "crps_paired_p": 0.05738389513333989,
+    "crps_win_rate": 0.03907424105801022
+   },
+   "native": {
+    "n": 13308.0,
+    "coverage80": 0.7647279831680193,
+    "coverage90": 0.883453561767358,
+    "width_ratio": 1.0,
+    "crps": 675.6614263064921,
+    "crps_paired_t": NaN,
+    "crps_paired_p": NaN,
+    "crps_win_rate": NaN
+   },
+   "ship": {
+    "n": 13308.0,
+    "coverage80": 0.7883979561166216,
+    "coverage90": 0.8951758340847611,
+    "width_ratio": 1.0826153856218648,
+    "crps": 674.0399756942188,
+    "crps_paired_t": -1.6970529391788283,
+    "crps_paired_p": 0.08971003764432808,
+    "crps_win_rate": 0.34077246768860836
+   },
+   "ship_n024": {
+    "n": 13308.0,
+    "coverage80": 0.7924556657649534,
+    "coverage90": 0.8996844003606853,
+    "width_ratio": 1.0907638068656935,
+    "crps": 673.873181092077,
+    "crps_paired_t": -2.292506399628147,
+    "crps_paired_p": 0.021891969308009563,
+    "crps_win_rate": 0.3294259092275323
+   },
+   "ship_n04": {
+    "n": 13308.0,
+    "coverage80": 0.7832131048993087,
+    "coverage90": 0.8878118425007514,
+    "width_ratio": 1.079323845136909,
+    "crps": 675.5537089126639,
+    "crps_paired_t": -0.09552311401279459,
+    "crps_paired_p": 0.9239007702357364,
+    "crps_win_rate": 0.34235046588518186
+   }
+  }
+ },
+ "bar": {
+  "ship": {
+   "norm_delta_mean": -0.002376115804800156,
+   "norm_delta_p": 0.04671592359044501,
+   "raw_pooled_crps_ship": 674.0399756942188,
+   "raw_pooled_crps_b": 676.9624221184567,
+   "crit1_crps": true,
+   "crit2_coverage_all_families": true,
+   "crit3_m4_cov80_gain": 0.029166666666666674,
+   "crit3_m4_width": 1.1368031523769446,
+   "crit3_m4": true
+  },
+  "ship_n04": {
+   "norm_delta_mean": 0.0005460850506790838,
+   "norm_delta_p": 0.699597346572501,
+   "raw_pooled_crps_ship": 675.5537089126639,
+   "raw_pooled_crps_b": 676.9624221184567,
+   "crit1_crps": false,
+   "crit2_coverage_all_families": true,
+   "crit3_m4_cov80_gain": 0.02256944444444442,
+   "crit3_m4_width": 1.1259055880369078,
+   "crit3_m4": true
+  },
+  "ship_n024": {
+   "norm_delta_mean": -0.00282948022974378,
+   "norm_delta_p": 0.006633732584126079,
+   "raw_pooled_crps_ship": 673.873181092077,
+   "raw_pooled_crps_b": 676.9624221184567,
+   "crit1_crps": true,
+   "crit2_coverage_all_families": true,
+   "crit3_m4_cov80_gain": 0.03645833333333326,
+   "crit3_m4_width": 1.1544589929943918,
+   "crit3_m4": true
+  }
+ },
+ "min_series": 8
+}

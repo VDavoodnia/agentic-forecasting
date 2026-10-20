@@ -203,6 +203,25 @@ regime-gated option for volatile subsets. Macro news signals, tested
 as uncertainty features, add nothing measurable over story features
 in the current (calm) window.
 
+**exp81: pooled conformal banks for many-series benchmarks.** The
+sweep's binding constraint was per-series bank size (M4's conformal
+arms were an exact no-op: 8-origin banks never fire CQR). The
+production fix pools CQR scores **across series within a benchmark**,
+PIT-safe by an evaluation-round lag rule (a pooled case enters only
+when fully realized within its own series' timeline), using the
+*signed* max-score (per-side exceedance quantiles are degenerate at
+level 0.8 whenever a side's exceedance rate is under 20%), side-
+specific width normalization, and shrinkage of the pooled quantile
+toward the series' own scores (n0=24). It activates only in
+many-series families (≥ 8 series), where per-series banks are
+starved; few-series families keep per-series CQR. On the exp76 sweep:
+pooled CRPS beats per-series CQR (scale-free Δ −0.0028, p=0.0066),
+coverage no worse in any family, and M4 goes from no-op to cov80
+**0.805** (+0.036) — Tourism wins both CRPS (−1.0%) and coverage
+(0.806 vs 0.783). Pooling is contraindicated for few, heterogeneous,
+adequately-banked series (OSFI's 4 segments: harmful in every form
+tested, +62 CRPS pooled-signed) — the family gate is the guardrail.
+
 ---
 
 ## Other Validated Results

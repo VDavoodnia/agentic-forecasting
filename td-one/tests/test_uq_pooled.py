@@ -192,3 +192,90 @@ def test_pooled_study_future_y_perturbation_is_invisible():
     for a, b in zip(early_a, early_b, strict=True):
         assert (a.config_id, a.origin, a.h) == (b.config_id, b.origin, b.h)
         assert a.crps == pytest.approx(b.crps)
+
+
+def test_signed_scores_not_zero_inflated():
+    # 12 upside + 12 downside exceedances: 12% per-side rate (per-side
+    # CQR offset is exactly 0) but 24% total (signed CQR bites).
+    bank = (
+        [_case(i, 1, half=1.0, y=0.0) for i in range(76)]
+        + [_case(100 + i, 1, half=1.0, y=5.0) for i in range(12)]
+        + [_case(200 + i, 1, half=1.0, y=-5.0) for i in range(12)]
+    )
+    case = _case(500, 1)
+    s_per = P._signed_scores(bank, 1, "width")
+    assert P.finite_quantile(s_per, 0.8) > 0
+    r_lo, r_hi = P.arm_pooled_cqr_signed(case, [], bank)
+    assert r_lo > 1.0 and r_hi > 1.0
+    # The per-side variant is provably inert on this bank.
+    assert P.arm_pooled_cqr(case, [], bank) == (1.0, 1.0)
+
+
+def test_signed_arm_narrows_on_overcovered_bank():
+    # All realizeds inside the interval -> signed scores negative ->
+    # the pooled quantile is negative -> narrowing (textbook CQR).
+    bank = [_case(i, 1, half=1.0, y=0.0) for i in range(20)]
+    case = _case(100, 1)
+    r_lo, r_hi = P.arm_pooled_cqr_signed(case, [], bank)
+    assert r_lo < 1.0 and r_hi < 1.0
+
+
+def test_shrink_signed_limits():
+    own = [_case(i, 1, half=1.0, y=5.0) for i in range(20)]
+    cross = [_case(50 + i, 1, half=1.0, y=0.0) for i in range(20)]
+    case = _case(100, 1)
+    # No cross -> own signed scores only.
+    r_mix = P.arm_pooled_shrink_signed(case, own, [])
+    assert r_mix[1] > 1.5
+    # No own -> equals pooled-signed on cross (quantile-convention slack).
+    r_cross = P.arm_pooled_shrink_signed(case, [], cross)
+    r_dir = P.arm_pooled_cqr_signed(case, [], cross)
+    assert r_cross[0] == pytest.approx(r_dir[0], abs=0.2)
+    assert r_cross[1] == pytest.approx(r_dir[1], abs=0.2)
+
+
+def test_fill_resid_scales_pit_safe():
+    # scale at a case uses only cases observable before its origin.
+    rng = np.random.default_rng(11)
+    cases = []
+    for origin in (100, 112, 124):
+        for h in (1, 6):
+            cases.append(_case(origin, h, y=float(rng.normal(0, 3))))
+    P.fill_resid_scales({"c": cases})
+    early = [c for c in cases if c.origin == 100]
+    late = [c for c in cases if c.origin == 124]
+    for c in early:
+        assert c.feats["resid_scale_h"] == pytest.approx(1.0)  # no prior -> own half-width
+    # Later cases get a real residual scale from prior cases.
+    assert late[0].feats["resid_scale_h"] > 0
+    s0 = {id(c): c.feats["resid_scale_h"] for c in early}
+    # Perturbing a LATER realized must not move EARLIER scales.
+    for c in late:
+        c.y = 999.0
+    P.fill_resid_scales({"c": cases})
+    for c in early:
+        assert c.feats["resid_scale_h"] == pytest.approx(s0[id(c)])
+
+
+def test_gated_arm_returns_b_when_bank_fed():
+    own = [_case(i, 1, half=1.0, y=2.0) for i in range(30)]  # 30 >= gate 24
+    cross = [_case(100 + i, 1, half=1.0, y=-9.0) for i in range(30)]
+    case = _case(500, 1)
+    assert P.arm_pooled_shrink_gated(case, own, cross) == M.arm_cqr(case, own)
+    # Below the gate it must use the pool (different answer than B here).
+    own_small = own[:5]
+    assert P.arm_pooled_shrink_gated(case, own_small, cross) != M.arm_cqr(case, own_small)
+
+
+def test_similarity_gate_filters_far_scale_series():
+    case = _case(500, 1)
+    case.feats["resid_scale_h"] = 1.0
+    near = _case(0, 1, y=5.0)
+    near.feats["resid_scale_h"] = 2.0  # within kappa=3
+    far = _case(1, 1, y=5.0)
+    far.feats["resid_scale_h"] = 50.0  # outside kappa=3
+    kept = P._similar_cross(case, [near, far], 3.0)
+    assert kept == [near]
+    # Missing scale information -> kept (never silently drop data).
+    bare = _case(2, 1, y=5.0)
+    assert P._similar_cross(case, [bare], 3.0) == [bare]
