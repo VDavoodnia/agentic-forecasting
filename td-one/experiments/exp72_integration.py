@@ -54,11 +54,11 @@ from td_one.data_gen.shift_scenarios import ShiftSpec, apply_divergence, apply_s
 
 # --- pre-registered config (round 0) -------------------------------------
 SEEDS = [7, 42]
-N_CUSTOMERS = 10000
-N_MONTHS = 48
-N_CLUSTERS = 4
+N_CUSTOMERS = 4000
+N_MONTHS = 30
+N_CLUSTERS = 3
 GROUPER_SEED = 42
-MIN_GROUP_N = 150
+MIN_GROUP_N = 60
 TRAIN_WINDOW = 6
 ORIGIN_START = 12
 ORIGIN_STOP_TAIL = 8  # stop this many months before the last outcome month
@@ -125,6 +125,30 @@ def naive_grid9(ctx: np.ndarray) -> np.ndarray:
     return np.clip(mu + z * sd, 0.0, 1.0)
 
 
+def gauss5_forecaster_fn() -> object:
+    """Proper probabilistic forecaster_fn on the 5-level grid.
+
+    Round 1 diagnosis: Track-1's ``v2_forecaster_fn`` emits *flat*
+    (point-mass) quantiles — the only expert it feeds the router is a
+    tiled last value. Per-month noisy actuals punish that brutally
+    (control CRPS 0.16 vs 0.10 for a Gaussian trailing forecaster).
+    This is the honest-probabilist alternative with the same
+    forecaster_fn contract (for the GROUPQ arm).
+    """
+
+    def _forecast(series: np.ndarray) -> np.ndarray:
+        ctx = np.asarray(series, dtype=float)
+        w = min(6, len(ctx))
+        mu = float(np.mean(ctx[-w:])) if len(ctx) else 0.0
+        tail = ctx[-min(24, len(ctx)) :]
+        resid = tail - np.mean(tail) if len(tail) else np.array([0.01])
+        sd = max(float(np.std(resid)) if len(resid) > 1 else 0.01, 1e-4)
+        z = stats.norm.ppf(Q5_LEVELS)
+        return np.clip(mu + z * sd, 0.0, 1.0)
+
+    return _forecast
+
+
 def assign_by_rules(df: pd.DataFrame, groups: list[GroupDefinition]) -> dict[str, str]:
     """Vectorized rule application; each row must match exactly one rule."""
     assign: dict[str, str] = {}
@@ -179,6 +203,16 @@ def build_seed_data(seed: int) -> SeedData:
     )
     history = sim.generate_history()
     outcomes = sim.generate_outcomes(history)
+    # Chunked model_dump + early release: the record list is the memory
+    # peak (pydantic objects); free it once outcomes exist.
+    import gc
+
+    chunks = []
+    for i in range(0, len(history), 40_000):
+        chunks.append(pd.DataFrame([r.model_dump() for r in history[i : i + 40_000]]))
+    hist_df = pd.concat(chunks, ignore_index=True)
+    del history, chunks
+    gc.collect()
     out_df = pd.DataFrame(
         {
             "mortgage_id": [o.mortgage_id for o in outcomes],
@@ -195,7 +229,6 @@ def build_seed_data(seed: int) -> SeedData:
     onset = len(months) // 2
     cutoff = months[onset]
 
-    hist_df = pd.DataFrame([r.model_dump() for r in history])
     hist_df["snapshot_date"] = pd.to_datetime(hist_df["snapshot_date"])
     meta_train = (
         hist_df[hist_df["snapshot_date"] < pd.Timestamp(cutoff)]
@@ -205,7 +238,11 @@ def build_seed_data(seed: int) -> SeedData:
         .reset_index()
     )
     det = fit_deterministic_groups(
-        meta_train, n_clusters=N_CLUSTERS, seed=GROUPER_SEED, min_group_n=MIN_GROUP_N
+        meta_train,
+        n_clusters=N_CLUSTERS,
+        seed=GROUPER_SEED,
+        min_group_n=MIN_GROUP_N,
+        max_tree_depth=3,
     )
     out_mids = set(out_df["mortgage_id"].astype(str))
     meta_out = meta_train[meta_train["mortgage_id"].astype(str).isin(out_mids)].copy()
@@ -221,18 +258,18 @@ def build_seed_data(seed: int) -> SeedData:
     series = build_group_series(out_df, group_of)
     series["__portfolio__"] = portfolio_totals(series)
 
-    # Region map for S3: modal province per group (from training meta).
+    # Region map for S3: median split on training ON-share (A = above
+    # median). Modal-province mapping leaves ~all groups ON (ON is 40%
+    # of the portfolio), which would not average away at the aggregate.
     meta_out = meta_out.copy()
     meta_out["group_id"] = meta_out["mortgage_id"].astype(str).map(group_of)
-    modal_prov = meta_out.groupby("group_id")["province"].agg(
-        lambda s: s.mode().iloc[0] if len(s) else "?"
+    on_share = (
+        meta_out.assign(is_on=meta_out["province"] == "ON").groupby("group_id")["is_on"].mean()
     )
-    region_of = {gid: ("A" if p == "ON" else "B") for gid, p in modal_prov.items()}
-    if "A" not in region_of.values():  # fallback: highest ON share -> A
-        on_share = (
-            meta_out.assign(is_on=meta_out["province"] == "ON").groupby("group_id")["is_on"].mean()
-        )
-        region_of[str(on_share.idxmax())] = "A"
+    order = on_share.sort_values(ascending=False)
+    n_half = max(1, len(order) // 2)
+    a_set = set(order.index[:n_half])
+    region_of = {gid: ("A" if gid in a_set else "B") for gid in on_share.index}
 
     # Donor/recipient for S7mix by pre-onset realised attrition.
     train_rates = {
@@ -275,7 +312,9 @@ def _from_shift_dict(gid: str, months: list[date], d: dict[str, np.ndarray]) -> 
     )
 
 
-def build_world(sd: SeedData, world: str) -> dict[str, GroupSeries]:
+def build_world(
+    sd: SeedData, world: str, migration_rate: float = MIGRATION_RATE
+) -> dict[str, GroupSeries]:
     """Build the per-group series for one world (control or shifted)."""
     base = {g: gs for g, gs in sd.base_series.items() if g != "__portfolio__"}
     if world == "control":
@@ -288,7 +327,7 @@ def build_world(sd: SeedData, world: str) -> dict[str, GroupSeries]:
         mask = (df["group_id"] == sd.donor) & (df["midx"] >= sd.onset)
         p = np.where(
             mask,
-            np.minimum(1.0, MIGRATION_RATE * (df["midx"] - sd.onset + 1)),
+            np.minimum(1.0, migration_rate * (df["midx"] - sd.onset + 1)),
             0.0,
         )
         move = rng.random(len(df)) < p
@@ -322,12 +361,18 @@ def build_world(sd: SeedData, world: str) -> dict[str, GroupSeries]:
 # --- arms -------------------------------------------------------------------
 
 
+SHRINK_TAUS = (10.0, 50.0)
+
+
 def run_world(
     sd: SeedData,
     world: str,
     groups: dict[str, GroupSeries],
     fcaster: CachedForecaster,
+    gqaster: CachedForecaster,
     l2_cfg: MetaRouterConfig,
+    min_group_n: int,
+    taus: tuple[float, ...] = SHRINK_TAUS,
 ) -> list[dict]:
     """Rolling-origin forecasts for all arms in one (seed, world)."""
     months = sd.months
@@ -335,29 +380,37 @@ def run_world(
     origins = list(range(ORIGIN_START, n - ORIGIN_STOP_TAIL))
     gids = [g for g in groups if g != "__portfolio__"]
     rows: list[dict] = []
-    gf_default = GroupForecaster(fcaster, min_group_n=MIN_GROUP_N)
+    gf_default = GroupForecaster(fcaster, min_group_n=min_group_n)
     gf_nofb = GroupForecaster(fcaster, min_group_n=1)
+    gf_q = GroupForecaster(gqaster, min_group_n=min_group_n)
 
     # Pre-compute per-origin group/global grids for LAYER2 candidates.
     grids_by_origin: dict[int, dict[str, dict[str, np.ndarray]]] = {}
     actuals_by_group: dict[str, list[np.ndarray]] = {g: [] for g in gids}
     for o in origins:
         trunc_p = _truncate(groups["__portfolio__"], o)
-        global_q5 = fcaster(np.array(trunc_p.attrition_rate, dtype=float))
+        ph = np.array(trunc_p.attrition_rate, dtype=float)
+        global_q5 = fcaster(ph)
         global_grid = interp9(global_q5)
+        globalq_grid = interp9(gqaster(ph))
         per_group: dict[str, dict[str, np.ndarray]] = {}
         trunc_groups = {g: _truncate(groups[g], o) for g in gids}
         trunc_groups["__portfolio__"] = trunc_p
         fc = gf_default.forecast(trunc_groups, train_months=TRAIN_WINDOW)
         fc_nofb = gf_nofb.forecast(trunc_groups, train_months=TRAIN_WINDOW)
+        fc_q = gf_q.forecast(trunc_groups, train_months=TRAIN_WINDOW)
         for g in gids:
             hist = np.array(trunc_groups[g].attrition_rate, dtype=float)
             v2_grid = interp9(fc[g].quantiles)
+            v2q_grid = interp9(fc_q[g].quantiles)
             per_group[g] = {
                 "naive": naive_grid9(hist),
                 "v2": v2_grid,
                 "global": global_grid,
+                "v2q": v2q_grid,
+                "globalq": globalq_grid,
                 "_fb": np.array([1.0 if fc[g].used_fallback else 0.0]),
+                "_fbq": np.array([1.0 if fc_q[g].used_fallback else 0.0]),
                 "_nofb_grid": interp9(fc_nofb[g].quantiles),
             }
             actuals_by_group[g].append(np.array([groups[g].attrition_rate[o]]))
@@ -365,6 +418,7 @@ def run_world(
 
     # LAYER2: one MetaRouter run per group over the origin sequence.
     l2_grids: dict[str, list[np.ndarray]] = {}
+    l2q_grids: dict[str, list[np.ndarray]] = {}
     l2_choices: dict[str, list[str]] = {}
     for g in gids:
         y = np.array(groups[g].attrition_rate, dtype=float)
@@ -376,6 +430,13 @@ def run_world(
         res = MetaRouter(l2_cfg).run(y, origins, cand, actuals_by_group[g])
         l2_grids[g] = [np.asarray(gr).ravel() for gr in res.grids]
         l2_choices[g] = list(res.choices)
+        candq = {
+            name: [grids_by_origin[o][g][name] for o in origins]
+            for name in ("naive", "v2q", "globalq")
+        }
+        candq = {k: [v.reshape(9, 1) for v in vs] for k, vs in candq.items()}
+        resq = MetaRouter(l2_cfg).run(y, origins, candq, actuals_by_group[g])
+        l2q_grids[g] = [np.asarray(gr).ravel() for gr in resq.grids]
 
     ctrl_counts = {g: sd.base_series[g].n_at_risk for g in gids}
     for oi, o in enumerate(origins):
@@ -387,9 +448,18 @@ def run_world(
             arm_grids = {
                 "GROUP": pg["v2"],
                 "GLOBAL": pg["global"],
+                "GROUPQ": pg["v2q"],
+                "GLOBALQ": pg["globalq"],
                 "LAYER2": l2_grids[g][oi],
+                "LAYER2Q": l2q_grids[g][oi],
                 "NOFB": pg["_nofb_grid"],
             }
+            # James-Stein-style partial pooling toward the global grid,
+            # weight from the group's trailing-6 at-risk volume.
+            n6 = float(sum(groups[g].n_at_risk[max(0, o - 5) : o + 1]))
+            for tau in taus:
+                w = n6 / (n6 + tau) if n6 + tau > 0 else 0.0
+                arm_grids[f"SHRINK_{int(tau)}"] = w * pg["v2q"] + (1.0 - w) * pg["globalq"]
             for arm, grid in arm_grids.items():
                 rows.append(
                     {
@@ -402,6 +472,7 @@ def run_world(
                         "crps": pinball_crps(np.asarray(grid).reshape(9, 1), np.array([actual])),
                         "weight": w,
                         "fallback": bool(pg["_fb"][0]) if arm in ("GROUP", "LAYER2") else None,
+                        "fallback_q": bool(pg["_fbq"][0]) if arm in ("GROUPQ", "LAYER2Q") else None,
                         "l2_choice": l2_choices[g][oi] if arm == "LAYER2" else None,
                         "n_at_risk": int(groups[g].n_at_risk[o]),
                     }
@@ -442,7 +513,17 @@ def analyze(rows: list[dict], onset_by_seed: dict[int, int]) -> dict:
     deg: dict[str, dict] = {}
     for world in worlds:
         sub = df[df.world == world]
-        for arm in ("GROUP", "GLOBAL", "LAYER2", "NOFB"):
+        for arm in (
+            "GROUP",
+            "GLOBAL",
+            "GROUPQ",
+            "GLOBALQ",
+            "LAYER2",
+            "LAYER2Q",
+            "NOFB",
+            "SHRINK_10",
+            "SHRINK_50",
+        ):
             s = sub[sub.arm == arm].set_index(["seed", "origin", "group_id", "arm"])["crps"]
             idx = s.index.intersection(ctrl.index)
             diff = (s.loc[idx] - ctrl.loc[idx]).to_numpy()
@@ -494,47 +575,54 @@ def analyze(rows: list[dict], onset_by_seed: dict[int, int]) -> dict:
         return pd.concat([d, cls], axis=1)
 
     for world in ("S3_4.0", "S3_1.0", "S1_4.0", "S1_1.0"):
-        try:
-            dg = _diff_frame(world, "GROUP")
-            dl = _diff_frame(world, "GLOBAL")
-            idx = dg.index.intersection(dl.index)
-            both = pd.concat(
-                [
-                    dg.loc[idx, "diff"].rename("group"),
-                    dl.loc[idx, "diff"].rename("glob"),
-                    dg.loc[idx, "cls"],
-                ],
-                axis=1,
-            )
-            sp = both[both.cls != "pre"]
-            out[f"Q1_{world}"] = {
-                "group_minus_global_deg": _paired(sp["group"].to_numpy(), sp["glob"].to_numpy()),
-                "n": int(len(sp)),
-            }
-        except Exception as e:  # noqa: BLE001
-            out[f"Q1_{world}"] = {"error": str(e)}
+        for pair, tag in ((("GROUP", "GLOBAL"), "Q1"), (("GROUPQ", "GLOBALQ"), "Q1Q")):
+            try:
+                dg = _diff_frame(world, pair[0])
+                dl = _diff_frame(world, pair[1])
+                idx = dg.index.intersection(dl.index)
+                both = pd.concat(
+                    [
+                        dg.loc[idx, "diff"].rename("group"),
+                        dl.loc[idx, "diff"].rename("glob"),
+                        dg.loc[idx, "cls"],
+                    ],
+                    axis=1,
+                )
+                sp = both[both.cls != "pre"]
+                out[f"{tag}_{world}"] = {
+                    "group_minus_global_deg": _paired(
+                        sp["group"].to_numpy(), sp["glob"].to_numpy()
+                    ),
+                    "n": int(len(sp)),
+                }
+            except Exception as e:  # noqa: BLE001
+                out[f"{tag}_{world}"] = {"error": str(e)}
 
-    # Q3: LAYER2 vs GROUP within shifted worlds (and control do-no-harm).
+    # Q3: LAYER2 vs GROUP within shifted worlds (and control do-no-harm),
+    # plus protection framing: does L2 reduce shift DEGRADATION (diff of
+    # diffs vs control)? Both pairings: production wiring (LAYER2/GROUP)
+    # and honest-probabilist wiring (LAYER2Q/GROUPQ).
     for world in ["control"] + worlds:
-        try:
-            a = df[(df.world == world) & (df.arm == "LAYER2")].set_index(
-                ["seed", "origin", "group_id"]
-            )["crps"]
-            b = df[(df.world == world) & (df.arm == "GROUP")].set_index(
-                ["seed", "origin", "group_id"]
-            )
-            cls = b["origin_class"]
-            b = b["crps"]
-            idx = a.index.intersection(b.index)
-            cc = cls.loc[idx].to_numpy()
-            entry = {"all": _paired(a.loc[idx].to_numpy(), b.loc[idx].to_numpy())}
-            for cl in ("pre", "straddle", "post"):
-                m = cc == cl
-                if m.sum() > 1:
-                    entry[cl] = _paired(a.loc[idx].to_numpy()[m], b.loc[idx].to_numpy()[m])
-            out[f"Q3_{world}"] = entry
-        except Exception as e:  # noqa: BLE001
-            out[f"Q3_{world}"] = {"error": str(e)}
+        for l2arm, basearm, tag in (
+            ("LAYER2", "GROUP", "Q3"),
+            ("LAYER2Q", "GROUPQ", "Q3Q"),
+        ):
+            try:
+                key3 = ["seed", "origin", "group_id"]
+                a = df[(df.world == world) & (df.arm == l2arm)].set_index(key3)["crps"]
+                bdf = df[(df.world == world) & (df.arm == basearm)].set_index(key3)
+                cls = bdf["origin_class"]
+                b = bdf["crps"]
+                idx = a.index.intersection(b.index)
+                cc = cls.loc[idx].to_numpy()
+                entry = {"all": _paired(a.loc[idx].to_numpy(), b.loc[idx].to_numpy())}
+                for cl in ("pre", "straddle", "post"):
+                    m = cc == cl
+                    if m.sum() > 1:
+                        entry[cl] = _paired(a.loc[idx].to_numpy()[m], b.loc[idx].to_numpy()[m])
+                out[f"{tag}_{world}"] = entry
+            except Exception as e:  # noqa: BLE001
+                out[f"{tag}_{world}"] = {"error": str(e)}
 
     # Fallback rates.
     fb = (
@@ -545,6 +633,15 @@ def analyze(rows: list[dict], onset_by_seed: dict[int, int]) -> dict:
         .to_dict()
     )
     out["fallback_rates"] = {f"{k[0]}/{k[1]}": float(v) for k, v in fb.items()}
+    if "fallback_q" in df.columns:
+        fbq = (
+            df[df.arm == "GROUPQ"]
+            .groupby(["world", "origin_class"])["fallback_q"]
+            .mean()
+            .round(3)
+            .to_dict()
+        )
+        out["fallback_q_rates"] = {f"{k[0]}/{k[1]}": float(v) for k, v in fbq.items()}
     # Placebo gate: max |pre diff| across worlds/arms.
     mx = 0.0
     for _key, e in deg.items():
@@ -561,8 +658,15 @@ def main() -> None:
     ap.add_argument("--val-window", type=int, default=12)
     ap.add_argument("--min-val", type=int, default=6)
     ap.add_argument("--margin", type=float, default=0.02)
+    ap.add_argument("--min-group-n", type=int, default=MIN_GROUP_N)
+    ap.add_argument("--migration-rate", type=float, default=MIGRATION_RATE)
     ap.add_argument("--out", default="experiments/exp72_results.json")
     ap.add_argument("--tag", default="round0")
+    ap.add_argument(
+        "--seed-cache",
+        default="",
+        help="directory for pickled SeedData (build once, reuse across rounds)",
+    )
     args = ap.parse_args()
 
     seeds = [int(s) for s in args.seeds.split(",")]
@@ -571,12 +675,30 @@ def main() -> None:
         val_window=args.val_window, min_val=args.min_val, margin=args.margin, use_lockin=False
     )
     fcaster = CachedForecaster(v2_forecaster_fn())
+    gqaster = CachedForecaster(gauss5_forecaster_fn())
     all_rows: list[dict] = []
     meta: dict = {"config": vars(args), "seeds_info": {}}
     t0 = time.time()
     for seed in seeds:
         print(f"=== seed {seed} ===", flush=True)
-        sd = build_seed_data(seed)
+        import pickle
+
+        cache_path = None
+        if args.seed_cache:
+            cache_dir = Path(args.seed_cache)
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            cache_path = cache_dir / f"seeddata_{seed}.pkl"
+        sd = None
+        if cache_path is not None and cache_path.exists():
+            with open(cache_path, "rb") as f:
+                sd = pickle.load(f)
+            print(f"  loaded cached seed data ({cache_path})", flush=True)
+        else:
+            sd = build_seed_data(seed)
+            if cache_path is not None:
+                with open(cache_path, "wb") as f:
+                    pickle.dump(sd, f, protocol=pickle.HIGHEST_PROTOCOL)
+                print(f"  cached seed data ({cache_path})", flush=True)
         print(
             f"  months={len(sd.months)} onset={sd.onset} groups={len(sd.groups)} "
             f"regions={sd.region_of} donor={sd.donor} recip={sd.recipient}",
@@ -593,8 +715,8 @@ def main() -> None:
             "train_rates": sd.train_rates,
         }
         for world in worlds:
-            groups = build_world(sd, world)
-            rows = run_world(sd, world, groups, fcaster, l2_cfg)
+            groups = build_world(sd, world, migration_rate=args.migration_rate)
+            rows = run_world(sd, world, groups, fcaster, gqaster, l2_cfg, args.min_group_n)
             all_rows.extend(rows)
             print(
                 f"  world {world}: {len(rows)} rows "
