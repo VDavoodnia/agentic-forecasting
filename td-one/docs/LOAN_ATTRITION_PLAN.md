@@ -124,6 +124,22 @@ cohorts.
   with the fix (seed 42); grouping = explainability verdict stands.
   Layer-2 smoke clean (traces emit). Default switched; exp75/exp72
   reproduction needs `quantile_spread=False`.
+- **exp79 (2026-10-20):** settled the two questions exp78 left open.
+  (1) **Center: trailing-6-mean ships as the production default**
+  (`center="trailing_mean"`; exp78's naive center stays behind the
+  flag). On SimulatorV2 it beats naive on control (−0.0072 CRPS,
+  p=0.034 pooled; fresh-seed confirmation −0.0171, p=1.6e-05) and
+  under S1@4σ (−0.0243, p=4.7e-07) with *better* shock coverage
+  (cov80 0.713 vs 0.602). exp66c grouping cost drops again:
+  +0.0033 → +0.0018. (2) **The real fitted v2 router does NOT belong
+  inside the group forecaster**: `router_forecaster_fn` (per-series
+  rolling-origin fit, experts naive/ETS/ARIMA) is significantly
+  *worse* than the naive center on control (+0.0080, p=0.012) and
+  loses to the trailing center everywhere (p≤6e-07) — a per-series
+  self-fit has ≤13 backtest records vs the hundreds the router was
+  designed for. It ships as an available option, not the default,
+  with regression tests proving fit() runs and failures raise (the
+  exp78 silent-fallback bug class cannot be reintroduced silently).
 
 ## Direction
 

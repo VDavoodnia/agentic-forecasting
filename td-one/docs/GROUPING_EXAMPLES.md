@@ -18,9 +18,12 @@ Each example follows the same five beats:
    function never ran the v2 router — `predict()` was called without
    `fit()`, the error was swallowed, and every call returned its
    point-mass naive fallback; the identical 0.0933 across all four
-   examples below is consistent with that defect. Since exp78 the
-   function returns a naive center + Gaussian spread; restoring the
-   actual router in the group forecaster is exp79, in flight.
+   examples below is consistent with that defect. exp78 restored a
+   naive center + Gaussian spread; **exp79 (2026-10-20) settled the
+   center** — the production default is now the trailing-6-mean
+   center, which beat the exp78 naive center and the actual fitted
+   v2 router (also evaluated, lost; see
+   `experiments/exp79_report.md`).
 4. **Risk** — two independent risk reads: deterministic training-tertile bins
    vs the LLM classifier (stats + PIT-safe news).
 5. **Explanation** — the LLM's citation-grounded narrative. Every factual

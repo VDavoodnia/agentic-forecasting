@@ -1,0 +1,9 @@
+{
+  "exp66c_cell": {
+    "arm": "B",
+    "A_global": 0.012716097066333726,
+    "G_deterministic": 0.014472425628186963,
+    "grouping_cost": 0.0017563285618532373
+  },
+  "runtime_s": 68.1
+}
