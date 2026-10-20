@@ -537,6 +537,27 @@ planted answer key) has never been run in that agent form.
    revisit of the competitor-spread question; the unannounced-shock
    synthesis test (exp69b caveat).
 
+**Deck fix pass (2026-10-20, later the same day).** Four surgical
+fixes were applied to `TD-One-Slides.html`. (1) News framing: the
+Solution and Approach slides no longer describe calibrated news
+signals as feeding the range layer in the built system; the signals
+are calibrated (7/9 live, exp70-MS), proven not to move forecasts
+through the router (exp71-MS, exp77), and their range-layer use is
+in testing in exp76. (2) Results slide gained a "Two more test
+beds" block: Bank of Canada decisions (72.2% vs 69.4%, 119
+meetings), WTI crude (agent abstained 92%; honest negative), and
+the exp67 planted-shock battery (rate shock roughly triples error
+at 4-sigma; Chronos-2 coverage 0.89 to 0.53); the M3 row now
+carries its p-value and the Freddie Mac SMM row names exp65.
+(3) Group forecaster: the negatives row and the Future Work block
+now carry the exp78 shipped state (fix is the default; coverage 0%
+to 71%; grouping cost +0.0033), resolving item 3 above. exp79
+(center: naive vs trailing mean vs fitted router) was only
+pre-registered at pass time, so the deck says "in flight" and the
+HTML carries an `exp79 pending` comment marker at the center block.
+(4) Consistency spot-check of all touched claims against the cited
+reports; em dash count is 0.
+
 ## 7. Repo pointers (relative to `td-one/`)
 
 - `docs/slides/TD-One-Slides.html`: the deck of record (this
