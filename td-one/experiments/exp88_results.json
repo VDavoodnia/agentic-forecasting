@@ -1,0 +1,1767 @@
+{
+  "config": {
+    "n_customers": 4000,
+    "n_months": 36,
+    "test_months": 9,
+    "min_group_n": 200,
+    "seeds": [
+      7,
+      42,
+      123
+    ],
+    "bar": "ARI > 0.091 on >= 2 of 3 seeds"
+  },
+  "per_seed": [
+    {
+      "seed": 7,
+      "cutoff": "2023-09-01",
+      "cohort_counts": {
+        "control": 2224,
+        "low_rate": 1113,
+        "osfi_exempt": 384,
+        "family_squeeze": 279
+      },
+      "incumbents": {
+        "raw_kmeans_ari": 0.0385124270761019,
+        "shap_cluster_ari": 0.07032462562162718,
+        "shap_per_cohort": {
+          "control": {
+            "group_id": "0",
+            "precision": 0.7838899803536346,
+            "recall": 0.35881294964028776,
+            "f1": 0.4922887106724244,
+            "n_true": 2224,
+            "n_pred": 1018
+          },
+          "family_squeeze": {
+            "group_id": "0",
+            "precision": 0.0893909626719057,
+            "recall": 0.32616487455197135,
+            "f1": 0.14032382420971473,
+            "n_true": 279,
+            "n_pred": 1018
+          },
+          "low_rate": {
+            "group_id": "4",
+            "precision": 0.4597402597402597,
+            "recall": 0.6361185983827493,
+            "f1": 0.5337353938937052,
+            "n_true": 1113,
+            "n_pred": 1540
+          },
+          "osfi_exempt": {
+            "group_id": "0",
+            "precision": 0.12671905697445973,
+            "recall": 0.3359375,
+            "f1": 0.1840228245363766,
+            "n_true": 384,
+            "n_pred": 1018
+          }
+        }
+      },
+      "rounds": {
+        "r1": {
+          "ari": 0.14869170762201755,
+          "per_cohort": {
+            "control": {
+              "group_id": "high_rate_sensitive_variable",
+              "precision": 0.7554545454545455,
+              "recall": 0.37365107913669066,
+              "f1": 0.5,
+              "n_true": 2224,
+              "n_pred": 1100
+            },
+            "family_squeeze": {
+              "group_id": "stretched_large_families",
+              "precision": 0.34057971014492755,
+              "recall": 0.33691756272401435,
+              "f1": 0.3387387387387388,
+              "n_true": 279,
+              "n_pred": 276
+            },
+            "low_rate": {
+              "group_id": "passive_locked_in",
+              "precision": 0.8384146341463414,
+              "recall": 0.4941599281221923,
+              "f1": 0.6218202374222725,
+              "n_true": 1113,
+              "n_pred": 656
+            },
+            "osfi_exempt": {
+              "group_id": "high_rate_sensitive_variable",
+              "precision": 0.14545454545454545,
+              "recall": 0.4166666666666667,
+              "f1": 0.215633423180593,
+              "n_true": 384,
+              "n_pred": 1100
+            }
+          },
+          "n_groups": 8,
+          "catch_all_share": 0.1705,
+          "groups": [
+            {
+              "group_id": "vulnerable_repayment_stress",
+              "rule": "credit_score_band == 'below_600' or (credit_score_band == '600_659' and credit_utilization_pct > 46.1)",
+              "rationale": "Borrowers with low credit scores or high utilization are at elevated risk of delinquency and may require proactive retention support."
+            },
+            {
+              "group_id": "high_rate_sensitive_variable",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Variable rate borrowers facing significant rate hikes are highly motivated to shop for fixed-rate alternatives elsewhere."
+            },
+            {
+              "group_id": "prime_equity_builders",
+              "rule": "credit_score_band == '720_plus' and mortgage_balance_cad < 422947",
+              "rationale": "High credit quality borrowers with lower balances have significant equity and strong retention potential through tailored loyalty offers."
+            },
+            {
+              "group_id": "life_event_movers",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Borrowers undergoing major life transitions are prone to reassessing their banking needs and mortgage arrangements."
+            },
+            {
+              "group_id": "stretched_large_families",
+              "rule": "n_children >= 3 and adjusted_family_net_income_cad < 70582",
+              "rationale": "Large households with limited net income may be highly price-sensitive and vulnerable to competing mortgage products."
+            },
+            {
+              "group_id": "passive_locked_in",
+              "rule": "rate_type == 'fixed' and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers currently benefiting from historically low fixed rates are unlikely to churn until their renewal window opens."
+            },
+            {
+              "group_id": "investment_property_owners",
+              "rule": "occupancy_type == 'rental' or occupancy_type == 'second_home'",
+              "rationale": "Non-owner-occupied segments operate with different financial motivations compared to primary residents and require specialized engagement."
+            },
+            {
+              "group_id": "engaged_high_net_worth",
+              "rule": "has_investments == True and has_savings == True and household_income_cad > 137184",
+              "rationale": "Affluent clients with multiple product relationships are stable but likely to seek competitive rate matching if they perceive a value gap."
+            }
+          ],
+          "rejections": [],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r2": {
+          "ari": 0.0032988347415077016,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.49881046788263284,
+              "recall": 0.28282374100719426,
+              "f1": 0.36097560975609755,
+              "n_true": 2224,
+              "n_pred": 1261
+            },
+            "family_squeeze": {
+              "group_id": "high_leverage_variable_rate",
+              "precision": 0.1707920792079208,
+              "recall": 0.24731182795698925,
+              "f1": 0.2020497803806735,
+              "n_true": 279,
+              "n_pred": 404
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.3568596352101507,
+              "recall": 0.40431266846361186,
+              "f1": 0.3791069924178601,
+              "n_true": 1113,
+              "n_pred": 1261
+            },
+            "osfi_exempt": {
+              "group_id": "stable_long_term_owners",
+              "precision": 0.12598425196850394,
+              "recall": 0.20833333333333334,
+              "f1": 0.15701668302257113,
+              "n_true": 384,
+              "n_pred": 635
+            }
+          },
+          "n_groups": 7,
+          "catch_all_share": 0.31525,
+          "groups": [
+            {
+              "group_id": "vulnerable_renters_or_second_home",
+              "rule": "occupancy_type != 'owner_occupied'",
+              "rationale": "Non-owner occupied properties represent investment or rental risks with different sensitivity to interest rate fluctuations."
+            },
+            {
+              "group_id": "high_leverage_variable_rate",
+              "rule": "rate_type == 'variable' and credit_utilization_pct >= 40.0",
+              "rationale": "Borrowers with variable rates and high credit utilization are highly sensitive to payment shock and liquidity constraints."
+            },
+            {
+              "group_id": "low_equity_distressed",
+              "rule": "insured_flag == True and credit_score_band in ['below_600', '600_659']",
+              "rationale": "Insured borrowers with low credit scores face limited refinancing options and higher retention risk."
+            },
+            {
+              "group_id": "stable_long_term_owners",
+              "rule": "td_tenure_months >= 84 and rate_type == 'fixed'",
+              "rationale": "Long-tenure fixed-rate borrowers typically exhibit higher loyalty but may be targeted by competitors upon mortgage maturity."
+            },
+            {
+              "group_id": "high_income_prime_families",
+              "rule": "household_income_cad >= 150000 and n_children >= 2",
+              "rationale": "Affluent families with high debt obligations prioritize convenience and are less likely to shop around aggressively."
+            },
+            {
+              "group_id": "recent_high_rate_fixers",
+              "rule": "origination_year >= 2022 and rate_type == 'fixed' and mortgage_rate_pct >= 4.0",
+              "rationale": "Borrowers who locked in high rates recently face potential payment relief upon renewal and are prime targets for retention offers."
+            },
+            {
+              "group_id": "liquidity_constrained_employed",
+              "rule": "has_savings == False and employment_status == 'employed'",
+              "rationale": "Employed borrowers without cash buffers are susceptible to churn if they perceive a better monthly cash flow opportunity elsewhere."
+            }
+          ],
+          "rejections": [],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r3": {
+          "ari": 0.20374440264980928,
+          "per_cohort": {
+            "control": {
+              "group_id": "variable_rate_shock_segment",
+              "precision": 0.7648535564853557,
+              "recall": 0.41097122302158273,
+              "f1": 0.5346592570927172,
+              "n_true": 2224,
+              "n_pred": 1195
+            },
+            "family_squeeze": {
+              "group_id": "variable_rate_shock_segment",
+              "precision": 0.10125523012552301,
+              "recall": 0.4336917562724014,
+              "f1": 0.16417910447761194,
+              "n_true": 279,
+              "n_pred": 1195
+            },
+            "low_rate": {
+              "group_id": "low_rate_fixed_rate_vulnerability",
+              "precision": 0.6794701986754967,
+              "recall": 0.921832884097035,
+              "f1": 0.7823103316812811,
+              "n_true": 1113,
+              "n_pred": 1510
+            },
+            "osfi_exempt": {
+              "group_id": "__catch_all__",
+              "precision": 0.14514692787177205,
+              "recall": 0.4244791666666667,
+              "f1": 0.21632382216323826,
+              "n_true": 384,
+              "n_pred": 1123
+            }
+          },
+          "n_groups": 3,
+          "catch_all_share": 0.28075,
+          "groups": [
+            {
+              "group_id": "low_rate_fixed_rate_vulnerability",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021.0 and mortgage_rate_pct < 4.0",
+              "rationale": "Borrowers who locked in historic low fixed rates face the most severe payment shock upon renewal and are highly likely to shop for better rates."
+            },
+            {
+              "group_id": "variable_rate_shock_segment",
+              "rule": "rate_type == 'variable' and payment_structure == 'adjustable_payment' and mortgage_rate_pct >= 5.0",
+              "rationale": "Variable rate borrowers with adjustable payments have already seen their cash flow tighten significantly and may require proactive engagement to prevent attrition."
+            },
+            {
+              "group_id": "credit_risk_captive_borrowers",
+              "rule": "credit_score_band in ['below_600', '600_659'] and insured_flag == True",
+              "rationale": "Borrowers with lower credit scores who are insured are often locked into their current lender due to difficulties meeting underwriting standards elsewhere."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "insured_flag == False and credit_utilization_pct > 50.0 and mortgage_balance_cad > 400000.0",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "n_children >= 2 and household_income_cad < 75000.0 and has_savings == False",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "credit_score_band == '720_plus' and mortgage_balance_cad < 350000.0 and has_investments == True",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "primary_borrower_age >= 65.0 and employment_status == 'retired'",
+              "reason": "empty",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r4": {
+          "ari": 0.3649151814160101,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.7325051759834369,
+              "recall": 0.7954136690647482,
+              "f1": 0.7626643673205433,
+              "n_true": 2224,
+              "n_pred": 2415
+            },
+            "family_squeeze": {
+              "group_id": "__catch_all__",
+              "precision": 0.09565217391304348,
+              "recall": 0.8279569892473119,
+              "f1": 0.1714922048997773,
+              "n_true": 279,
+              "n_pred": 2415
+            },
+            "low_rate": {
+              "group_id": "low_rate_fixed_vulnerable",
+              "precision": 0.8376569037656904,
+              "recall": 0.89937106918239,
+              "f1": 0.8674176776429809,
+              "n_true": 1113,
+              "n_pred": 1195
+            },
+            "osfi_exempt": {
+              "group_id": "__catch_all__",
+              "precision": 0.12546583850931678,
+              "recall": 0.7890625,
+              "f1": 0.2165058949624866,
+              "n_true": 384,
+              "n_pred": 2415
+            }
+          },
+          "n_groups": 2,
+          "catch_all_share": 0.60375,
+          "info_set": "r3",
+          "sample_aris": [
+            0.23723411000025452,
+            0.2304375271875563,
+            0.26892482237769755
+          ],
+          "groups": [
+            {
+              "group_id": "low_rate_fixed_vulnerable",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers who secured historically low rates face extreme payment shock at renewal and are highly motivated to negotiate or seek retention offers."
+            },
+            {
+              "group_id": "recent_homebuyer_high_rate",
+              "rule": "origination_year >= 2022 and mortgage_rate_pct > 5.0",
+              "rationale": "Borrowers who entered the market at the peak of recent rates are already acclimated to high costs but may be struggling with property value decline."
+            }
+          ]
+        },
+        "r5a": {
+          "ari": 0.3724279406237622,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.8197767145135566,
+              "recall": 0.46223021582733814,
+              "f1": 0.5911443358251869,
+              "n_true": 2224,
+              "n_pred": 1254
+            },
+            "family_squeeze": {
+              "group_id": "budget_constrained_families_with_children",
+              "precision": 0.3790849673202614,
+              "recall": 0.4157706093189964,
+              "f1": 0.3965811965811966,
+              "n_true": 279,
+              "n_pred": 306
+            },
+            "low_rate": {
+              "group_id": "ultra_low_fixed_rate_2021_lock_in",
+              "precision": 1.0,
+              "recall": 0.89937106918239,
+              "f1": 0.9470198675496689,
+              "n_true": 1113,
+              "n_pred": 1001
+            },
+            "osfi_exempt": {
+              "group_id": "high_rate_variable_rate_squeezed",
+              "precision": 0.13389121338912133,
+              "recall": 0.4166666666666667,
+              "f1": 0.2026599113362888,
+              "n_true": 384,
+              "n_pred": 1195
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.3135,
+          "info_set": "r1",
+          "model": "flash",
+          "groups": [
+            {
+              "group_id": "ultra_low_fixed_rate_2021_lock_in",
+              "rule": "rate_type == 'fixed' and origination_year == 2021 and mortgage_rate_pct <= 3.0",
+              "rationale": "Borrowers holding ultra-low fixed rates from the pandemic trough face severe payment shock if renewing at current market rates, making them price-sensitive negotiators."
+            },
+            {
+              "group_id": "high_rate_variable_rate_squeezed",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Variable-rate borrowers who experienced rapid rate hikes face elevated monthly debt burdens and are highly likely to shop around for lower fixed options."
+            },
+            {
+              "group_id": "budget_constrained_families_with_children",
+              "rule": "household_income_cad < 75000 and n_children >= 2 and mortgage_payment_monthly_cad > 2000",
+              "rationale": "Lower-income households managing multiple children and significant monthly mortgage payments prioritize immediate cash flow relief and payment stability."
+            },
+            {
+              "group_id": "digital_native_uninsured_refinancers",
+              "rule": "channel == 'digital' and insured_flag == False and has_advisor == False",
+              "rationale": "Self-directed borrowers without dedicated advisors who rely on digital channels are agile comparison shoppers prone to switching for competitive online rates."
+            },
+            {
+              "group_id": "tenured_branch_loyals",
+              "rule": "td_tenure_months >= 90 and channel == 'branch' and has_advisor == True",
+              "rationale": "Long-standing relationship clients who engage through physical branches and advisors exhibit high institutional loyalty and lower churn propensity."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "household_income_cad >= 137184 and has_investments == True and credit_score_band == '720_plus'",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "life_event_6m == True and td_deposits_3m_change_cad < 0",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        },
+        "r5b": {
+          "ari": 0.019641327343647496,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.4528301886792453,
+              "recall": 0.34532374100719426,
+              "f1": 0.3918367346938776,
+              "n_true": 2224,
+              "n_pred": 1696
+            },
+            "family_squeeze": {
+              "group_id": "variable_rate_volatility_exposed",
+              "precision": 0.10641200545702592,
+              "recall": 0.27956989247311825,
+              "f1": 0.1541501976284585,
+              "n_true": 279,
+              "n_pred": 733
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.39504716981132076,
+              "recall": 0.6019766397124887,
+              "f1": 0.4770380918476326,
+              "n_true": 1113,
+              "n_pred": 1696
+            },
+            "osfi_exempt": {
+              "group_id": "variable_rate_volatility_exposed",
+              "precision": 0.1664392905866303,
+              "recall": 0.3177083333333333,
+              "f1": 0.21844225604297227,
+              "n_true": 384,
+              "n_pred": 733
+            }
+          },
+          "n_groups": 4,
+          "catch_all_share": 0.424,
+          "diagnostic": "outcome aggregates (not a scout config)",
+          "groups": [
+            {
+              "group_id": "mortgage_distress_vulnerable",
+              "rule": "credit_score_band == 'below_600' or credit_score_band == '600_659'",
+              "rationale": "Borrowers with lower credit scores are more sensitive to payment shocks and demonstrate higher churn risk."
+            },
+            {
+              "group_id": "high_income_stable_wealthy",
+              "rule": "household_income_cad >= 150000 and has_investments == True",
+              "rationale": "High net worth individuals with investments are typically less price sensitive and maintain long term retention through holistic banking relationships."
+            },
+            {
+              "group_id": "early_career_expanding_family",
+              "rule": "primary_borrower_age < 35 and n_children >= 2",
+              "rationale": "Young families face significant household liquidity constraints that drive them to search for lower monthly payment options."
+            },
+            {
+              "group_id": "variable_rate_volatility_exposed",
+              "rule": "rate_type == 'variable' and payment_structure == 'adjustable_payment'",
+              "rationale": "Borrowers with variable rates and fluctuating payments are experiencing the most immediate impact from interest rate changes."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "rate_type == 'fixed' and mortgage_rate_pct > 5.0 and origination_year >= 2021.0",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "employment_status == 'retired' and mortgage_balance_cad < 350000",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "credit_utilization_pct > 50.0 and other_debt_payment_monthly_cad > 400",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        }
+      }
+    },
+    {
+      "seed": 42,
+      "cutoff": "2023-09-01",
+      "cohort_counts": {
+        "control": 2171,
+        "low_rate": 1158,
+        "osfi_exempt": 385,
+        "family_squeeze": 286
+      },
+      "incumbents": {
+        "raw_kmeans_ari": 0.04596617334548781,
+        "shap_cluster_ari": 0.09057806792605383,
+        "shap_per_cohort": {
+          "control": {
+            "group_id": "3",
+            "precision": 0.7094448449891853,
+            "recall": 0.45324735145094425,
+            "f1": 0.5531197301854974,
+            "n_true": 2171,
+            "n_pred": 1387
+          },
+          "family_squeeze": {
+            "group_id": "3",
+            "precision": 0.09084354722422494,
+            "recall": 0.4405594405594406,
+            "f1": 0.1506276150627615,
+            "n_true": 286,
+            "n_pred": 1387
+          },
+          "low_rate": {
+            "group_id": "0",
+            "precision": 0.5324779470729751,
+            "recall": 0.5734024179620034,
+            "f1": 0.5521829521829521,
+            "n_true": 1158,
+            "n_pred": 1247
+          },
+          "osfi_exempt": {
+            "group_id": "3",
+            "precision": 0.11751982696467195,
+            "recall": 0.42337662337662335,
+            "f1": 0.1839729119638826,
+            "n_true": 385,
+            "n_pred": 1387
+          }
+        }
+      },
+      "rounds": {
+        "r1": {
+          "ari": 0.0848806106250421,
+          "per_cohort": {
+            "control": {
+              "group_id": "high_rate_variable_pressure",
+              "precision": 0.7487001733102253,
+              "recall": 0.3979732842008291,
+              "f1": 0.5196992481203008,
+              "n_true": 2171,
+              "n_pred": 1154
+            },
+            "family_squeeze": {
+              "group_id": "high_rate_variable_pressure",
+              "precision": 0.11265164644714037,
+              "recall": 0.45454545454545453,
+              "f1": 0.18055555555555552,
+              "n_true": 286,
+              "n_pred": 1154
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.4063926940639269,
+              "recall": 0.5379965457685665,
+              "f1": 0.4630248978075065,
+              "n_true": 1158,
+              "n_pred": 1533
+            },
+            "osfi_exempt": {
+              "group_id": "high_rate_variable_pressure",
+              "precision": 0.1386481802426343,
+              "recall": 0.4155844155844156,
+              "f1": 0.20792722547108508,
+              "n_true": 385,
+              "n_pred": 1154
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.38325,
+          "groups": [
+            {
+              "group_id": "high_rate_variable_pressure",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Borrowers on variable rates with high current interest costs are most sensitive to payment shock and active search for lower rates."
+            },
+            {
+              "group_id": "recent_purchase_fixed_lock",
+              "rule": "origination_year >= 2022 and rate_type == 'fixed' and mortgage_rate_pct >= 4.0",
+              "rationale": "Borrowers who bought at the peak of the rate cycle are likely to have negative equity or high LTV concerns, making them prone to seeking mortgage portability or restructuring."
+            },
+            {
+              "group_id": "distressed_credit_segment",
+              "rule": "credit_score_band == 'below_600' or credit_score_band == '600_659'",
+              "rationale": "Borrowers with lower credit scores have limited options for refinancing elsewhere and are more dependent on current lender support."
+            },
+            {
+              "group_id": "life_event_driven",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Major personal transitions often trigger re-evaluation of household debt structures and external lender shopping."
+            },
+            {
+              "group_id": "long_tenure_legacy_low_rate",
+              "rule": "td_tenure_months > 80 and mortgage_rate_pct < 3.0",
+              "rationale": "Long-term loyal customers currently benefiting from very low rates will face significant payment increases, increasing their propensity to switch upon renewal."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "n_children >= 2 and household_income_cad < 75000 and has_savings == False",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "mortgage_balance_cad < 350000 and credit_score_band == '720_plus' and has_investments == True",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "employment_status == 'self_employed' and mortgage_balance_cad > 450000",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r2": {
+          "ari": 0.13789142531754597,
+          "per_cohort": {
+            "control": {
+              "group_id": "vulnerable_variable_rate",
+              "precision": 0.7487001733102253,
+              "recall": 0.3979732842008291,
+              "f1": 0.5196992481203008,
+              "n_true": 2171,
+              "n_pred": 1154
+            },
+            "family_squeeze": {
+              "group_id": "low_income_large_families",
+              "precision": 0.45454545454545453,
+              "recall": 0.34965034965034963,
+              "f1": 0.3952569169960474,
+              "n_true": 286,
+              "n_pred": 220
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.5884297520661157,
+              "recall": 0.614853195164076,
+              "f1": 0.6013513513513513,
+              "n_true": 1158,
+              "n_pred": 1210
+            },
+            "osfi_exempt": {
+              "group_id": "vulnerable_variable_rate",
+              "precision": 0.1386481802426343,
+              "recall": 0.4155844155844156,
+              "f1": 0.20792722547108508,
+              "n_true": 385,
+              "n_pred": 1154
+            }
+          },
+          "n_groups": 8,
+          "catch_all_share": 0.3025,
+          "groups": [
+            {
+              "group_id": "vulnerable_variable_rate",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Borrowers with variable rates at high interest levels are likely to be sensitive to payment shocks and actively considering refinancing."
+            },
+            {
+              "group_id": "high_balance_recent_originators",
+              "rule": "origination_year >= 2022 and mortgage_balance_cad > 420000",
+              "rationale": "Recent mortgage originations with high debt loads are often the most price-sensitive segments when facing renewal."
+            },
+            {
+              "group_id": "equity_rich_stable_tenure",
+              "rule": "td_tenure_months > 80 and credit_score_band == '720_plus'",
+              "rationale": "Long-tenure, high-credit borrowers have significant equity and market options, making them prime targets for competitive retention offers."
+            },
+            {
+              "group_id": "stressed_renters_and_investors",
+              "rule": "occupancy_type != 'owner_occupied' and credit_utilization_pct > 40",
+              "rationale": "Non-owner-occupied properties with high credit utilization indicate potential cash-flow strain and higher churn risk."
+            },
+            {
+              "group_id": "low_income_large_families",
+              "rule": "household_income_cad < 75000 and n_children >= 3",
+              "rationale": "Large households with lower income have limited budget flexibility and are highly motivated by payment reductions."
+            },
+            {
+              "group_id": "mature_fixed_rate_holders",
+              "rule": "rate_type == 'fixed' and origination_year <= 2019",
+              "rationale": "Borrowers nearing the end of long-term fixed contracts established years ago will face significant payment increases at renewal."
+            },
+            {
+              "group_id": "life_event_driven_switchers",
+              "rule": "life_event_6m == True",
+              "rationale": "Recent life changes like job shifts or relocations typically trigger a re-evaluation of mortgage arrangements and banking relationships."
+            },
+            {
+              "group_id": "retired_conservative_savers",
+              "rule": "employment_status == 'retired' and has_savings == True",
+              "rationale": "Retired borrowers with liquid assets are often less sensitive to rate fluctuations and prioritize product stability over lowest price."
+            }
+          ],
+          "rejections": [],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r3": {
+          "ari": 0.45386129182747303,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 1.0,
+              "recall": 0.6563795485951175,
+              "f1": 0.7925472747497219,
+              "n_true": 2171,
+              "n_pred": 1425
+            },
+            "family_squeeze": {
+              "group_id": "vulnerable_high_debt_burden",
+              "precision": 0.45036764705882354,
+              "recall": 0.8566433566433567,
+              "f1": 0.5903614457831325,
+              "n_true": 286,
+              "n_pred": 544
+            },
+            "low_rate": {
+              "group_id": "low_rate_lockin_high_impact",
+              "precision": 0.6868327402135231,
+              "recall": 1.0,
+              "f1": 0.8143459915611814,
+              "n_true": 1158,
+              "n_pred": 1686
+            },
+            "osfi_exempt": {
+              "group_id": "equity_rich_uninsured",
+              "precision": 1.0,
+              "recall": 0.6181818181818182,
+              "f1": 0.7640449438202247,
+              "n_true": 385,
+              "n_pred": 238
+            }
+          },
+          "n_groups": 4,
+          "catch_all_share": 0.35625,
+          "groups": [
+            {
+              "group_id": "low_rate_lockin_high_impact",
+              "rule": "rate_type == 'fixed' and origination_year >= 2020 and origination_year <= 2021",
+              "rationale": "Borrowers who secured historically low rates during the pandemic face the largest potential payment shocks upon renewal."
+            },
+            {
+              "group_id": "vulnerable_high_debt_burden",
+              "rule": "n_children >= 2 and household_income_cad < 75000",
+              "rationale": "Families with multiple children and lower household incomes have minimal financial buffer to absorb rising living costs and higher mortgage payments."
+            },
+            {
+              "group_id": "equity_rich_uninsured",
+              "rule": "insured_flag == False and credit_score_band == '720_plus'",
+              "rationale": "High-credit, uninsured borrowers have the most mobility and leverage to switch lenders if offered better retention pricing."
+            },
+            {
+              "group_id": "life_event_impacted",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Borrowers undergoing significant life changes are prone to reassessing their long-term financial obligations and housing needs."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "rate_type == 'variable' and credit_score_band == 'below_600'",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "occupancy_type == 'rental' and has_savings == False",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r4": {
+          "ari": 0.18763856535128504,
+          "per_cohort": {
+            "control": {
+              "group_id": "stressed_variable_rate",
+              "precision": 0.859304084720121,
+              "recall": 0.2616305849838784,
+              "f1": 0.4011299435028248,
+              "n_true": 2171,
+              "n_pred": 661
+            },
+            "family_squeeze": {
+              "group_id": "high_debt_young_family",
+              "precision": 0.2550335570469799,
+              "recall": 0.5314685314685315,
+              "f1": 0.3446712018140589,
+              "n_true": 286,
+              "n_pred": 596
+            },
+            "low_rate": {
+              "group_id": "low_rate_lockin",
+              "precision": 0.6868327402135231,
+              "recall": 1.0,
+              "f1": 0.8143459915611814,
+              "n_true": 1158,
+              "n_pred": 1686
+            },
+            "osfi_exempt": {
+              "group_id": "prime_uninsured_equity",
+              "precision": 1.0,
+              "recall": 0.5168831168831168,
+              "f1": 0.6815068493150684,
+              "n_true": 385,
+              "n_pred": 199
+            }
+          },
+          "n_groups": 17,
+          "catch_all_share": 0.06,
+          "info_set": "r3",
+          "sample_aris": [
+            0.22435341243672635,
+            0.31647851908444713,
+            0.3713668195999004
+          ],
+          "groups": [
+            {
+              "group_id": "low_rate_lockin",
+              "rule": "rate_type == 'fixed' and origination_year >= 2020 and origination_year <= 2021",
+              "rationale": "These borrowers secured historic low rates and will face significant payment shock at renewal, making them prime candidates for proactive retention."
+            },
+            {
+              "group_id": "stressed_variable_rate",
+              "rule": "rate_type == 'variable' and credit_score_band != '720_plus'",
+              "rationale": "Variable rate borrowers with sub-optimal credit have absorbed multiple interest rate hikes and face immediate liquidity constraints."
+            },
+            {
+              "group_id": "high_debt_young_family",
+              "rule": "n_children >= 2 and household_income_cad < 100000",
+              "rationale": "Families with multiple children and moderate income have low discretionary spending and are highly sensitive to rising household costs."
+            },
+            {
+              "group_id": "prime_uninsured_equity",
+              "rule": "insured_flag == False and credit_score_band == '720_plus'",
+              "rationale": "High-credit uninsured borrowers have the most market options and are the most likely to shop around for better rates at renewal."
+            },
+            {
+              "group_id": "vulnerable_low_credit",
+              "rule": "credit_score_band == 'below_600' or credit_score_band == '600_659'",
+              "rationale": "Borrowers with lower credit scores have limited refinancing options, effectively making them a captive segment for the existing lender."
+            },
+            {
+              "group_id": "early_tenure_digital",
+              "rule": "td_tenure_months <= 36 and channel == 'digital'",
+              "rationale": "Newer, digitally-engaged borrowers often lack a strong personal relationship with an advisor, making them more likely to switch lenders online."
+            },
+            {
+              "group_id": "senior_retired_stability",
+              "rule": "employment_status == 'retired'",
+              "rationale": "Retired borrowers generally have fixed income sources and lower risk appetite, typically preferring to stay with their current institution for simplicity."
+            },
+            {
+              "group_id": "low_rate_lockin_high_impact",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers who secured historic low rates during the pandemic face severe payment shock at renewal and will be highly sensitive to retention offers."
+            },
+            {
+              "group_id": "distressed_variable_rate",
+              "rule": "rate_type == 'variable' and credit_score_band in ['600_659', 'below_600']",
+              "rationale": "Variable rate borrowers with lower credit scores have already experienced payment increases and possess high risk of default or lender switching."
+            },
+            {
+              "group_id": "overleveraged_families",
+              "rule": "n_children >= 2 and household_income_cad < 100000 and credit_utilization_pct > 45",
+              "rationale": "Households with multiple children and high debt usage have limited financial flexibility and are susceptible to rising cost of living pressures."
+            },
+            {
+              "group_id": "uninsured_equity_constrained",
+              "rule": "insured_flag == False and credit_score_band == '660_719'",
+              "rationale": "Uninsured borrowers with moderate credit scores face significant barriers to switching lenders due to strict stress-test qualifications on new applications."
+            },
+            {
+              "group_id": "affluent_rate_shoppers",
+              "rule": "credit_score_band == '720_plus' and mortgage_balance_cad > 450000 and has_investments == True",
+              "rationale": "High-net-worth borrowers with strong equity positions are prime targets for competitor acquisition and represent the most significant potential loss of assets under management."
+            },
+            {
+              "group_id": "self_employed_volatility",
+              "rule": "employment_status == 'self_employed' and td_deposits_3m_change_cad < 0",
+              "rationale": "Self-employed borrowers showing a decline in liquid savings exhibit cash-flow volatility that necessitates proactive outreach to prevent delinquency."
+            },
+            {
+              "group_id": "low_rate_lockin",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021.0 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers who secured historically low rates are highly motivated to retain their current lender to avoid a severe payment shock upon renewal."
+            },
+            {
+              "group_id": "variable_rate_pressure",
+              "rule": "rate_type == 'variable' and credit_score_band == '720_plus'",
+              "rationale": "These borrowers have experienced immediate payment increases due to policy rate hikes but maintain strong credit profiles that provide them with significant refinancing leverage."
+            },
+            {
+              "group_id": "distressed_insured",
+              "rule": "insured_flag == True and credit_score_band in ['600_659', 'below_600']",
+              "rationale": "Lower credit quality combined with insurance constraints limits these borrowers' ability to switch lenders, effectively trapping them in the current book."
+            },
+            {
+              "group_id": "income_constrained_families",
+              "rule": "n_children >= 2 and household_income_cad < 75000",
+              "rationale": "Households with multiple children and restricted income have minimal budgetary flexibility to manage higher mortgage payments in an inflationary environment."
+            }
+          ]
+        },
+        "r5a": {
+          "ari": 0.42895116719946424,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.889644746787604,
+              "recall": 0.5421464762782128,
+              "f1": 0.6737263880938752,
+              "n_true": 2171,
+              "n_pred": 1323
+            },
+            "family_squeeze": {
+              "group_id": "large_family_budget_constrained",
+              "precision": 0.4339152119700748,
+              "recall": 0.6083916083916084,
+              "f1": 0.5065502183406114,
+              "n_true": 286,
+              "n_pred": 401
+            },
+            "low_rate": {
+              "group_id": "ultra_low_fixed_rate_holders",
+              "precision": 1.0,
+              "recall": 0.9231433506044905,
+              "f1": 0.960035922766053,
+              "n_true": 1158,
+              "n_pred": 1069
+            },
+            "osfi_exempt": {
+              "group_id": "high_equity_prime_investors",
+              "precision": 0.9761904761904762,
+              "recall": 0.3194805194805195,
+              "f1": 0.48140900195694714,
+              "n_true": 385,
+              "n_pred": 126
+            }
+          },
+          "n_groups": 6,
+          "catch_all_share": 0.33075,
+          "info_set": "r1",
+          "model": "flash",
+          "groups": [
+            {
+              "group_id": "ultra_low_fixed_rate_holders",
+              "rule": "rate_type == 'fixed' and origination_year == 2021 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers with locked-in low fixed rates face significant payment shock upon renewal and are highly likely to shop around."
+            },
+            {
+              "group_id": "variable_rate_strained_deposits",
+              "rule": "rate_type == 'variable' and td_deposits_3m_change_cad < 0 and mortgage_rate_pct > 5.0",
+              "rationale": "Variable rate holders experiencing declining deposit balances are under cash flow pressure and require proactive retention offers."
+            },
+            {
+              "group_id": "high_equity_prime_investors",
+              "rule": "insured_flag == False and credit_score_band == '720_plus' and has_investments == True",
+              "rationale": "Affluent conventional borrowers with strong credit profiles represent high retention value and elevated rate sensitivity."
+            },
+            {
+              "group_id": "large_family_budget_constrained",
+              "rule": "n_children >= 2 and household_income_cad < 75000",
+              "rationale": "Lower-income households with multiple dependents face heightened affordability pressure that influences their lender loyalty."
+            },
+            {
+              "group_id": "ontario_digital_first_borrowers",
+              "rule": "province == 'ON' and channel == 'digital' and has_advisor == False",
+              "rationale": "Tech-savvy urban borrowers without a dedicated advisor are prone to online rate shopping and fast switching."
+            },
+            {
+              "group_id": "long_tenure_branch_loyalists",
+              "rule": "td_tenure_months >= 89 and has_advisor == True and channel == 'branch'",
+              "rationale": "Deeply embedded relationship clients who utilize branch channels tend to prioritize service continuity over marginal rate gains."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "employment_status == 'self_employed' and insured_flag == False",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        },
+        "r5b": {
+          "ari": 0.16305044937379734,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.6290893015030946,
+              "recall": 0.6554583141409489,
+              "f1": 0.6420031581321904,
+              "n_true": 2171,
+              "n_pred": 2262
+            },
+            "family_squeeze": {
+              "group_id": "high_burden_families",
+              "precision": 0.5652173913043478,
+              "recall": 0.6818181818181818,
+              "f1": 0.618066561014263,
+              "n_true": 286,
+              "n_pred": 345
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.3169761273209549,
+              "recall": 0.6191709844559585,
+              "f1": 0.4192982456140351,
+              "n_true": 1158,
+              "n_pred": 2262
+            },
+            "osfi_exempt": {
+              "group_id": "wealthy_stable_owners",
+              "precision": 0.746031746031746,
+              "recall": 0.36623376623376624,
+              "f1": 0.49128919860627185,
+              "n_true": 385,
+              "n_pred": 189
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.5655,
+          "diagnostic": "outcome aggregates (not a scout config)",
+          "groups": [
+            {
+              "group_id": "stressed_variable_holders",
+              "rule": "rate_type == 'variable' and credit_utilization_pct > 45.0 and mortgage_rate_pct > 5.0",
+              "rationale": "Variable rate borrowers experiencing high credit utilization feel the cumulative pressure of rising payments."
+            },
+            {
+              "group_id": "life_event_impacted",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Major personal transitions significantly disrupt long-term mortgage inertia and trigger active lender shopping."
+            },
+            {
+              "group_id": "wealthy_stable_owners",
+              "rule": "credit_score_band == '720_plus' and has_investments == True and insured_flag == False",
+              "rationale": "High-net-worth individuals with strong credit profiles are prime targets for competitor acquisition efforts."
+            },
+            {
+              "group_id": "high_burden_families",
+              "rule": "n_children >= 3 and household_income_cad < 75000",
+              "rationale": "Families with many dependents and modest income have low tolerance for payment increases."
+            },
+            {
+              "group_id": "digital_native_savers",
+              "rule": "channel == 'digital' and has_savings == True and has_advisor == False",
+              "rationale": "Independent digital users with available liquidity are comfortable managing their own mortgage products."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "occupancy_type == 'rental' and credit_score_band == 'below_600'",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "rate_type == 'fixed' and origination_year >= 2021 and mortgage_rate_pct > 5.0",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "primary_borrower_age >= 60 and employment_status == 'retired'",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "cutoff": "2023-09-01",
+      "cohort_counts": {
+        "control": 2252,
+        "low_rate": 1105,
+        "osfi_exempt": 360,
+        "family_squeeze": 283
+      },
+      "incumbents": {
+        "raw_kmeans_ari": 0.03266408588085863,
+        "shap_cluster_ari": 0.0894402877108373,
+        "shap_per_cohort": {
+          "control": {
+            "group_id": "0",
+            "precision": 0.7628617363344051,
+            "recall": 0.4214031971580817,
+            "f1": 0.5429061784897025,
+            "n_true": 2252,
+            "n_pred": 1244
+          },
+          "family_squeeze": {
+            "group_id": "0",
+            "precision": 0.10209003215434084,
+            "recall": 0.44876325088339225,
+            "f1": 0.16633922724296007,
+            "n_true": 283,
+            "n_pred": 1244
+          },
+          "low_rate": {
+            "group_id": "4",
+            "precision": 0.5139296187683284,
+            "recall": 0.6343891402714932,
+            "f1": 0.5678412312677197,
+            "n_true": 1105,
+            "n_pred": 1364
+          },
+          "osfi_exempt": {
+            "group_id": "0",
+            "precision": 0.12138263665594855,
+            "recall": 0.41944444444444445,
+            "f1": 0.1882793017456359,
+            "n_true": 360,
+            "n_pred": 1244
+          }
+        }
+      },
+      "rounds": {
+        "r1": {
+          "ari": 0.2574142984438978,
+          "per_cohort": {
+            "control": {
+              "group_id": "variable_rate_shock",
+              "precision": 0.7873563218390804,
+              "recall": 0.4258436944937833,
+              "f1": 0.5527377521613832,
+              "n_true": 2252,
+              "n_pred": 1218
+            },
+            "family_squeeze": {
+              "group_id": "__catch_all__",
+              "precision": 0.10510046367851623,
+              "recall": 0.48056537102473496,
+              "f1": 0.17247939124920736,
+              "n_true": 283,
+              "n_pred": 1294
+            },
+            "low_rate": {
+              "group_id": "locked_in_low_rate",
+              "precision": 0.8768328445747801,
+              "recall": 0.8117647058823529,
+              "f1": 0.8430451127819549,
+              "n_true": 1105,
+              "n_pred": 1023
+            },
+            "osfi_exempt": {
+              "group_id": "variable_rate_shock",
+              "precision": 0.12643678160919541,
+              "recall": 0.42777777777777776,
+              "f1": 0.19518377693282637,
+              "n_true": 360,
+              "n_pred": 1218
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.3235,
+          "groups": [
+            {
+              "group_id": "variable_rate_shock",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Borrowers on variable rates facing significantly higher interest costs are highly motivated to seek competitive refinancing options."
+            },
+            {
+              "group_id": "high_equity_wealthy",
+              "rule": "has_investments == True and credit_score_band == '720_plus' and mortgage_balance_cad < 400000",
+              "rationale": "Affluent borrowers with significant assets and strong credit scores have the financial flexibility to move lenders for better terms."
+            },
+            {
+              "group_id": "locked_in_low_rate",
+              "rule": "rate_type == 'fixed' and mortgage_rate_pct < 3.0 and term_months > 12",
+              "rationale": "Borrowers currently benefiting from historically low fixed rates have little incentive to move until closer to their maturity date."
+            },
+            {
+              "group_id": "life_event_switchers",
+              "rule": "life_event_6m == True",
+              "rationale": "Recent major life changes like job shifts or relocations often trigger a re-evaluation of current banking and mortgage relationships."
+            },
+            {
+              "group_id": "older_stable_homeowners",
+              "rule": "primary_borrower_age >= 55 and has_advisor == True",
+              "rationale": "Older homeowners who maintain a relationship with an advisor are generally more stable and less prone to aggressive rate shopping."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "credit_score_band == 'below_600' or missed_payment_count_12m > 0",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "n_children >= 2 and household_income_cad < 75000 and has_savings == False",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "occupancy_type == 'rental' and channel == 'digital'",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r2": {
+          "ari": 0.014048016002399815,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.5681159420289855,
+              "recall": 0.6092362344582594,
+              "f1": 0.5879580029997858,
+              "n_true": 2252,
+              "n_pred": 2415
+            },
+            "family_squeeze": {
+              "group_id": "cash_constrained_families",
+              "precision": 0.2222222222222222,
+              "recall": 0.14840989399293286,
+              "f1": 0.17796610169491525,
+              "n_true": 283,
+              "n_pred": 189
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.2836438923395445,
+              "recall": 0.6199095022624435,
+              "f1": 0.3892045454545454,
+              "n_true": 1105,
+              "n_pred": 2415
+            },
+            "osfi_exempt": {
+              "group_id": "stable_long_tenure",
+              "precision": 0.21238938053097345,
+              "recall": 0.2,
+              "f1": 0.20600858369098712,
+              "n_true": 360,
+              "n_pred": 339
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.60375,
+          "groups": [
+            {
+              "group_id": "vulnerable_variable_rate",
+              "rule": "rate_type == 'variable' and credit_score_band in ['below_600', '600_659']",
+              "rationale": "Borrowers with variable rates and lower credit scores are highly sensitive to payment shock and default risk."
+            },
+            {
+              "group_id": "wealthy_active_savers",
+              "rule": "has_investments == True and td_deposits_3m_change_cad > 0",
+              "rationale": "Affluent clients with growing liquid assets demonstrate high retention potential through proactive financial advice."
+            },
+            {
+              "group_id": "stable_long_tenure",
+              "rule": "td_tenure_months > 90 and credit_score_band == '720_plus'",
+              "rationale": "Long-tenured, prime credit customers are the most loyal but require competitive loyalty pricing to prevent churn."
+            },
+            {
+              "group_id": "event_driven_movers",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Major life transitions trigger mortgage reassessment and provide specific touchpoints for tailored retention offers."
+            },
+            {
+              "group_id": "cash_constrained_families",
+              "rule": "n_children >= 3 and has_savings == False",
+              "rationale": "Large households without a savings buffer are highly susceptible to interest rate hikes affecting their monthly disposable income."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "origination_year <= 2019 and mortgage_rate_pct < 3.0",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "origination_year >= 2022 and credit_utilization_pct > 45.0",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r3": {
+          "ari": 0.4244338650505821,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.8674351585014409,
+              "recall": 0.6682948490230906,
+              "f1": 0.7549535991973915,
+              "n_true": 2252,
+              "n_pred": 1735
+            },
+            "family_squeeze": {
+              "group_id": "strained_families",
+              "precision": 0.5155038759689923,
+              "recall": 0.9399293286219081,
+              "f1": 0.6658322903629538,
+              "n_true": 283,
+              "n_pred": 516
+            },
+            "low_rate": {
+              "group_id": "low_rate_shock",
+              "precision": 0.842506350550381,
+              "recall": 0.9004524886877828,
+              "f1": 0.8705161854768154,
+              "n_true": 1105,
+              "n_pred": 1181
+            },
+            "osfi_exempt": {
+              "group_id": "equity_rich_prime",
+              "precision": 0.957983193277311,
+              "recall": 0.31666666666666665,
+              "f1": 0.47599164926931103,
+              "n_true": 360,
+              "n_pred": 119
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.43375,
+          "groups": [
+            {
+              "group_id": "low_rate_shock",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers with low fixed rates from the pandemic era are highly rate-sensitive and will face significant payment shocks upon renewal."
+            },
+            {
+              "group_id": "strained_families",
+              "rule": "n_children >= 3 and household_income_cad < 100000",
+              "rationale": "Large households with limited income face substantial inflationary pressure on daily essentials, increasing the risk of default or liquidity-driven refinancing."
+            },
+            {
+              "group_id": "credit_constrained_variable",
+              "rule": "rate_type == 'variable' and credit_score_band in ['below_600', '600_659']",
+              "rationale": "Borrowers with variable rates and weaker credit scores are the most vulnerable to payment increases and have the fewest alternatives for refinancing."
+            },
+            {
+              "group_id": "equity_rich_prime",
+              "rule": "credit_score_band == '720_plus' and insured_flag == False and has_investments == True",
+              "rationale": "High-credit borrowers without mortgage insurance have the most bargaining power and are the most likely to switch lenders for competitive rates."
+            },
+            {
+              "group_id": "recent_buyer_stress",
+              "rule": "origination_year == 2022 and mortgage_rate_pct > 5.0",
+              "rationale": "Borrowers who entered the market at the peak of recent rates are already dealing with high payments and potential negative equity due to market corrections."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "occupancy_type == 'rental' and household_income_cad < 75000",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "primary_borrower_age >= 60 and employment_status == 'retired'",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0,
+          "attempts": 1
+        },
+        "r4": {
+          "ari": 0.3263237130064016,
+          "per_cohort": {
+            "control": {
+              "group_id": "variable_rate_exposed",
+              "precision": 0.8782051282051282,
+              "recall": 0.4258436944937833,
+              "f1": 0.5735645933014354,
+              "n_true": 2252,
+              "n_pred": 1092
+            },
+            "family_squeeze": {
+              "group_id": "stressed_families",
+              "precision": 0.8363636363636363,
+              "recall": 0.9752650176678446,
+              "f1": 0.900489396411093,
+              "n_true": 283,
+              "n_pred": 330
+            },
+            "low_rate": {
+              "group_id": "low_rate_fixed_lock",
+              "precision": 0.9375582479030755,
+              "recall": 0.9104072398190045,
+              "f1": 0.9237832874196511,
+              "n_true": 1105,
+              "n_pred": 1073
+            },
+            "osfi_exempt": {
+              "group_id": "prime_uninsured",
+              "precision": 0.9672131147540983,
+              "recall": 0.1638888888888889,
+              "f1": 0.28028503562945367,
+              "n_true": 360,
+              "n_pred": 61
+            }
+          },
+          "n_groups": 19,
+          "catch_all_share": 0.10925,
+          "info_set": "r3",
+          "sample_aris": [
+            0.4188146138525332,
+            0.2835375489477706,
+            0.34588972799534945
+          ],
+          "groups": [
+            {
+              "group_id": "low_rate_fixed_lock",
+              "rule": "rate_type == 'fixed' and origination_year >= 2020.0 and mortgage_rate_pct < 3.5",
+              "rationale": "Borrowers who locked in low rates during the pandemic face severe payment shock at renewal and are highly likely to be rate-sensitive."
+            },
+            {
+              "group_id": "stressed_families",
+              "rule": "n_children >= 3 and household_income_cad < 75000",
+              "rationale": "Large households with limited income have minimal financial slack to absorb rising mortgage costs, making them prone to payment distress."
+            },
+            {
+              "group_id": "variable_rate_exposed",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct >= 5.0",
+              "rationale": "Borrowers already subjected to significant rate increases are currently experiencing payment pressure and may look for stability elsewhere."
+            },
+            {
+              "group_id": "liquid_asset_wealthy",
+              "rule": "td_liquid_deposits_cad > 15000 and has_investments == True",
+              "rationale": "Affluent clients with high liquidity and investment portfolios have the easiest path to moving lenders and are the most valuable segment to retain."
+            },
+            {
+              "group_id": "late_cycle_renters",
+              "rule": "occupancy_type == 'rental' and origination_year >= 2021.0",
+              "rationale": "Investors who purchased recently in a softening housing market may be facing negative cash flow and are likely to re-evaluate their portfolios."
+            },
+            {
+              "group_id": "stable_tenured_owners",
+              "rule": "td_tenure_months >= 90 and credit_score_band == '720_plus'",
+              "rationale": "Long-term, high-credit borrowers are the most stable group and are likely to stay if offered a competitive loyalty renewal."
+            },
+            {
+              "group_id": "low_rate_shock",
+              "rule": "rate_type == 'fixed' and origination_year <= 2021 and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers with low fixed rates from previous years face significant payment increases at renewal, making them highly sensitive to retention offers."
+            },
+            {
+              "group_id": "high_debt_young_families",
+              "rule": "n_children >= 2 and other_debt_payment_monthly_cad > 400 and household_income_cad < 100000",
+              "rationale": "Large households with existing debt and moderate income have limited financial slack to absorb higher monthly mortgage payments."
+            },
+            {
+              "group_id": "credit_constrained",
+              "rule": "credit_score_band in ['below_600', '600_659'] and insured_flag == False",
+              "rationale": "Uninsured borrowers with lower credit scores have reduced mobility to refinance with other lenders and are more likely to be retained."
+            },
+            {
+              "group_id": "prime_uninsured",
+              "rule": "credit_score_band == '720_plus' and insured_flag == False and mortgage_balance_cad > 400000",
+              "rationale": "High-credit borrowers with substantial balances are the primary targets for competitor acquisition and require proactive retention."
+            },
+            {
+              "group_id": "distressed_variable",
+              "rule": "rate_type == 'variable' and payment_structure == 'adjustable_payment' and credit_utilization_pct > 45.0",
+              "rationale": "Variable rate borrowers with adjustable payments and high credit utilization are already experiencing payment shocks and financial stress."
+            },
+            {
+              "group_id": "affluent_investors",
+              "rule": "has_investments == True and household_income_cad >= 150000",
+              "rationale": "High-income households with investments represent a stable segment that prioritizes relationship value and service over rate-seeking."
+            },
+            {
+              "group_id": "remote_digital_adopters",
+              "rule": "channel == 'digital' and has_advisor == False",
+              "rationale": "Borrowers who interact through digital channels without an assigned advisor are more likely to switch lenders based on self-serve rate comparisons."
+            },
+            {
+              "group_id": "low_rate_shock_vulnerable",
+              "rule": "origination_year >= 2020 and origination_year <= 2021 and rate_type == 'fixed' and mortgage_rate_pct < 3.0",
+              "rationale": "Borrowers who locked in record-low rates during the pandemic face the largest payment spikes upon renewal and represent a high flight risk for competitive refinancing."
+            },
+            {
+              "group_id": "distressed_variable_holders",
+              "rule": "rate_type == 'variable' and credit_score_band in ['below_600', '600_659']",
+              "rationale": "Variable rate holders with lower credit scores are experiencing compounded pressure from rising interest costs and restricted borrowing capacity."
+            },
+            {
+              "group_id": "high_debt_family_burden",
+              "rule": "n_children >= 2 and adjusted_family_net_income_cad < 75000 and mortgage_payment_monthly_cad > 2000",
+              "rationale": "Families with multiple children and limited net income face acute household cash flow constraints that make them hypersensitive to mortgage payment increases."
+            },
+            {
+              "group_id": "prime_advisor_reliant",
+              "rule": "has_advisor == True and credit_score_band == '720_plus' and mortgage_balance_cad > 400000",
+              "rationale": "High-credit borrowers with established advisor relationships are likely to leverage their strong standing to negotiate better renewal terms or switch lenders."
+            },
+            {
+              "group_id": "stable_long_tenure_veterans",
+              "rule": "td_tenure_months > 90 and credit_score_band == '720_plus' and employment_status == 'employed'",
+              "rationale": "Long-tenured borrowers with strong credit and stable employment are the most predictable segment and have the highest likelihood of remaining with the incumbent lender."
+            },
+            {
+              "group_id": "transitional_life_event_impacted",
+              "rule": "life_event_6m == True and life_event_type != 'none'",
+              "rationale": "Borrowers experiencing significant life transitions like job changes or relocations are in a state of financial flux and require proactive outreach to prevent churn during renewal."
+            }
+          ]
+        },
+        "r5a": {
+          "ari": 0.3899693081494616,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.8666666666666667,
+              "recall": 0.4271758436944938,
+              "f1": 0.5722784057108863,
+              "n_true": 2252,
+              "n_pred": 1110
+            },
+            "family_squeeze": {
+              "group_id": "financially_constrained_families",
+              "precision": 0.49477351916376305,
+              "recall": 0.5017667844522968,
+              "f1": 0.49824561403508777,
+              "n_true": 283,
+              "n_pred": 287
+            },
+            "low_rate": {
+              "group_id": "ultra_low_fixed_rate_holders",
+              "precision": 1.0,
+              "recall": 0.9004524886877828,
+              "f1": 0.9476190476190477,
+              "n_true": 1105,
+              "n_pred": 995
+            },
+            "osfi_exempt": {
+              "group_id": "high_equity_prime_switchers",
+              "precision": 0.9451219512195121,
+              "recall": 0.4305555555555556,
+              "f1": 0.5916030534351144,
+              "n_true": 360,
+              "n_pred": 164
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.2775,
+          "info_set": "r1",
+          "model": "flash",
+          "groups": [
+            {
+              "group_id": "ultra_low_fixed_rate_holders",
+              "rule": "rate_type == 'fixed' and mortgage_rate_pct < 3.0 and origination_year == 2021",
+              "rationale": "Borrowers locked into rock-bottom fixed rates face substantial payment shock at renewal, driving strong price sensitivity and active shop-around behavior."
+            },
+            {
+              "group_id": "unhedged_variable_rate_borrowers",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0",
+              "rationale": "Variable rate holders experiencing elevated interest costs are prime candidates for negotiating rate stability or restructuring their loans."
+            },
+            {
+              "group_id": "high_equity_prime_switchers",
+              "rule": "insured_flag == False and credit_score_band == '720_plus' and mortgage_balance_cad > 350000",
+              "rationale": "Uninsured prime credit borrowers with substantial balances represent highly lucrative targets for aggressive competitor retention offers."
+            },
+            {
+              "group_id": "financially_constrained_families",
+              "rule": "household_income_cad < 75000 and n_children >= 2 and mortgage_payment_monthly_cad > 2000",
+              "rationale": "Lower-income households managing multiple children and heavy monthly obligations require tailored payment solutions to prevent default or churn."
+            },
+            {
+              "group_id": "depleted_liquidity_insured_borrowers",
+              "rule": "insured_flag == True and td_liquid_deposits_cad < 1000 and td_deposits_3m_change_cad < 0",
+              "rationale": "Insured borrowers experiencing declining cash reserves face heightened budget sensitivity and require proactive outreach before term end."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "household_income_cad >= 132505 and has_investments == True and channel == 'digital'",
+              "reason": "too_small",
+              "attempt": 0
+            },
+            {
+              "rule": "employment_status == 'retired' and has_advisor == True and channel == 'branch'",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        },
+        "r5b": {
+          "ari": 0.04858540507489605,
+          "per_cohort": {
+            "control": {
+              "group_id": "__catch_all__",
+              "precision": 0.5864306784660767,
+              "recall": 0.4413854351687389,
+              "f1": 0.5036736762097795,
+              "n_true": 2252,
+              "n_pred": 1695
+            },
+            "family_squeeze": {
+              "group_id": "constrained_lower_income",
+              "precision": 0.2867332382310984,
+              "recall": 0.7102473498233216,
+              "f1": 0.40853658536585363,
+              "n_true": 283,
+              "n_pred": 701
+            },
+            "low_rate": {
+              "group_id": "__catch_all__",
+              "precision": 0.3297935103244838,
+              "recall": 0.5058823529411764,
+              "f1": 0.39928571428571424,
+              "n_true": 1105,
+              "n_pred": 1695
+            },
+            "osfi_exempt": {
+              "group_id": "high_rate_shock_vulnerable",
+              "precision": 0.12571428571428572,
+              "recall": 0.18333333333333332,
+              "f1": 0.14915254237288136,
+              "n_true": 360,
+              "n_pred": 525
+            }
+          },
+          "n_groups": 5,
+          "catch_all_share": 0.42375,
+          "diagnostic": "outcome aggregates (not a scout config)",
+          "groups": [
+            {
+              "group_id": "high_rate_shock_vulnerable",
+              "rule": "rate_type == 'fixed' and origination_year >= 2021 and mortgage_rate_pct > 4.0",
+              "rationale": "Borrowers who entered the market recently with fixed rates that have reset or are approaching high market levels are most likely to seek alternatives."
+            },
+            {
+              "group_id": "floating_rate_high_exposure",
+              "rule": "rate_type == 'variable' and mortgage_rate_pct > 5.0 and origination_year <= 2020",
+              "rationale": "Borrowers with older variable rate mortgages face compounding interest rate pressure and are actively shopping to stabilize payments."
+            },
+            {
+              "group_id": "constrained_lower_income",
+              "rule": "household_income_cad < 75000 and n_children >= 2",
+              "rationale": "Large households with limited income are susceptible to liquidity crunches and demonstrate higher sensitivity to mortgage payment changes."
+            },
+            {
+              "group_id": "early_tenure_stability_seekers",
+              "rule": "td_tenure_months <= 24 and rate_type == 'fixed'",
+              "rationale": "Newer clients are still in the early phase of their relationship with the lender and are most likely to switch if they feel they overpaid at origination."
+            },
+            {
+              "group_id": "high_balance_affluent_optimizers",
+              "rule": "mortgage_balance_cad > 480000 and has_investments == True",
+              "rationale": "Affluent clients with large mortgages and investment portfolios are strategic, price-sensitive shoppers who prioritize yield management."
+            }
+          ],
+          "rejections": [
+            {
+              "rule": "insured_flag == False and credit_score_band == '600_659'",
+              "reason": "too_small",
+              "attempt": 0
+            }
+          ],
+          "parse_failures": 0
+        }
+      }
+    }
+  ],
+  "llm": {
+    "real_calls": 20,
+    "cache_hits": 1
+  },
+  "elapsed_s": 713.3,
+  "summary": {
+    "r1": {
+      "aris": [
+        0.14869170762201755,
+        0.0848806106250421,
+        0.2574142984438978
+      ],
+      "mean": 0.1636622055636525
+    },
+    "r2": {
+      "aris": [
+        0.0032988347415077016,
+        0.13789142531754597,
+        0.014048016002399815
+      ],
+      "mean": 0.051746092020484497
+    },
+    "r3": {
+      "aris": [
+        0.20374440264980928,
+        0.45386129182747303,
+        0.4244338650505821
+      ],
+      "mean": 0.3606798531759548
+    },
+    "r4": {
+      "aris": [
+        0.3649151814160101,
+        0.18763856535128504,
+        0.3263237130064016
+      ],
+      "mean": 0.29295915325789895
+    },
+    "r5a": {
+      "aris": [
+        0.3724279406237622,
+        0.42895116719946424,
+        0.3899693081494616
+      ],
+      "mean": 0.3971161386575626
+    },
+    "r5b": {
+      "aris": [
+        0.019641327343647496,
+        0.16305044937379734,
+        0.04858540507489605
+      ],
+      "mean": 0.0770923939307803
+    }
+  }
+}
