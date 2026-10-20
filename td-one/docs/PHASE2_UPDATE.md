@@ -35,6 +35,8 @@ flowchart TD
 | Competitor spread | settled negative at aggregate level with 54 real broker months; in-sample r=−0.345, OOS +39.3% MSE (p=0.019) — regime artifact | exp71b |
 | **Macro Signal Service calibration** | 7/9 anchored categories LIVE (fx corr +0.63 holdout 0.79; food holdout 0.82; labour/inflation/housing/services/wars); certainty does not calibrate; dead: basic_needs (anti-correlated), central_bank_rates (n=1, correctly silent) | exp70-MS |
 | Macro-signal integration (SMM) | honest negative — degenerate router at all signal-window origins; track NOT killed: store validates, Food CPI is the open test | exp71-MS |
+| Integration: shifts × group forecaster | Q1 groups isolate regional shocks: NOT supported (p=0.22, oracle geography identical). Q2 fallback: working safety valve, blunt size-based trigger. Q3 **Layer-2 protects the group forecaster too** (−0.021..−0.031, p<1e-8, win 0.65–0.68, control + all shifts) | exp72 |
+| Track-1 group forecaster calibration ⚠️ | exp72 found `v2_forecaster_fn` emits flat point-mass quantiles (CRPS 0.165 vs 0.13 Gaussian on same histories) — Track-1 group forecasts are miscalibrated on monthly actuals; exp66b/c comparability affected (they scored window means). Fix queued, not yet shipped | exp72 |
 | Risk classifier of record | LLM + stats only, pooled over 5 seeds beats deterministic bins (+0.0198 bin error, CI excludes zero) | exp66g |
 
 ## ✅ Honest negatives (with diagnoses in the reports)
@@ -73,7 +75,6 @@ flowchart TD
 
 ## ⏳ In flight (do not cite as results yet)
 
-- **exp72** — planted shifts stress-testing the group forecaster.
 - **exp75** — mini-agent orchestrator (~22 factor agents + diagnostics →
   decision engine), five test beds.
 - **exp76** — CQR × story fusion + UQ sweep across Tourism/M3/M4/OSFI/SMM.
