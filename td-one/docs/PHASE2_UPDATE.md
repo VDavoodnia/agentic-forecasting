@@ -33,6 +33,8 @@ flowchart TD
 | Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); cost quantified (+0.009–0.016 CRPS); risk reports, not forecasts | exp66c/d |
 | SHAP clustering | 2× cohort recovery vs raw features (ARI 0.091 vs 0.046) | exp66e |
 | Competitor spread | settled negative at aggregate level with 54 real broker months; in-sample r=−0.345, OOS +39.3% MSE (p=0.019) — regime artifact | exp71b |
+| **Macro Signal Service calibration** | 7/9 anchored categories LIVE (fx corr +0.63 holdout 0.79; food holdout 0.82; labour/inflation/housing/services/wars); certainty does not calibrate; dead: basic_needs (anti-correlated), central_bank_rates (n=1, correctly silent) | exp70-MS |
+| Macro-signal integration (SMM) | honest negative — degenerate router at all signal-window origins; track NOT killed: store validates, Food CPI is the open test | exp71-MS |
 | Risk classifier of record | LLM + stats only, pooled over 5 seeds beats deterministic bins (+0.0198 bin error, CI excludes zero) | exp66g |
 
 ## ✅ Honest negatives (with diagnoses in the reports)
@@ -63,14 +65,20 @@ flowchart TD
 | News DB | 17,906 articles; 544 with full bodies; fixed-512 chunking |
 | Demographic + macro news topics | 27 topics (12 demographic, 15 macro) |
 
+## ✅ Finished since this doc was created
+
+- **Macro Signal Service** — extraction, calibration (7/9 live), and SMM
+  integration results are final; see `docs/MACRO_SIGNAL.md`.
+- **exp66g** — counterfactual killed; LLM+stats is classifier of record.
+
 ## ⏳ In flight (do not cite as results yet)
 
-- **Macro Signal Service** — ~22-category monthly signals + calibration gate
-  (see `docs/MACRO_SIGNAL.md` when it lands).
 - **exp72** — planted shifts stress-testing the group forecaster.
 - **exp75** — mini-agent orchestrator (~22 factor agents + diagnostics →
   decision engine), five test beds.
 - **exp76** — CQR × story fusion + UQ sweep across Tourism/M3/M4/OSFI/SMM.
+- **exp77** — Macro Signal Service × Food CPI integration (the SMM-negative
+  diagnosis named Food CPI as the open next test).
 
 ## Framing note (for slides/reports)
 
