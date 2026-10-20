@@ -226,12 +226,33 @@ sized. On food prices it beat the model's native ranges on error
 (CRPS 1.2824 vs 1.3035, p=1.7e-04), put reality inside the 80% range
 82.4% of the time and inside the 90% range 90.4% of the time, at a
 width cost of 7.8%. ACI (adaptive conformal inference) is a
-regime-gated option for volatile subsets (p=3.6e-05 there).
-**Caveat that must survive:** exp74 also reported that story features
-from news improved the uncertainty model (paired p=2.0e-11). exp76
-found a one-month keying offset in exp74's feature construction (a
-lookahead). The direction is plausible; the size is being
-re-measured. Do not cite the 2.0e-11 figure as settled.
+regime-gated option for volatile subsets (p=3.6e-05 there); exp76
+validated the gated form (beats raw ACI on synthetic data, -1.5%,
+p=1.4e-08; a wash on food prices), and the gated form is the ACI
+variant that ships. exp76 also shipped a fusion, MetaLevelCqr
+gated to horizons of 3 or more, which uses story features from news
+text to modulate the conformal level: on food prices it is the best
+range arm tested (CRPS 1.2587 vs plain CQR 1.2824, -1.8%,
+p=2.0e-05, coverage80 0.854). It ships only where its two inputs
+exist (a long single-series bank, about 40 origins or more, and
+the story feature pipeline); its numeric-only form does not
+transfer to many-series benchmarks. The second fusion design,
+ConditionalCqr, is dead: it pools exceedance scores across horizons
+while CQR conditions on horizon, so its offsets are biased at
+short horizons. exp76 also corrected CQR's own claim: across five
+more benchmark families CQR is a coverage repair, not an error
+engine (pooled CRPS +0.19%, p=0.057; the one real error win is
+OSFI runoff, -1.28%, p=0.0012; on M4 it is an exact no-op because
+per-series banks of 8 origins starve it). The binding constraint
+is bank size; the follow-up design is cross-series pooled
+conformal banks.
+**Caveat that must survive, now settled:** exp74 also reported
+that story features from news improved the uncertainty model
+(paired p=2.0e-11). exp76 found a one-month keying offset in
+exp74's feature construction (a lookahead) and re-measured with
+the fix: story features beat numeric-only features by -2.8%
+(p=1.9e-06). The effect is real; the 2.0e-11 figure was
+leak-inflated and must not be cited as settled.
 
 **Headline results (CRPS, lower is better; paired t-tests)**:
 M4 Monthly (100 series): v2 0.1451 vs equal weights 0.1507 vs best
@@ -332,8 +353,19 @@ vs 69.4% best classical on 119 meetings.
     services costs, wars). The LLM's stated certainty does NOT
     calibrate. Per the user's 2026-10-20 directive, the signals are
     **uncertainty features, not forecast-router inputs**.
-    exp76 (in flight) is measuring whether they improve the range
-    layer over story-only features.
+    exp76 (landed) measured exactly that: macro features add
+    nothing measurable over story-only on the available overlap
+    (live-7 vs story-only +0.1%, p=0.885; clean scope food price
+    origins 166 to 192, 27 origins). The overlap window is
+    signal-quiet (calm origins, native coverage80 0.99), so the
+    test has little power. Per-category diagnosis found one live
+    wire: inflation |direction| tracks native residual magnitude
+    (Spearman rho +0.408, p=0.028, uncorrected, n=29 origins); the
+    other live categories are all |rho| <= 0.19, not significant.
+    Macro stays an uncertainty feature, kept but flagged; the
+    encoding to carry forward is story features plus standalone
+    inflation magnitude, to be retested when the backfill covers a
+    higher-volatility window.
 
 ### 4.6 The explanation layer (the working H consumer)
 
@@ -451,7 +483,9 @@ planted answer key) has never been run in that agent form.
   repair to +0.8% n.s.; horizon 3 gated beats v2 by 6.8%, p=0.015).
   SMM from exp65 (neutral, p=0.69) and exp18b (TimesFM -12.2% vs ETS,
   p=0.076). CQR row from exp74 (1.2824 vs 1.3035, p=1.7e-04; coverage
-  0.824 at 80%, 0.904 at 90%; width 1.078).
+  0.824 at 80%, 0.904 at 90%; width 1.078), extended by the exp76
+  fold-in: fusion 1.2587 (-1.8% vs CQR, p=2.0e-05, coverage80
+  0.854), OSFI sweep win -1.28% (p=0.0012), M4 exact no-op.
 - Negatives slide: exp69/69b/69c (+10.2% synthetic, oracle +11.4%,
   real +23.7%); exp71b (out-of-sample +39.3%, p=0.019); exp77 (no
   effect, calm-window mechanism); exp75 (decider win -19.1% beaten by
@@ -459,7 +493,7 @@ planted answer key) has never been run in that agent form.
   exp78 early numbers (coverage 0% to 0.47 to 0.60 depending on spread
   method, CRPS down about a fifth; in progress, not a result).
 - Executive summary stats: 75+ experiments (73 rows in
-  experiments/README.md plus exp76 and exp78 in flight). "3 agent
+  experiments/README.md plus exp76 and exp78, both landed). "3 agent
   roles kept" = gated LLM expert, explanation writer, macro signal
   reader (ranges only). Dropped roles include: number adjuster, tool
   agent forecaster, group inventor, anticipatory overlay, mini-agent
@@ -533,15 +567,27 @@ planted answer key) has never been run in that agent form.
     ablation (story-only vs story+macro vs story+macro-live-7) as a
     first-class result. Clean S8 scope: food price origins 166 to 192
     (27 origins) where both story and macro signals exist.
+    **Landed (2026-10-20):** the h3-gated MetaLevelCqr fusion is the
+    uncertainty champion on food prices (1.2587 vs plain CQR 1.2824,
+    -1.8%, p=2.0e-05); the corrected story effect is -2.8%
+    (p=1.9e-06); S8 found macro adds nothing over story-only (+0.1%,
+    p=0.885) in the quiet 166 to 192 window, with inflation
+    |direction| the one live wire (rho +0.408, p=0.028,
+    uncorrected). Sections 4.4 (Layer 3) and 4.5 carry the settled
+    state.
 
 ## 6. Open decisions and open work
 
 1. **Narration notes** still do not exist. The slides are deliberately
    minimal; a one or two sentence spoken cue per slide would help the
    presenter and is a good next task.
-2. **exp76 verdict** will change the Future Work slide (range layer
-   with news) when it lands: cite it, and retire the "in flight"
-   wording.
+2. **exp76 verdict** — landed and folded into the deck
+   (2026-10-20): the Future Work "range layer with news" block now
+   carries the settled verdicts (fusion champion on food prices;
+   macro no gain over story-only; cross-series pooled banks are the
+   next design step), and the Solution, Approach, and Results
+   slides no longer describe signals-in-ranges as in testing. See
+   the exp76 fold-in paragraph at the end of this section.
 3. **exp78 verdict** — landed: the grouping cost numbers in 4.6 are
    corrected (+0.0033 with the exp78 fix, seed 42). **exp79 verdict**
    — also landed: the trailing-mean center is the group forecaster's
@@ -590,6 +636,38 @@ default center (control 0.0899 vs 0.1042, p=0.034; S1@4σ 0.1193 vs
 the fitted router is recorded as tested and rejected (per-series
 backtest records too few, ≤13); grouping cost +0.0018.
 `docs/FINAL_RESULTS.md` gained the matching exp78/exp79 passage.
+
+**exp76 fold-in pass (2026-10-20, after the exp79 touch-up pass).**
+exp76 completed, so every "in testing (exp76)" and "in flight" piece
+of wording is now retired. (1) The Future Work "range layer with
+news" block now carries the settled verdicts: the h3-gated
+MetaLevelCqr fusion (story features from news text modulating the
+conformal level, switched on only at horizons of 3 or more) is the
+best range arm on food prices (1.2587 vs plain CQR 1.2824, -1.8%,
+p=2.0e-05, coverage80 0.854); calibrated macro signals added
+nothing beyond the story features (+0.1%, p=0.885) in the quiet
+window tested (food price origins 166 to 192, 27 origins); the
+fusion does not transfer to many-series benchmarks (per-series
+banks of 8 to 12 origins starve it; M4 is an exact no-op); the next
+design step is cross-series pooled conformal banks. ConditionalCqr
+is dead (cross-horizon pooling bias). (2) Solution slide: the H
+footnote and the Honest ranges block now state the tested outcome
+instead of "in testing". (3) Approach slide: the news row and the
+methods table are updated (new row: range layer plus story features,
+KEPT WHERE THEY EXIST; the news signal service stamp is now
+RANGES: TESTED, NO GAIN). (4) Results slide: the CQR row carries the
+fusion and sweep numbers. (5) Negatives slide: the macro row's Kept
+cell no longer says the signals' official use is the range layer;
+it says they added nothing beyond story features, stay a flagged
+feature, and are due a retest in a stormier window (the strength of
+the inflation signal alone did track forecast error, rho +0.408,
+p=0.028, uncorrected). (6) The Slide 8 footnote now cites the
+corrected story-ablation size (-2.8%, p=1.9e-06) instead of the
+"being re-measured" wording; the leak-inflated p=2.0e-11 is never
+cited. (7) Exec Summary next steps name exp76 as finished. The
+shipped default is precise: plain CQR everywhere, the h3-gated
+fusion where story features and a long bank exist. All numbers from
+`experiments/exp76_report.md`; em dash count in the HTML is 0.
 
 ## 7. Repo pointers (relative to `td-one/`)
 
