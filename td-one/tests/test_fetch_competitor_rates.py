@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from fetch_competitor_rates import _month_range, parse_rates
+from fetch_competitor_rates import _month_list, _month_range, parse_rates
 
 
 def test_parse_rates_clean_json() -> None:
@@ -53,3 +53,17 @@ def test_month_range_excludes_current_month() -> None:
     for m in months:
         y, mo = int(m[:4]), int(m[5:7])
         assert (y, mo) < (today.year, today.month)
+
+
+def test_month_list_from_start_to_last_complete() -> None:
+    from datetime import UTC, datetime
+
+    months = _month_list("2022-01")
+    assert months[0] == "2022-01"
+    assert months == sorted(months)
+    today = datetime.now(UTC).date()
+    assert months[-1] < f"{today.year:04d}-{today.month:02d}"
+    # Jan-Dec 2022 fully present.
+    assert [m for m in months if m.startswith("2022-")] == [
+        f"2022-{i:02d}" for i in range(1, 13)
+    ]

@@ -70,3 +70,25 @@ show up in real data?
    `date <= origin`; vintage revisions are NOT modeled (flagged
    limitation — FRED values are latest-vintage).
 4. Run `evaluation/leakage.py` audit on any new data path.
+
+## Competitor-rate coverage (expanded 2026-10-20, exp71b)
+
+The `competitor_rates` table now has three tagged sources (`source`
+column) and a monthly coverage matrix generator
+(`scripts/coverage_matrix_rates.py`):
+
+| Source | Coverage |
+|---|---|
+| `boc-valet` — BoC Valet, chartered-bank posted (exact, free) | **622 months**, 1975-01 → 2026-10: 1/3/5yr conventional + prime (`scripts/pull_boc_posted_rates.py`) |
+| `wayback-ratehub` — Wayback snapshots of RateHub best-rates page | **54 months** 5yr-fixed best, 44 months 3yr, 54 months variable, 2022-01 → 2026-09 (`scripts/fetch_wayback_rates.py`) |
+| `perplexity` — Big-6 posted + broker/monoline (LLM retrieval) | 16 months bank-posted, ~10 broker — sparse; the LLM cannot pin historical rates (`scripts/fetch_competitor_rates.py`, dual phrasing, `--start 2022-01`) |
+
+Remaining honest gaps: 2026-07 has no RateHub snapshot; 2022-12 and
+2024-09 broker bests are missing. Pre-2022 broker-discount archives are
+too sparse to trust — not fabricated. 56 of the 57 target months
+(2022-01 → 2026-09) have some broker/discount data; **54 raw broker-5yr
+months** feed the exp71b spread series.
+
+With coverage solved, exp71b re-ran the spread test: **❌ settled
+negative** (in-sample r halves to −0.345 on real months; OOS slope
+hurts). See `experiments/exp71b_report.md`.

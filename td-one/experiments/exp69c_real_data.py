@@ -85,16 +85,11 @@ def results_path(mode: str) -> Path:
     name = "exp69c_results.json" if mode == "real" else "exp69c_results_mock.json"
     return ROOT / "experiments" / name
 
+
 SERIES_CFG = {
     "food_cpi": {
-        "target_desc": (
-            "Canada Food CPI year-over-year inflation rate "
-            "(fraction, e.g. 0.05 = 5%)"
-        ),
-        "question": (
-            "Will food-price inflation in Canada shift materially "
-            "in the next 6 months?"
-        ),
+        "target_desc": ("Canada Food CPI year-over-year inflation rate (fraction, e.g. 0.05 = 5%)"),
+        "question": ("Will food-price inflation in Canada shift materially in the next 6 months?"),
         "queries": [
             "Bank of Canada interest rate hike inflation outlook",
             "food prices grocery inflation Canada rising",
@@ -102,14 +97,8 @@ SERIES_CFG = {
         ],
     },
     "smm": {
-        "target_desc": (
-            "Freddie Mac single-month mortgage prepayment "
-            "(attrition) rate (fraction)"
-        ),
-        "question": (
-            "Will mortgage prepayment/attrition shift materially "
-            "in the next 6 months?"
-        ),
+        "target_desc": ("Freddie Mac single-month mortgage prepayment (attrition) rate (fraction)"),
+        "question": ("Will mortgage prepayment/attrition shift materially in the next 6 months?"),
         "queries": [
             "Bank of Canada interest rate decision mortgage rates",
             "mortgage refinancing prepayment rates outlook",
@@ -190,9 +179,7 @@ def load_food_cpi() -> tuple[list[str], np.ndarray]:
 def load_smm() -> tuple[list[str], np.ndarray]:
     df = pd.read_csv(ROOT / "data" / "freddie" / "smm_monthly_2021_2026.csv")
     df = df.sort_values("period").reset_index(drop=True)
-    months = [
-        f"{int(p) // 100:04d}-{int(p) % 100:02d}" for p in df["period"].tolist()
-    ]
+    months = [f"{int(p) // 100:04d}-{int(p) % 100:02d}" for p in df["period"].tolist()]
     vals = df["smm"].to_numpy(dtype=float)
     assert bool((vals >= 0).all()) and bool((vals <= 1).all())
     return months, vals
@@ -297,10 +284,7 @@ def main() -> None:
         "food_cpi": load_food_cpi(),
         "smm": load_smm(),
     }
-    pos = {
-        name: {m: i for i, m in enumerate(months)}
-        for name, (months, _) in series.items()
-    }
+    pos = {name: {m: i for i, m in enumerate(months)} for name, (months, _) in series.items()}
 
     straddle_months = {m for e in TEST_EPISODES for m in e["straddle"]}
     if args.mode == "real":
@@ -325,9 +309,7 @@ def main() -> None:
     if args.resume and out_json.exists():
         rows = json.loads(out_json.read_text())["rows"]
         print(f"resumed with {len(rows)} rows")
-    done = {
-        (r["episode"], r["origin"], r.get("origin_class", "straddle")) for r in rows
-    }
+    done = {(r["episode"], r["origin"], r.get("origin_class", "straddle")) for r in rows}
 
     def get_pipeline(name: str) -> StoryPipeline:
         cfg = SERIES_CFG[name]
@@ -463,9 +445,7 @@ def main() -> None:
         else:
             fire = origin_ym in straddle_months
             mk = lambda: (  # noqa: E731
-                ShiftSignal("rate", "up", "large", 2, "high", "mock")
-                if fire
-                else NULL_SIGNAL
+                ShiftSignal("rate", "up", "large", 2, "high", "mock") if fire else NULL_SIGNAL
             )
             signals = {"B": mk()}
             if run_notl:
@@ -483,9 +463,7 @@ def main() -> None:
                 "timing_confidence": sig.timing_confidence,
                 "rationale": sig.rationale,
                 "driving_trends": list(sig.driving_trends),
-                "fired": bool(
-                    sig.is_actionable and not np.array_equal(q, q_a)
-                ),
+                "fired": bool(sig.is_actionable and not np.array_equal(q, q_a)),
             }
         rows.append(row)
         if isinstance(llm, CachingClient):
@@ -569,9 +547,7 @@ def _paired(d: pd.DataFrame, a: str, b: str, name: str, harm_only: bool = False)
         return entry
     diff = d[f"crps_{a}"].to_numpy() - d[f"crps_{b}"].to_numpy()
     entry["mean_diff"] = float(np.mean(diff))
-    entry["rel_pct"] = float(
-        100 * np.mean(diff) / np.mean(d[f"crps_{b}"].to_numpy())
-    )
+    entry["rel_pct"] = float(100 * np.mean(diff) / np.mean(d[f"crps_{b}"].to_numpy()))
     entry["win_rate"] = float(np.mean(diff < 0))
     if np.all(diff == 0):
         entry.update(paired_p=1.0, verdict="PASS" if harm_only else "FAIL")
@@ -579,9 +555,7 @@ def _paired(d: pd.DataFrame, a: str, b: str, name: str, harm_only: bool = False)
     _, p = stats.ttest_1samp(diff, 0.0)
     entry["paired_p"] = float(p)
     if harm_only:
-        entry["verdict"] = (
-            "PASS" if not (p < 0.05 and np.mean(diff) > 0) else "FAIL"
-        )
+        entry["verdict"] = "PASS" if not (p < 0.05 and np.mean(diff) > 0) else "FAIL"
     else:
         entry["verdict"] = "PASS" if (p < 0.05 and np.mean(diff) < 0) else "FAIL"
     return entry
@@ -628,8 +602,13 @@ def diagnose(rows: list[dict]) -> dict:
     # (Approximation: needs the series; recomputed in run_variants.)
     diag["n_fired"] = len(fired)
     diag["fired_origins"] = [
-        (r["episode"], r["origin"], r["signal_B"]["direction"],
-         r["signal_B"]["months_from_now"], round(r["realized_change"], 5))
+        (
+            r["episode"],
+            r["origin"],
+            r["signal_B"]["direction"],
+            r["signal_B"]["months_from_now"],
+            round(r["realized_change"], 5),
+        )
         for r in fired
     ]
     return diag
@@ -664,31 +643,21 @@ def run_variants(
     firing = float(np.mean([r["signal_B"]["fired"] for r in sh]))
     out["firing_rate"] = firing
     if firing < 0.5:
-        out["V_abstain"] = _rescore(
-            sh, series, pos, _fn_abstain, "V_abstain_vs_A"
-        )
+        out["V_abstain"] = _rescore(sh, series, pos, _fn_abstain, "V_abstain_vs_A")
     fired = [r for r in sh if r["signal_B"]["fired"]]
     if fired:
         dir_acc = float(
             np.mean(
-                [
-                    (r["realized_change"] > 0)
-                    == (r["signal_B"]["direction"] == "up")
-                    for r in fired
-                ]
+                [(r["realized_change"] > 0) == (r["signal_B"]["direction"] == "up") for r in fired]
             )
         )
         out["direction_accuracy_fired"] = dir_acc
         if dir_acc < 0.5:
-            out["V_oracle_dir"] = _rescore(
-                fired, series, pos, _fn_oracle_dir, "V_oracle_dir_vs_A"
-            )
+            out["V_oracle_dir"] = _rescore(fired, series, pos, _fn_oracle_dir, "V_oracle_dir_vs_A")
     bias = _timing_bias(cal_rows, series, pos)
     out["cal_timing_bias"] = bias
     if bias is not None and abs(bias) >= 1:
-        out["V_timing"] = _rescore(
-            sh, series, pos, lambda r: _fn_timing(r, bias), "V_timing_vs_A"
-        )
+        out["V_timing"] = _rescore(sh, series, pos, lambda r: _fn_timing(r, bias), "V_timing_vs_A")
     ratios = [
         abs(r["realized_change"]) / max(abs(v), 1e-9)
         for r in sh
@@ -699,7 +668,9 @@ def run_variants(
         out["size_ratio_realized_over_calibrated"] = med_ratio
         if med_ratio > 2.0 or med_ratio < 0.5:
             out["V_size"] = _rescore(
-                sh, series, pos,
+                sh,
+                series,
+                pos,
                 lambda r: _rebuild_signal(r["signal_B"]),
                 "V_size_vs_A",
                 table_scale=med_ratio,
@@ -712,8 +683,7 @@ def _delta_used(row: dict) -> float | None:
     if not sig.get("fired"):
         return None
     vals = [
-        v for k, v in row["cal_table"].items()
-        if k.endswith("/" + str(sig["magnitude_bucket"]))
+        v for k, v in row["cal_table"].items() if k.endswith("/" + str(sig["magnitude_bucket"]))
     ]
     return float(vals[0]) if vals else None
 
@@ -764,9 +734,7 @@ def _fn_abstain(row: dict) -> ShiftSignal:
     """Allow 'low' confidence to fire as 'medium' (ramp)."""
     sig = _rebuild_signal(row["signal_B"])
     if sig.timing_confidence == "low" and sig.shift_type != "none":
-        return _rebuild_signal(
-            row["signal_B"], timing_confidence="medium"
-        )
+        return _rebuild_signal(row["signal_B"], timing_confidence="medium")
     return sig
 
 
@@ -780,9 +748,7 @@ def _fn_timing(row: dict, bias: float) -> ShiftSignal:
     sig = _rebuild_signal(row["signal_B"])
     if sig.months_from_now is None:
         return sig
-    return _rebuild_signal(
-        row["signal_B"], months_from_now=max(0, sig.months_from_now + int(bias))
-    )
+    return _rebuild_signal(row["signal_B"], months_from_now=max(0, sig.months_from_now + int(bias)))
 
 
 def _rescore(
@@ -800,10 +766,7 @@ def _rescore(
         o_pos = pos[r["series"]][r["origin"]]
         actuals = vals[o_pos + 1 : o_pos + 1 + HORIZON]
         q_a = np.array(r["q_A"], dtype=float)
-        table = {
-            tuple(k.split("/")): v * table_scale
-            for k, v in r["cal_table"].items()
-        }
+        table = {tuple(k.split("/")): v * table_scale for k, v in r["cal_table"].items()}
         sig = signal_fn(r)  # type: ignore[operator]
         q_v = apply_overlay(COMMON_GRID, q_a, sig, o_pos, table)
         crps_v = crps_from_quantiles(COMMON_GRID, q_v, actuals)
@@ -812,9 +775,7 @@ def _rescore(
     d = np.array(diffs)
     entry: dict = {"name": name, "n": int(len(d))}
     entry["mean_diff"] = float(np.mean(d)) if len(d) else 0.0
-    entry["rel_pct"] = float(
-        100 * np.mean(d) / np.mean(base) if len(d) else 0.0
-    )
+    entry["rel_pct"] = float(100 * np.mean(d) / np.mean(base) if len(d) else 0.0)
     entry["win_rate"] = float(np.mean(d < 0)) if len(d) else 0.0
     if len(d) and not np.all(d == 0):
         _, p = stats.ttest_1samp(d, 0.0)
