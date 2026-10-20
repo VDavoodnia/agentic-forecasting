@@ -48,6 +48,7 @@ class OrchestratorConfig:
     veto_conf: float = 0.7  # stability/disagreement conf >= this -> abstain
     val_margin: float = 0.02  # validation winner must beat naive by this
     family_weights: tuple[float, ...] = (1.0,) * 5  # prices,housing,labour,policy,external
+    pressure_agg: str = "mean"  # mean | max (Round-4 variant: strongest family)
     # UNCERTAINTY mode
     width_cap: float = 2.5  # multiplier clip
     coverage_target: float = 0.80
@@ -71,11 +72,15 @@ class OrchestratorTrace:
 def world_pressure(
     signals: Sequence[FactorSignal],
     family_weights: Sequence[float] | None = None,
+    pressure_agg: str = "mean",
 ) -> tuple[float, dict[str, float]]:
     """Aggregate factor pressures into one world-pressure score P.
 
     Grouped voting: mean signed pressure per family, weighted mean over
-    families. ``family_weights`` order: prices, housing, labour, policy,
+    families (``pressure_agg="mean"``), or the single strongest family's
+    score (``pressure_agg="max"`` — a Round-4 variant that avoids
+    dilution when one family shouts and the rest are silent).
+    ``family_weights`` order: prices, housing, labour, policy,
     external (matches :data:`FACTOR_FAMILIES` insertion order).
     """
     fams = list(FACTOR_FAMILIES)
@@ -85,6 +90,10 @@ def world_pressure(
             acc[s.family].append(s.pressure)
     scores = {f: float(sum(v) / len(v)) if v else 0.0 for f, v in acc.items()}
     w = list(family_weights) if family_weights is not None else [1.0] * len(fams)
+    if pressure_agg == "max":
+        best_i = max(range(len(fams)), key=lambda i: abs(scores[fams[i]]))
+        p = float(scores[fams[best_i]] * w[best_i] / (abs(w[best_i]) or 1.0))
+        return p, scores
     total = float(sum(abs(x) for x in w)) or 1.0
     p = float(sum(scores[f] * w[i] for i, f in enumerate(fams)) / total)
     return p, scores
@@ -128,7 +137,7 @@ class DeterministicOrchestrator:
         5. Weak pressure + validation winner -> blend; else naive.
         """
         cfg = self.cfg
-        p, fam_scores = world_pressure(signals, cfg.family_weights)
+        p, fam_scores = world_pressure(signals, cfg.family_weights, cfg.pressure_agg)
         veto: str | None = None
         stab = _diag("stability", diags)
         dis = _diag("disagreement", diags)

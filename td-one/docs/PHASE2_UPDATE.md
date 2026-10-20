@@ -33,6 +33,7 @@ flowchart TD
 | Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); cost quantified (+0.009–0.016 CRPS); risk reports, not forecasts | exp66c/d |
 | SHAP clustering | 2× cohort recovery vs raw features (ARI 0.091 vs 0.046) | exp66e |
 | Competitor spread | settled negative at aggregate level with 54 real broker months; in-sample r=−0.345, OOS +39.3% MSE (p=0.019) — regime artifact | exp71b |
+| Risk classifier of record | LLM + stats only, pooled over 5 seeds beats deterministic bins (+0.0198 bin error, CI excludes zero) | exp66g |
 
 ## ✅ Honest negatives (with diagnoses in the reports)
 
@@ -45,6 +46,12 @@ flowchart TD
 - **Lock-in correction in Layer-2**: the lock-in level carries no in-sample
   signal on OSFI runoff (|r| ≤ 0.043); gated variants correctly stay silent
   but add nothing (exp73).
+- **Counterfactual tool as classifier prompt context** (exp66g): the exp66f
+  single-seed signal (+0.348) did not survive 5 seeds — B vs A delta −0.0018,
+  CI covers zero; a shuffled-control arm proves the content inert. Five
+  iteration rounds (prompt tuning, format, param search, guidance, control)
+  converge on: the original result was seed noise. The tool remains a valid
+  analyst *explanation* device.
 
 ## Data assets added this phase
 
@@ -64,7 +71,6 @@ flowchart TD
 - **exp75** — mini-agent orchestrator (~22 factor agents + diagnostics →
   decision engine), five test beds.
 - **exp76** — CQR × story fusion + UQ sweep across Tourism/M3/M4/OSFI/SMM.
-- **exp66g** — multi-seed confirmation of the counterfactual risk tool.
 
 ## Framing note (for slides/reports)
 

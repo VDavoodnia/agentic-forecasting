@@ -101,6 +101,7 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 | exp43 regime router | ✅ Partial positive — first to beat equal weights (M4 0.1282 vs 0.1295, p=0.018) |
 | Conformal M0 | ✅ Strong baseline — nothing beats it cleanly on synthetic |
 | Uncertainty layer (exp74) | ✅ CQR on the TSFM quantile grid is the default UQ layer (coverage→nominal, no CRPS cost); ACI regime-conditional; story-feature uncertainty meta-model real (paired p=2e-11 vs numeric-only) |
+| Integration (exp72) | ⚠️ Mixed — Track-2 shifts stress-test Track-1 groups: Q1 regional-isolation not supported (p=0.22, 5 seeds; oracle geography identical — the limit is the forecaster); Q2 fallback a working but blunt safety valve; Q3 Layer-2 protects in the thin-group regime (p<1e-8). Flagged: v2_forecaster_fn emits flat point-mass quantiles |
 | TSFMs | ✅ Beat m0 30% on 63-mo real SMM (exp18, p=0.0012); beat classical ~20% on M4 |
 | Macro (FRED overlay) | ❌ Closed — 5-seed, no evidence macro helps (classical or TSFM) |
 | M5 router | ❌ Dead — loses to inverse-CRPS even constrained |

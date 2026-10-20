@@ -355,6 +355,7 @@ def bed_sim() -> BedData:
         CachedForecaster,
         build_seed_data,
         build_world,
+        interp9,
         naive_grid9,
     )
 
@@ -385,7 +386,7 @@ def bed_sim() -> BedData:
             actuals: list[np.ndarray] = []
             for o in origins:
                 train = values[:o]
-                v2_g.append(np.asarray(fcaster(train), dtype=float).reshape(9, 1))
+                v2_g.append(interp9(np.asarray(fcaster(train), dtype=float))[:, None])
                 naive_g.append(naive_grid9(train)[:, None])
                 actuals.append(values[o : o + 1])
             unit_name = f"{world}/{label}"
@@ -517,7 +518,7 @@ def run_unit(
         diags_all.append(diags)
         fired = any(s.available for s in bundle)
         n_fired += int(fired)
-        p, _ = world_pressure(bundle, cfg.family_weights)
+        p, _ = world_pressure(bundle, cfg.family_weights, cfg.pressure_agg)
         ps.append(abs(p))
 
     arm_crps: dict[str, list[float]] = {a: [] for a in ("A", "B", "C", "D")}
@@ -795,12 +796,28 @@ def main() -> None:
         help="Run arm C (LLM orchestrator) on the prioritized subset "
         "(OSFI + Food CPI h=1 + S3 shifts).",
     )
+    ap.add_argument(
+        "--pressure-agg",
+        choices=["mean", "max"],
+        default="mean",
+        help="Round-4 variant: strongest-family pressure instead of weighted mean.",
+    )
+    ap.add_argument(
+        "--tag",
+        default="",
+        help="Variant tag; results stored under <bed>::variant::<tag>.",
+    )
     args = ap.parse_args()
 
     fcache = FactorCache(FACTOR_CACHE_PATH)
     results: dict[str, Any] = {}
     results_dir = ROOT / "experiments" / "exp75_results"
     results_dir.mkdir(parents=True, exist_ok=True)
+
+    default_cfg = OrchestratorConfig()
+    if args.pressure_agg != "mean":
+        default_cfg = OrchestratorConfig(pressure_agg=args.pressure_agg)
+    tag_suffix = f"::variant::{args.tag}" if args.tag else ""
 
     beds: list[BedData] = []
     if args.bed in ("osfi", "real", "all"):
@@ -816,9 +833,9 @@ def main() -> None:
 
     for bed in beds:
         print(f"== bed {bed.bed} ==", flush=True)
-        res = run_bed_arms(bed, factor_cache=fcache)
+        res = run_bed_arms(bed, config=default_cfg, factor_cache=fcache)
         rep = bed_report(bed, res)
-        results[bed.bed] = rep
+        results[bed.bed + tag_suffix] = rep
         print(json.dumps(rep["pooled"], indent=1), flush=True)
         if args.ablate:
             abl: dict[str, Any] = {}
@@ -848,15 +865,15 @@ def main() -> None:
             results[f"{bed.bed}::search"] = search
             print("search done", flush=True)
 
-    # Per-bed result files (process-safe; avoids clobbering between parallel runs).
+    # Per-bed result files (process-safe; merge with existing content).
     for bed in beds:
+        new_entries = {
+            k: v for k, v in results.items() if k == bed.bed or k.startswith(bed.bed + "::")
+        }
         bed_path = results_dir / f"{bed.bed}.json"
-        bed_path.write_text(
-            json.dumps(
-                {k: v for k, v in results.items() if k == bed.bed or k.startswith(bed.bed + "::")},
-                indent=1,
-            )
-        )
+        merged = json.loads(bed_path.read_text()) if bed_path.exists() else {}
+        merged.update(new_entries)
+        bed_path.write_text(json.dumps(merged, indent=1))
         print(f"wrote {bed_path}", flush=True)
 
     if args.llm:
@@ -880,16 +897,9 @@ def main() -> None:
                     merged[unit]["C_vs_A"] = paired(cres_u["C"], a_crps)
             results[f"{bed.bed}::armC"] = merged
             bed_path = results_dir / f"{bed.bed}.json"
-            bed_path.write_text(
-                json.dumps(
-                    {
-                        k: v
-                        for k, v in results.items()
-                        if k == bed.bed or k.startswith(bed.bed + "::")
-                    },
-                    indent=1,
-                )
-            )
+            existing = json.loads(bed_path.read_text()) if bed_path.exists() else {}
+            existing[f"{bed.bed}::armC"] = merged
+            bed_path.write_text(json.dumps(existing, indent=1))
             print(f"wrote arm C for {bed.bed}", flush=True)
 
 

@@ -159,8 +159,43 @@ LLM arm C runs after Round-1 stabilizes.
 3. **D success bar** (coverage → 0.80, width ≤ 1.5× native, no
    significant CRPS loss): fails on OSFI/Food h=1, passes on
    SMM/Food h=6. D is a rescue tool, not a default.
-4. Corroboration channel dead → Round 2 param search on tau thresholds
-   + family-weight learning; Round 3-4: max-family pressure variant.
+### Round 2 — ablation + naive reference (2026-10-20)
+
+**Per-family / per-factor / per-diagnostic ablation on OSFI** (drops
+each, re-runs B vs A pooled): every single drop leaves B vs A at
+≈ −3.6% ± 0.09pp — the mini-agents are individually AND jointly
+inert. Even `drop_diag::stability` (the 140-veto driver) barely moves
+it, because without the veto those origins fall into the validation-
+margin abstain anyway.
+
+**Naive-alone reference** (computed on the same test origins): B ≡
+naive on all five beds (OSFI 0.003855 vs 0.003851; Food h=1 0.6354 =
+naive; Food h=6 2.2831 = naive; SMM 0.000591 = naive; shifts 0.04694
+= naive). Wherever B "beats" A, pure naive beats A by the same
+amount. **B contributes nothing beyond the abstain-to-naive default —
+the same gating engine exp73's Layer-2 meta-router already ships.**
+The ~25-signal synthesis layer is dead weight on these beds.
+
+### Round 3 — parameter search (2026-10-20)
+
+tau_high × tau_low × veto_conf grid (27 configs) on OSFI: results in
+`exp75_results/osfi.json::search`. [pending at write time]
+
+### Round 4 — max-family pressure variant (2026-10-20)
+
+**Hypothesis**: family-mean aggregation structurally dilutes a lone
+shouting family; `pressure_agg="max"` (strongest family wins) should
+let corroboration fire. Result: OSFI −3.52% (p=0.09) vs −3.59% base;
+corroboration fired 2/240 origins (vs 0 base) but the two v2 picks
+didn't beat the abstain default. Food h=1: +0.0% ≡ base. **Diagnosis**:
+even the strongest family never produces |P| ≥ tau_high with val-
+winner support — the monthly macro readings are too coarse to
+override the validation gate. The synthesis channel is empty, not
+just diluted.
+
+**Standing rule status (4–5 rounds)**: R1 design+diagnosis, R2
+ablation+naive-reference, R3 param search, R4 max-family variant,
+R5 confirmation+arm C. Not killed before Round 5.
 
 _(to be filled as rounds land)_
 

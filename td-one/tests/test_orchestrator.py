@@ -38,7 +38,19 @@ def _ds(name, direction=0, conf=0.6):
     )
 
 
-def test_world_pressure_grouped_voting():
+def test_world_pressure_max_agg_picks_strongest_family():
+    # One family shouts (+0.9), the rest are silent: mean aggregation
+    # dilutes it to ~0.18; max aggregation keeps 0.9.
+    sigs = [
+        FactorSignal("inflation", "prices", "2026-01", 1, 0.9, 0.9, 0.0, "high", "x", True),
+    ]
+    p_mean, _ = world_pressure(sigs)
+    p_max, _ = world_pressure(sigs, pressure_agg="max")
+    assert abs(p_mean) < 0.3
+    assert p_max == pytest.approx(0.9)
+
+
+
     sigs = [
         _fs("inflation", "prices", 0.8),
         _fs("food_prices", "prices", 0.4),

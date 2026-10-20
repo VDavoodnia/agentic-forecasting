@@ -331,19 +331,31 @@ forecast under S3 (groups isolate the diverging region)? (Q2) Does the
 S7? (Q3) Does Layer-2 gating protect the group forecaster the way it
 protected v2 on OSFI?
 
-**Findings (iteration log in the report).**
-- Round 0: placebo gate passes (exactly 0). Q1 null. Q2 not evaluable
-  (94% fallback — `min_group_n=60` exceeded every group's trailing-6
-  volume). Q3: Layer-2 wins big — mostly because Track-1's
-  `v2_forecaster_fn` emits *flat point-mass* quantiles.
-- Round 1 (proper-Gaussian `GROUPQ` arms, min_group_n=30): Q1Q
-  directional on S3 (S3@4σ −0.0065, p=0.093), not significant.
-  Fallback helps when it fires (donor CRPS 0.121→0.086 vs no-fallback
-  0.143→0.120) but the trigger is blunt. Q3Q survives the wiring fix
-  (LAYER2Q − GROUPQ = −0.031, p=4.6e-07) — candidate selection itself
-  adds value.
-- Round 2: James–Stein shrinkage arms (τ=10/50), 3rd seed, S7mix at
-  25%/month migration sensitivity — results in the report.
+**Findings (5 iteration rounds; full log in the report).**
+- **Q1 — not supported at the pre-registered bar.** 5 seeds:
+  S3@4σ group−global degradation diff −0.0021 (p=0.22);
+  directionally consistent in every round and both groupers, never
+  significant on the headline cell (S1@4σ is significant, p=0.002 —
+  a width/noise effect, not isolation). Oracle-pure province groups
+  (−0.0053, p=0.15) match tree groups: the limit is the forecasting
+  mechanism (trailing-mean has no way to foresee the divergence), not
+  the grouping.
+- **Q2 — fallback is a working safety valve with a blunt trigger.**
+  It helps on thin-but-alive groups (donor CRPS 0.121/0.086 vs
+  no-fallback 0.143/0.120) but fires on size not drift, lags collapse
+  (trailing-6 window), and is the *wrong* answer for truly empty
+  groups (own mean ≈ 0 scores 0.0000 vs fallback 0.0751). Design fix
+  noted, not shipped.
+- **Q3 — supported in the thin-group regime.** Layer-2: LAYER2Q −
+  GROUPQ = −0.021..−0.031 (p<1e-8, win 0.65–0.68) on control and all
+  shifted worlds, straddle classes carrying the effect. Edge vanishes
+  with 5 big province groups — the protection value lives where the
+  base forecaster is most fragile.
+- **Methodological flag:** Track-1's `v2_forecaster_fn` emits flat
+  point-mass quantiles — CRPS 0.165 vs 0.13 for a proper Gaussian
+  group forecaster on identical histories. Affects exp66b/c
+  comparability on noisy per-month metrics; flagged, not changed.
+- Honest negative on the James–Stein τ sweep (adds nothing).
 
 ## Standing constraints
 - PIT safety is a gate (no `observed_asof > origin` anywhere).

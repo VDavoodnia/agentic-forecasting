@@ -214,6 +214,73 @@ for both pairings).
   grouper is the bottleneck; if not, group-level forecasting itself
   is the limit.
 
+## Round 4 — oracle geography (`--grouper province`)
+
+Ran 2026-10-20, 3 seeds, 5 province groups, regions ON=A vs rest=B.
+
+- **Placebo gate: PASS** (0.0, fourth consecutive run).
+- **Q1Q:** S3@4σ −0.0053 (p=0.15); S3@1σ −0.0020 (p=0.40);
+  S1@4σ −0.0007 (p=0.81); S1@1σ −0.0024 (p=0.33). **The S3@4σ
+  magnitude is identical to the tree grouper at 3 seeds
+  (−0.0050) — oracle-pure regional groups do not isolate the
+  divergence better.** The bottleneck is the *forecaster*, not the
+  grouping: a trailing-mean Gaussian forecast has no mechanism to
+  foresee the divergence; it adapts at the same speed per-group or
+  at portfolio level. Note also that at 4σ the portfolio aggregate
+  is designed to cancel (GLOBALQ degradation +0.022, p=0.36 n.s.),
+  so there is little degradation for any group forecast to beat —
+  the S3 design intent itself caps Q1's ceiling.
+- **Q3Q collapses:** LAYER2Q − GROUPQ ≈ +0.002..+0.006
+  (p≈0.1–0.6, win ~0.5) — Layer-2 adds nothing with 5 big stable
+  groups. **Refinement of Q3: Layer-2's protection value lives in
+  the thin-group regime** (rounds 1–3: −0.02..−0.03, p<1e-8 with
+  8 thin tree groups), not with clean big groups where the base
+  forecaster is already adequate.
+- Control levels: province GROUPQ 0.1077 < tree GROUPQ 0.1148 —
+  bigger groups are easier to forecast, as expected.
+
+## Final verdicts (pre-registered criteria)
+
+- **Q1 — NOT SUPPORTED at the pre-registered bar.** 5 seeds:
+  S3@4σ GROUPQ−GLOBALQ degradation diff −0.0021 (p=0.22); 3 seeds:
+  p=0.064. Directionally consistent across every round and both
+  groupers, but never significant at 0.05 on the headline cell.
+  Significant on S1@4σ (p=0.002, 5 seeds) — a width/noise effect,
+  not regional isolation. Oracle geography does not change this:
+  the limit is the forecasting mechanism, not the groups.
+- **Q2 — fallback is a working safety valve with a blunt trigger.**
+  When it fires on thin-but-alive groups it helps (donor CRPS
+  0.121/0.086 vs no-fallback 0.143/0.120, seeds 42/7). But:
+  (a) at min_group_n=60 it fired at 94% (size-blind); at 30 it
+  fires 0.69–0.76 in both control and S7mix — still mostly size,
+  not drift; (b) trailing-6 lag means it fires *after* a group
+  collapses, not during; (c) for a truly empty group, fallback to
+  global is the *wrong* answer (own trailing mean ≈ 0 scores
+  CRPS 0.0000 vs 0.0751). Design fix noted (distinguish
+  "thin"→fall back from "dead"→own trailing mean), not shipped —
+  Q2b pre-registered pair (donor GROUP ≤ NOFB) holds in the
+  thin-but-alive regime.
+- **Q3 — SUPPORTED, with a regime qualification.** Layer-2 gating
+  protects the group forecaster: LAYER2Q − GROUPQ = −0.021..−0.031
+  (p<1e-8, win 0.65–0.68) on control AND all shifted worlds,
+  straddle classes carrying the effect — with the tree grouper
+  (thin groups). With 5 big province groups the edge vanishes.
+  On control it is also a win (do-no-harm satisfied trivially:
+  it never hurts, it helps everywhere).
+- **Honest methodological finding (rounds 0–1):** Track-1's
+  `v2_forecaster_fn` emits flat point-mass quantiles (single expert
+  = tiled last value) — CRPS 0.165 vs 0.13 for a proper Gaussian
+  group forecaster on the same histories. Track-1 production
+  group forecasts are badly miscalibrated on noisy per-month
+  actuals; this affects exp66b/c comparability on this metric
+  (exp66c scored against window means, where point-masses look
+  fine). Flagged to the parent, not changed in Track-1 code.
+
+Iteration count: 5 diagnosis-driven rounds (R0 baseline → R1 wiring
+fix → R2 shrinkage τ-sweep + 3rd seed + migration sensitivity →
+R3 five-seed confirmation → R4 oracle-geography ablation), matching
+the researcher's 4–5 round quota before concluding.
+
 ## Iteration log
 
 _(rounds appended as run)_
