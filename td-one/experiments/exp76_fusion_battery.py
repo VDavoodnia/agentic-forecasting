@@ -9,7 +9,8 @@ arms through the PIT-safe study driver.
 Arms:
   native, cqr (plain S6), aci (S4), aci_gated (regime-gated ACI),
   meta_numeric (S7, corrected keying), meta_story (S7 + story, corrected),
-  meta_full (S7 + story + macro, corrected),
+  meta_full (S7 + story + macro all-22, corrected),
+  meta_full_live (S7 + story + macro live-7 — the headline S8 arm),
   cqr_meta_level (F1 fusion, numeric+story), cqr_meta_level_num (F1, numeric),
   cqr_conditional (F2 fusion, numeric+story), cqr_conditional_num (F2, numeric).
 Note: ``M.META_FEATURES_STORY`` already bundles the 8 mac_* keys; the
@@ -57,8 +58,27 @@ def feature_month(idx: int) -> str:
     return month_before(ym_of_index(idx))
 
 
+# exp70 calibration live set (exp70_macro_signal_results.json): the 7
+# categories whose directional accuracy passed the calibration gate.
+LIVE_CATS = [
+    "inflation",
+    "services_costs",
+    "food_prices",
+    "labour",
+    "fx",
+    "housing",
+    "wars_geopolitics",
+]
+
+
 def macro_by_origin() -> dict[int, dict[str, float]]:
-    """Macro Signal Service features per Food CPI origin (PIT-safe keying)."""
+    """Macro Signal Service features per Food CPI origin (PIT-safe keying).
+
+    Two encodings from the same ``signals_asof`` snapshot: ``mac_*``
+    aggregates over all 22 categories (exp74's S8 encoding), and ``mcl_*``
+    aggregates over the 7 live categories only (exp77's set — macro as an
+    uncertainty feature is now the program's official stance).
+    """
     from td_one.news.macro_signal import signals_asof  # noqa: PLC0415
 
     out: dict[int, dict[str, float]] = {}
@@ -72,7 +92,12 @@ def macro_by_origin() -> dict[int, dict[str, float]]:
                 sig = signals_asof(con, ym)
             except sqlite3.Error:
                 sig = {}
-            out[idx] = macro_features(sig if sig else None)
+            feats = dict(macro_features(sig if sig else None))
+            live_sig = {k: v for k, v in (sig or {}).items() if k in LIVE_CATS}
+            feats.update(
+                {"mcl_" + k[4:]: v for k, v in macro_features(live_sig or None).items()}
+            )
+            out[idx] = feats
     finally:
         con.close()
     return out
@@ -118,6 +143,8 @@ FEATS_NUM = M.META_FEATURES_NUMERIC
 # META_FEATURES_STORY = 7 st_* keys + 8 mac_* keys; split for the S8 ablation.
 FEATS_STORY = M.META_FEATURES_NUMERIC + M.META_FEATURES_STORY[:7]
 FEATS_FULL = M.META_FEATURES_NUMERIC + M.META_FEATURES_STORY
+_MAC_KEYS = [k for k in M.META_FEATURES_STORY if k.startswith("mac_")]
+FEATS_FULL_LIVE = FEATS_STORY + ["mcl_" + k[4:] for k in _MAC_KEYS]
 
 
 def main() -> None:
@@ -136,6 +163,7 @@ def main() -> None:
         "meta_numeric": MetaArm(FEATS_NUM),
         "meta_story": MetaArm(FEATS_STORY),
         "meta_full": MetaArm(FEATS_FULL),
+        "meta_full_live": MetaArm(FEATS_FULL_LIVE),
         "cqr_meta_level": uqf.MetaLevelCqr(FEATS_STORY),
         "cqr_meta_level_num": uqf.MetaLevelCqr(FEATS_NUM),
         "cqr_conditional": uqf.ConditionalCqr(FEATS_STORY),

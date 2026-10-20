@@ -55,16 +55,32 @@ Food CPI and/or the exp67 synth scenarios.
 arms in numeric-feature form, on Tourism (20 series, h=24), M3 (20, h=18),
 M4 (20, h=18), OSFI runoff (4 segments, h=6), SMM (h=6).
 
-**S8 macro follow-up:** `macro_signals` now covers 2024-07→2026-09
-(524 rows, 22 categories). With corrected keying, the overlap with Food
-CPI origins is 23 origins (2024-08→2026-09 window); the macro ablation
-is `meta_story` vs `meta_full` on that scope.
+**Program stance (2026-10-20, confirmed): macro signals are an
+uncertainty feature, not a forecast-routing feature.** exp77 showed no
+signal can express itself through the regime router when origins are
+calm (mechanism-level result); exp74 showed narrative features carry a
+real uncertainty signal (story vs numeric p=2.0e-11). So S8 is a
+first-class result here, not an optional extra.
+
+**S8 macro ablation:** `macro_signals` now covers 2023-10→2026-09
+(36 months, 725 rows, 22 categories). With corrected keying the overlap
+with Food CPI origins (feature month ≤ 2026-09, story keys 2021-01..2025-12)
+is origins 166–197 (32 origins); the *clean* S8 scope with both signals
+present is 166–192 (27 origins). Arms: `meta_story` (numeric + 7 story
+features) vs `meta_full` (numeric + story + macro aggregates over all
+22 categories) vs `meta_full_live` (numeric + story + macro aggregates
+over the **7 live categories** — inflation, services_costs,
+food_prices, labour, fx, housing, wars_geopolitics, from the exp70
+calibration gate). All macro access is PIT-safe via `signals_asof`.
+If macro adds nothing over story-only, that is a reported finding —
+per-category diagnosis ships with it (see below), not a reason to drop
+the feature.
 
 ## Iteration log (researcher rule: 4–5 diagnosis-driven rounds)
 
 | Round | What was done | Diagnosis / lesson |
 |---|---|---|
-| 1 | Fusion battery on Food CPI + exp67 synth (corrected keying); story-ablation recomputed | … |
+| 1 | Fusion battery on Food CPI + exp67 synth (corrected keying); story-ablation recomputed; S8 made first-class with the live-7 macro arm (per user directive 2026-10-20: macro is officially an uncertainty feature, not a routing feature) | … |
 | 2 | Benchmark sweep (5 families) | … |
 | 3 | … | … |
 | 4 | … | … |

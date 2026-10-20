@@ -1,0 +1,255 @@
+{
+ "origins": [
+  166,
+  167,
+  168,
+  169,
+  170,
+  171,
+  172,
+  173,
+  174,
+  175,
+  176,
+  177,
+  178,
+  179,
+  180,
+  181,
+  182,
+  183,
+  184,
+  185,
+  186,
+  187,
+  188,
+  189,
+  190,
+  191,
+  192,
+  193,
+  194
+ ],
+ "per_category": {
+  "ai_startups": {
+   "rho_abs_dir_err_norm": 0.4309458036856673,
+   "p_abs_dir_err_norm": 0.019602074730949985,
+   "rho_certainty_err_norm": 0.47203412227043395,
+   "p_certainty_err_norm": 0.009728702344850189,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": 0.4309458036856673,
+   "p_direction_err_norm": 0.019602074730949985
+  },
+  "basic_needs": {
+   "rho_abs_dir_err_norm": 0.14117731575135792,
+   "p_abs_dir_err_norm": 0.4650894475963897,
+   "rho_certainty_err_norm": 0.008463576986541857,
+   "p_certainty_err_norm": 0.9652443067748554,
+   "rho_high_risk_exceed": 0.18245771106349715,
+   "p_high_risk_exceed": 0.34347097859100173,
+   "rho_direction_err_norm": 0.29754287725082534,
+   "p_direction_err_norm": 0.11697927902931833
+  },
+  "car_prices": {
+   "rho_abs_dir_err_norm": 0.16122870389670754,
+   "p_abs_dir_err_norm": 0.40341476455497943,
+   "rho_certainty_err_norm": 0.00028292624463320163,
+   "p_certainty_err_norm": 0.9988378164969074,
+   "rho_high_risk_exceed": -0.09239105341099031,
+   "p_high_risk_exceed": 0.6335919009663881,
+   "rho_direction_err_norm": -0.5686881373387846,
+   "p_direction_err_norm": 0.001286835388218014
+  },
+  "central_bank_rates": {
+   "rho_abs_dir_err_norm": 0.30619251067373304,
+   "p_abs_dir_err_norm": 0.10621573569988253,
+   "rho_certainty_err_norm": 0.09604407782435169,
+   "p_certainty_err_norm": 0.6201690718471942,
+   "rho_high_risk_exceed": -0.05140163693778031,
+   "p_high_risk_exceed": 0.7911594934173706,
+   "rho_direction_err_norm": -0.17336557330229013,
+   "p_direction_err_norm": 0.36845418576890887
+  },
+  "elections_politics": {
+   "rho_abs_dir_err_norm": 0.26276913640612176,
+   "p_abs_dir_err_norm": 0.1684650103234045,
+   "rho_certainty_err_norm": 0.21359964022084685,
+   "p_certainty_err_norm": 0.2658918970621737,
+   "rho_high_risk_exceed": -0.09239105341099031,
+   "p_high_risk_exceed": 0.6335919009663881,
+   "rho_direction_err_norm": -0.17151727528442323,
+   "p_direction_err_norm": 0.3736600983035648
+  },
+  "flight_prices": {
+   "rho_abs_dir_err_norm": -0.10539187616059185,
+   "p_abs_dir_err_norm": 0.5863680313358097,
+   "rho_certainty_err_norm": -0.2736383026084316,
+   "p_certainty_err_norm": 0.15090263871440304,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": 0.0407777070492838,
+   "p_direction_err_norm": 0.8336502012826607
+  },
+  "food_prices": {
+   "rho_abs_dir_err_norm": -0.1718559964257779,
+   "p_abs_dir_err_norm": 0.37270285857607993,
+   "rho_certainty_err_norm": 0.08234715336815501,
+   "p_certainty_err_norm": 0.6710778146001375,
+   "rho_high_risk_exceed": -0.15342412143780076,
+   "p_high_risk_exceed": 0.42685058210044013,
+   "rho_direction_err_norm": -0.17185539578048611,
+   "p_direction_err_norm": 0.3727045547548522
+  },
+  "fx": {
+   "rho_abs_dir_err_norm": -0.18865612368785198,
+   "p_abs_dir_err_norm": 0.3270398191177937,
+   "rho_certainty_err_norm": -0.03679113497628329,
+   "p_certainty_err_norm": 0.8497204332377549,
+   "rho_high_risk_exceed": -0.07402681788165726,
+   "p_high_risk_exceed": 0.7027316915435207,
+   "rho_direction_err_norm": -0.07092443534043692,
+   "p_direction_err_norm": 0.714663400231318
+  },
+  "global_trade": {
+   "rho_abs_dir_err_norm": 0.03314967720658979,
+   "p_abs_dir_err_norm": 0.8644512932069603,
+   "rho_certainty_err_norm": -0.1492893094279922,
+   "p_certainty_err_norm": 0.4395634110807898,
+   "rho_high_risk_exceed": 0.28153836043513053,
+   "p_high_risk_exceed": 0.1389914215225775,
+   "rho_direction_err_norm": -0.024745205178977252,
+   "p_direction_err_norm": 0.8986122317934387
+  },
+  "housing": {
+   "rho_abs_dir_err_norm": -0.050178321110709995,
+   "p_abs_dir_err_norm": 0.7960248820265533,
+   "rho_certainty_err_norm": 0.11149673729748479,
+   "p_certainty_err_norm": 0.5647386324973995,
+   "rho_high_risk_exceed": 0.18522790266124256,
+   "p_high_risk_exceed": 0.33606710704866755,
+   "rho_direction_err_norm": 0.0010190396547985817,
+   "p_direction_err_norm": 0.9958140809876647
+  },
+  "immigration_law": {
+   "rho_abs_dir_err_norm": -0.13071082861922972,
+   "p_abs_dir_err_norm": 0.49913880965356716,
+   "rho_certainty_err_norm": -0.05761404707110274,
+   "p_certainty_err_norm": 0.7665732466802162,
+   "rho_high_risk_exceed": -0.13892092699593192,
+   "p_high_risk_exceed": 0.4723251281381056,
+   "rho_direction_err_norm": -0.14511412656172978,
+   "p_direction_err_norm": 0.4526055698209198
+  },
+  "income_tax": {
+   "rho_abs_dir_err_norm": 0.2947822106643105,
+   "p_abs_dir_err_norm": 0.12057899454177831,
+   "rho_certainty_err_norm": 0.05803848566665245,
+   "p_certainty_err_norm": 0.7649012587068775,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": -0.2947822106643105,
+   "p_direction_err_norm": 0.12057899454177831
+  },
+  "inflation": {
+   "rho_abs_dir_err_norm": 0.4080471333733239,
+   "p_abs_dir_err_norm": 0.027992346032883416,
+   "rho_certainty_err_norm": -0.04048695178039321,
+   "p_certainty_err_norm": 0.8348201291574964,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": -0.24304505264176784,
+   "p_direction_err_norm": 0.20393608528832097
+  },
+  "labour": {
+   "rho_abs_dir_err_norm": -0.16598500055174642,
+   "p_abs_dir_err_norm": 0.3894967947699413,
+   "rho_certainty_err_norm": -0.301137603018977,
+   "p_certainty_err_norm": 0.11241206565182346,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": 0.0778983432491331,
+   "p_direction_err_norm": 0.6879384994638263
+  },
+  "markets_sp500": {
+   "rho_abs_dir_err_norm": -0.04613873153329812,
+   "p_abs_dir_err_norm": 0.812143462754466,
+   "rho_certainty_err_norm": -0.09951919674681067,
+   "p_certainty_err_norm": 0.6075096959360514,
+   "rho_high_risk_exceed": -0.09239105341099031,
+   "p_high_risk_exceed": 0.6335919009663881,
+   "rho_direction_err_norm": 0.18937354131918008,
+   "p_direction_err_norm": 0.32516967136016517
+  },
+  "minimum_wage": {
+   "rho_abs_dir_err_norm": 0.014840530760261886,
+   "p_abs_dir_err_norm": 0.9390950445893074,
+   "rho_certainty_err_norm": -0.2910211684894895,
+   "p_certainty_err_norm": 0.1256138175618967,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": 0.014840530760261886,
+   "p_direction_err_norm": 0.9390950445893074
+  },
+  "pandemics_health": {
+   "rho_abs_dir_err_norm": 0.24234485249813156,
+   "p_abs_dir_err_norm": 0.20528277095419661,
+   "rho_certainty_err_norm": -0.006958157313529336,
+   "p_certainty_err_norm": 0.971423551481315,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": 0.24234485249813156,
+   "p_direction_err_norm": 0.20528277095419661
+  },
+  "salary_region": {
+   "rho_abs_dir_err_norm": -0.4409319525567622,
+   "p_abs_dir_err_norm": 0.016657510913401837,
+   "rho_certainty_err_norm": -0.35281592221086727,
+   "p_certainty_err_norm": 0.06048002247125061,
+   "rho_high_risk_exceed": NaN,
+   "p_high_risk_exceed": NaN,
+   "rho_direction_err_norm": -0.04159582792510543,
+   "p_direction_err_norm": 0.8303601547709072
+  },
+  "school_childcare": {
+   "rho_abs_dir_err_norm": -0.016988239714587516,
+   "p_abs_dir_err_norm": 0.9303007727594542,
+   "rho_certainty_err_norm": 0.11194151142747777,
+   "p_certainty_err_norm": 0.5631770733835105,
+   "rho_high_risk_exceed": 0.2482934954120739,
+   "p_high_risk_exceed": 0.19403471528841817,
+   "rho_direction_err_norm": 0.23795941301925225,
+   "p_direction_err_norm": 0.2138558863251697
+  },
+  "services_costs": {
+   "rho_abs_dir_err_norm": -0.1266501700807976,
+   "p_abs_dir_err_norm": 0.512676642080644,
+   "rho_certainty_err_norm": -0.0938383857130377,
+   "p_certainty_err_norm": 0.6282598376253276,
+   "rho_high_risk_exceed": 0.1259077824413578,
+   "p_high_risk_exceed": 0.5151710457219013,
+   "rho_direction_err_norm": -0.1601196836920527,
+   "p_direction_err_norm": 0.40669989154100195
+  },
+  "small_business": {
+   "rho_abs_dir_err_norm": -0.2280915088356766,
+   "p_abs_dir_err_norm": 0.23402811423043138,
+   "rho_certainty_err_norm": -0.03418652629247764,
+   "p_certainty_err_norm": 0.8602521608110199,
+   "rho_high_risk_exceed": 0.0,
+   "p_high_risk_exceed": 1.0,
+   "rho_direction_err_norm": -0.015858988867058096,
+   "p_direction_err_norm": 0.9349238054510581
+  },
+  "wars_geopolitics": {
+   "rho_abs_dir_err_norm": 0.06512177860960622,
+   "p_abs_dir_err_norm": 0.737155875418294,
+   "rho_certainty_err_norm": 0.11782115676440041,
+   "p_certainty_err_norm": 0.5427211743666126,
+   "rho_high_risk_exceed": -0.17534185307177227,
+   "p_high_risk_exceed": 0.3629351717092941,
+   "rho_direction_err_norm": 0.17023410914854376,
+   "p_direction_err_norm": 0.37729937218632975
+  }
+ }
+}

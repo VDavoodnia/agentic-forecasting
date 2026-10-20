@@ -28,6 +28,8 @@ SCOPES = {
     "pooled_food": lambda r: r["config_id"] == "food_cpi",
     "food_story_subset": lambda r: r["config_id"] == "food_cpi" and 133 <= r["origin"] <= 192,
     "food_macro_subset": lambda r: r["config_id"] == "food_cpi" and 166 <= r["origin"] <= 197,
+    # Clean S8 scope: both story (<=192) and macro (>=166) present.
+    "food_overlap": lambda r: r["config_id"] == "food_cpi" and 166 <= r["origin"] <= 192,
     "pooled_all": lambda r: True,
 }
 
@@ -49,6 +51,17 @@ COMPARISONS = [
     ("food_macro_subset", "meta_full", "meta_story"),
     ("food_macro_subset", "meta_full", "meta_numeric"),
     ("food_macro_subset", "meta_full", "native"),
+    # First-class S8: story+macro(live-7) vs story-only, live-7 vs all-22.
+    ("food_overlap", "meta_full_live", "meta_story"),
+    ("food_overlap", "meta_full", "meta_story"),
+    ("food_overlap", "meta_full_live", "meta_full"),
+    ("food_overlap", "meta_story", "meta_numeric"),
+    ("food_overlap", "meta_full_live", "meta_numeric"),
+    ("food_overlap", "meta_full_live", "native"),
+    ("food_macro_subset", "meta_full_live", "meta_story"),
+    ("food_macro_subset", "meta_full_live", "meta_full"),
+    ("food_macro_subset", "meta_full_live", "meta_numeric"),
+    ("food_macro_subset", "meta_full_live", "native"),
     ("pooled_food", "cqr", "native"),
     ("pooled_synth", "cqr", "native"),
 ]
