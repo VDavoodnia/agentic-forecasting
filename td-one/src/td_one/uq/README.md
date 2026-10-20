@@ -15,5 +15,9 @@ current origin (`origin' + h' − 1 < origin`).
 
 Shipped configuration: per-series CQR default; pooled banks on
 many-series families; F1 h3-gated fusion where story features and a
-long bank exist; ACI as a regime-gated option. See
-`experiments/exp74_report.md`, `exp76_report.md`, `exp81_report.md`.
+long bank exist (feature set: story + the standalone inflation macro
+feature `mac_inflation` where Macro Signal coverage exists — exp83:
+−0.53% CRPS on stormy Food CPI origins, bootstrap CI excluding zero,
+inert on quiet origins); ACI as a regime-gated option. See
+`experiments/exp74_report.md`, `exp76_report.md`, `exp81_report.md`,
+`exp83_report.md`.

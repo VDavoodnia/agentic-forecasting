@@ -1,0 +1,1804 @@
+{
+ "searches": [
+  {
+   "n": 1,
+   "category": "inflation",
+   "month": "2022-06",
+   "est_cost_usd": 0.0096
+  },
+  {
+   "n": 2,
+   "category": "inflation",
+   "month": "2022-05",
+   "est_cost_usd": 0.0192
+  },
+  {
+   "n": 3,
+   "category": "inflation",
+   "month": "2022-07",
+   "est_cost_usd": 0.0288
+  },
+  {
+   "n": 4,
+   "category": "inflation",
+   "month": "2022-02",
+   "est_cost_usd": 0.0384
+  },
+  {
+   "n": 5,
+   "category": "inflation",
+   "month": "2022-04",
+   "est_cost_usd": 0.048
+  },
+  {
+   "n": 6,
+   "category": "inflation",
+   "month": "2021-10",
+   "est_cost_usd": 0.0576
+  },
+  {
+   "n": 7,
+   "category": "inflation",
+   "month": "2021-10",
+   "est_cost_usd": 0.0672
+  },
+  {
+   "n": 8,
+   "category": "inflation",
+   "month": "2022-03",
+   "est_cost_usd": 0.0768
+  },
+  {
+   "n": 9,
+   "category": "inflation",
+   "month": "2022-03",
+   "est_cost_usd": 0.0864
+  },
+  {
+   "n": 10,
+   "category": "inflation",
+   "month": "2021-09",
+   "est_cost_usd": 0.096
+  },
+  {
+   "n": 11,
+   "category": "inflation",
+   "month": "2021-09",
+   "est_cost_usd": 0.1056
+  },
+  {
+   "n": 12,
+   "category": "inflation",
+   "month": "2022-08",
+   "est_cost_usd": 0.1152
+  },
+  {
+   "n": 13,
+   "category": "inflation",
+   "month": "2022-01",
+   "est_cost_usd": 0.1248
+  },
+  {
+   "n": 14,
+   "category": "inflation",
+   "month": "2021-11",
+   "est_cost_usd": 0.1344
+  },
+  {
+   "n": 15,
+   "category": "inflation",
+   "month": "2021-11",
+   "est_cost_usd": 0.144
+  },
+  {
+   "n": 16,
+   "category": "inflation",
+   "month": "2021-06",
+   "est_cost_usd": 0.1536
+  },
+  {
+   "n": 17,
+   "category": "inflation",
+   "month": "2022-10",
+   "est_cost_usd": 0.1632
+  },
+  {
+   "n": 18,
+   "category": "inflation",
+   "month": "2022-09",
+   "est_cost_usd": 0.1728
+  },
+  {
+   "n": 19,
+   "category": "inflation",
+   "month": "2022-09",
+   "est_cost_usd": 0.1824
+  },
+  {
+   "n": 20,
+   "category": "inflation",
+   "month": "2021-07",
+   "est_cost_usd": 0.192
+  },
+  {
+   "n": 21,
+   "category": "inflation",
+   "month": "2021-07",
+   "est_cost_usd": 0.2016
+  },
+  {
+   "n": 22,
+   "category": "inflation",
+   "month": "2021-12",
+   "est_cost_usd": 0.2112
+  },
+  {
+   "n": 23,
+   "category": "inflation",
+   "month": "2022-11",
+   "est_cost_usd": 0.2208
+  },
+  {
+   "n": 24,
+   "category": "inflation",
+   "month": "2022-11",
+   "est_cost_usd": 0.2304
+  },
+  {
+   "n": 25,
+   "category": "inflation",
+   "month": "2023-01",
+   "est_cost_usd": 0.24
+  },
+  {
+   "n": 26,
+   "category": "inflation",
+   "month": "2021-05",
+   "est_cost_usd": 0.2496
+  },
+  {
+   "n": 27,
+   "category": "inflation",
+   "month": "2021-08",
+   "est_cost_usd": 0.2592
+  },
+  {
+   "n": 28,
+   "category": "inflation",
+   "month": "2021-04",
+   "est_cost_usd": 0.2688
+  },
+  {
+   "n": 29,
+   "category": "inflation",
+   "month": "2023-02",
+   "est_cost_usd": 0.2784
+  },
+  {
+   "n": 30,
+   "category": "inflation",
+   "month": "2022-12",
+   "est_cost_usd": 0.288
+  },
+  {
+   "n": 31,
+   "category": "inflation",
+   "month": "2022-12",
+   "est_cost_usd": 0.2976
+  },
+  {
+   "n": 32,
+   "category": "inflation",
+   "month": "2023-08",
+   "est_cost_usd": 0.3072
+  },
+  {
+   "n": 33,
+   "category": "inflation",
+   "month": "2023-07",
+   "est_cost_usd": 0.3168
+  },
+  {
+   "n": 34,
+   "category": "inflation",
+   "month": "2023-05",
+   "est_cost_usd": 0.3264
+  },
+  {
+   "n": 35,
+   "category": "inflation",
+   "month": "2023-05",
+   "est_cost_usd": 0.336
+  },
+  {
+   "n": 36,
+   "category": "inflation",
+   "month": "2023-04",
+   "est_cost_usd": 0.3456
+  },
+  {
+   "n": 37,
+   "category": "inflation",
+   "month": "2023-04",
+   "est_cost_usd": 0.3552
+  },
+  {
+   "n": 38,
+   "category": "inflation",
+   "month": "2021-01",
+   "est_cost_usd": 0.3648
+  },
+  {
+   "n": 39,
+   "category": "inflation",
+   "month": "2021-01",
+   "est_cost_usd": 0.3744
+  },
+  {
+   "n": 40,
+   "category": "inflation",
+   "month": "2023-06",
+   "est_cost_usd": 0.384
+  },
+  {
+   "n": 41,
+   "category": "inflation",
+   "month": "2023-09",
+   "est_cost_usd": 0.3936
+  },
+  {
+   "n": 42,
+   "category": "inflation",
+   "month": "2021-02",
+   "est_cost_usd": 0.4032
+  },
+  {
+   "n": 43,
+   "category": "inflation",
+   "month": "2021-03",
+   "est_cost_usd": 0.4128
+  },
+  {
+   "n": 44,
+   "category": "inflation",
+   "month": "2023-03",
+   "est_cost_usd": 0.4224
+  },
+  {
+   "n": 45,
+   "category": "inflation",
+   "month": "2023-03",
+   "est_cost_usd": 0.432
+  },
+  {
+   "n": 46,
+   "category": "services_costs",
+   "month": "2022-05",
+   "est_cost_usd": 0.4416
+  },
+  {
+   "n": 47,
+   "category": "food_prices",
+   "month": "2022-05",
+   "est_cost_usd": 0.4512
+  },
+  {
+   "n": 48,
+   "category": "labour",
+   "month": "2022-05",
+   "est_cost_usd": 0.4608
+  },
+  {
+   "n": 49,
+   "category": "labour",
+   "month": "2022-05",
+   "est_cost_usd": 0.4704
+  },
+  {
+   "n": 50,
+   "category": "fx",
+   "month": "2022-05",
+   "est_cost_usd": 0.48
+  },
+  {
+   "n": 51,
+   "category": "housing",
+   "month": "2022-05",
+   "est_cost_usd": 0.4896
+  },
+  {
+   "n": 52,
+   "category": "housing",
+   "month": "2022-05",
+   "est_cost_usd": 0.4992
+  },
+  {
+   "n": 53,
+   "category": "wars_geopolitics",
+   "month": "2022-05",
+   "est_cost_usd": 0.5088
+  },
+  {
+   "n": 54,
+   "category": "services_costs",
+   "month": "2022-07",
+   "est_cost_usd": 0.5184
+  },
+  {
+   "n": 55,
+   "category": "food_prices",
+   "month": "2022-07",
+   "est_cost_usd": 0.528
+  },
+  {
+   "n": 56,
+   "category": "food_prices",
+   "month": "2022-07",
+   "est_cost_usd": 0.5376
+  },
+  {
+   "n": 57,
+   "category": "labour",
+   "month": "2022-07",
+   "est_cost_usd": 0.5472
+  },
+  {
+   "n": 58,
+   "category": "fx",
+   "month": "2022-07",
+   "est_cost_usd": 0.5568
+  },
+  {
+   "n": 59,
+   "category": "housing",
+   "month": "2022-07",
+   "est_cost_usd": 0.5664
+  },
+  {
+   "n": 60,
+   "category": "wars_geopolitics",
+   "month": "2022-07",
+   "est_cost_usd": 0.576
+  },
+  {
+   "n": 61,
+   "category": "services_costs",
+   "month": "2022-06",
+   "est_cost_usd": 0.5856
+  },
+  {
+   "n": 62,
+   "category": "services_costs",
+   "month": "2022-06",
+   "est_cost_usd": 0.5952
+  },
+  {
+   "n": 63,
+   "category": "food_prices",
+   "month": "2022-06",
+   "est_cost_usd": 0.6048
+  },
+  {
+   "n": 64,
+   "category": "food_prices",
+   "month": "2022-06",
+   "est_cost_usd": 0.6144
+  },
+  {
+   "n": 65,
+   "category": "labour",
+   "month": "2022-06",
+   "est_cost_usd": 0.624
+  },
+  {
+   "n": 66,
+   "category": "labour",
+   "month": "2022-06",
+   "est_cost_usd": 0.6336
+  },
+  {
+   "n": 67,
+   "category": "fx",
+   "month": "2022-06",
+   "est_cost_usd": 0.6432
+  },
+  {
+   "n": 68,
+   "category": "fx",
+   "month": "2022-06",
+   "est_cost_usd": 0.6528
+  },
+  {
+   "n": 69,
+   "category": "housing",
+   "month": "2022-06",
+   "est_cost_usd": 0.6624
+  },
+  {
+   "n": 70,
+   "category": "housing",
+   "month": "2022-06",
+   "est_cost_usd": 0.672
+  },
+  {
+   "n": 71,
+   "category": "wars_geopolitics",
+   "month": "2022-06",
+   "est_cost_usd": 0.6816
+  },
+  {
+   "n": 72,
+   "category": "services_costs",
+   "month": "2022-02",
+   "est_cost_usd": 0.6912
+  },
+  {
+   "n": 73,
+   "category": "services_costs",
+   "month": "2022-02",
+   "est_cost_usd": 0.7008
+  },
+  {
+   "n": 74,
+   "category": "food_prices",
+   "month": "2022-02",
+   "est_cost_usd": 0.7104
+  },
+  {
+   "n": 75,
+   "category": "labour",
+   "month": "2022-02",
+   "est_cost_usd": 0.72
+  },
+  {
+   "n": 76,
+   "category": "labour",
+   "month": "2022-02",
+   "est_cost_usd": 0.7296
+  },
+  {
+   "n": 77,
+   "category": "fx",
+   "month": "2022-02",
+   "est_cost_usd": 0.7392
+  },
+  {
+   "n": 78,
+   "category": "housing",
+   "month": "2022-02",
+   "est_cost_usd": 0.7488
+  },
+  {
+   "n": 79,
+   "category": "housing",
+   "month": "2022-02",
+   "est_cost_usd": 0.7584
+  },
+  {
+   "n": 80,
+   "category": "wars_geopolitics",
+   "month": "2022-02",
+   "est_cost_usd": 0.768
+  },
+  {
+   "n": 81,
+   "category": "services_costs",
+   "month": "2022-04",
+   "est_cost_usd": 0.7776
+  },
+  {
+   "n": 82,
+   "category": "services_costs",
+   "month": "2022-04",
+   "est_cost_usd": 0.7872
+  },
+  {
+   "n": 83,
+   "category": "food_prices",
+   "month": "2022-04",
+   "est_cost_usd": 0.7968
+  },
+  {
+   "n": 84,
+   "category": "food_prices",
+   "month": "2022-04",
+   "est_cost_usd": 0.8064
+  },
+  {
+   "n": 85,
+   "category": "labour",
+   "month": "2022-04",
+   "est_cost_usd": 0.816
+  },
+  {
+   "n": 86,
+   "category": "fx",
+   "month": "2022-04",
+   "est_cost_usd": 0.8256
+  },
+  {
+   "n": 87,
+   "category": "fx",
+   "month": "2022-04",
+   "est_cost_usd": 0.8352
+  },
+  {
+   "n": 88,
+   "category": "housing",
+   "month": "2022-04",
+   "est_cost_usd": 0.8448
+  },
+  {
+   "n": 89,
+   "category": "housing",
+   "month": "2022-04",
+   "est_cost_usd": 0.8544
+  },
+  {
+   "n": 90,
+   "category": "wars_geopolitics",
+   "month": "2022-04",
+   "est_cost_usd": 0.864
+  },
+  {
+   "n": 91,
+   "category": "services_costs",
+   "month": "2021-10",
+   "est_cost_usd": 0.8736
+  },
+  {
+   "n": 92,
+   "category": "services_costs",
+   "month": "2021-10",
+   "est_cost_usd": 0.8832
+  },
+  {
+   "n": 93,
+   "category": "food_prices",
+   "month": "2021-10",
+   "est_cost_usd": 0.8928
+  },
+  {
+   "n": 94,
+   "category": "labour",
+   "month": "2021-10",
+   "est_cost_usd": 0.9024
+  },
+  {
+   "n": 95,
+   "category": "fx",
+   "month": "2021-10",
+   "est_cost_usd": 0.912
+  },
+  {
+   "n": 96,
+   "category": "fx",
+   "month": "2021-10",
+   "est_cost_usd": 0.9216
+  },
+  {
+   "n": 97,
+   "category": "housing",
+   "month": "2021-10",
+   "est_cost_usd": 0.9312
+  },
+  {
+   "n": 98,
+   "category": "housing",
+   "month": "2021-10",
+   "est_cost_usd": 0.9408
+  },
+  {
+   "n": 99,
+   "category": "wars_geopolitics",
+   "month": "2021-10",
+   "est_cost_usd": 0.9504
+  },
+  {
+   "n": 100,
+   "category": "services_costs",
+   "month": "2022-03",
+   "est_cost_usd": 0.96
+  },
+  {
+   "n": 101,
+   "category": "services_costs",
+   "month": "2022-03",
+   "est_cost_usd": 0.9696
+  },
+  {
+   "n": 102,
+   "category": "food_prices",
+   "month": "2022-03",
+   "est_cost_usd": 0.9792
+  },
+  {
+   "n": 103,
+   "category": "food_prices",
+   "month": "2022-03",
+   "est_cost_usd": 0.9888
+  },
+  {
+   "n": 104,
+   "category": "labour",
+   "month": "2022-03",
+   "est_cost_usd": 0.9984
+  },
+  {
+   "n": 105,
+   "category": "labour",
+   "month": "2022-03",
+   "est_cost_usd": 1.008
+  },
+  {
+   "n": 106,
+   "category": "fx",
+   "month": "2022-03",
+   "est_cost_usd": 1.0176
+  },
+  {
+   "n": 107,
+   "category": "fx",
+   "month": "2022-03",
+   "est_cost_usd": 1.0272
+  },
+  {
+   "n": 108,
+   "category": "housing",
+   "month": "2022-03",
+   "est_cost_usd": 1.0368
+  },
+  {
+   "n": 109,
+   "category": "housing",
+   "month": "2022-03",
+   "est_cost_usd": 1.0464
+  },
+  {
+   "n": 110,
+   "category": "wars_geopolitics",
+   "month": "2022-03",
+   "est_cost_usd": 1.056
+  },
+  {
+   "n": 111,
+   "category": "services_costs",
+   "month": "2021-09",
+   "est_cost_usd": 1.0656
+  },
+  {
+   "n": 112,
+   "category": "services_costs",
+   "month": "2021-09",
+   "est_cost_usd": 1.0752
+  },
+  {
+   "n": 113,
+   "category": "food_prices",
+   "month": "2021-09",
+   "est_cost_usd": 1.0848
+  },
+  {
+   "n": 114,
+   "category": "food_prices",
+   "month": "2021-09",
+   "est_cost_usd": 1.0944
+  },
+  {
+   "n": 115,
+   "category": "labour",
+   "month": "2021-09",
+   "est_cost_usd": 1.104
+  },
+  {
+   "n": 116,
+   "category": "labour",
+   "month": "2021-09",
+   "est_cost_usd": 1.1136
+  },
+  {
+   "n": 117,
+   "category": "fx",
+   "month": "2021-09",
+   "est_cost_usd": 1.1232
+  },
+  {
+   "n": 118,
+   "category": "housing",
+   "month": "2021-09",
+   "est_cost_usd": 1.1328
+  },
+  {
+   "n": 119,
+   "category": "wars_geopolitics",
+   "month": "2021-09",
+   "est_cost_usd": 1.1424
+  },
+  {
+   "n": 120,
+   "category": "services_costs",
+   "month": "2022-08",
+   "est_cost_usd": 1.152
+  },
+  {
+   "n": 121,
+   "category": "services_costs",
+   "month": "2022-08",
+   "est_cost_usd": 1.1616
+  },
+  {
+   "n": 122,
+   "category": "food_prices",
+   "month": "2022-08",
+   "est_cost_usd": 1.1712
+  },
+  {
+   "n": 123,
+   "category": "food_prices",
+   "month": "2022-08",
+   "est_cost_usd": 1.1808
+  },
+  {
+   "n": 124,
+   "category": "labour",
+   "month": "2022-08",
+   "est_cost_usd": 1.1904
+  },
+  {
+   "n": 125,
+   "category": "labour",
+   "month": "2022-08",
+   "est_cost_usd": 1.2
+  },
+  {
+   "n": 126,
+   "category": "fx",
+   "month": "2022-08",
+   "est_cost_usd": 1.2096
+  },
+  {
+   "n": 127,
+   "category": "housing",
+   "month": "2022-08",
+   "est_cost_usd": 1.2192
+  },
+  {
+   "n": 128,
+   "category": "wars_geopolitics",
+   "month": "2022-08",
+   "est_cost_usd": 1.2288
+  },
+  {
+   "n": 129,
+   "category": "services_costs",
+   "month": "2022-01",
+   "est_cost_usd": 1.2384
+  },
+  {
+   "n": 130,
+   "category": "services_costs",
+   "month": "2022-01",
+   "est_cost_usd": 1.248
+  },
+  {
+   "n": 131,
+   "category": "food_prices",
+   "month": "2022-01",
+   "est_cost_usd": 1.2576
+  },
+  {
+   "n": 132,
+   "category": "food_prices",
+   "month": "2022-01",
+   "est_cost_usd": 1.2672
+  },
+  {
+   "n": 133,
+   "category": "labour",
+   "month": "2022-01",
+   "est_cost_usd": 1.2768
+  },
+  {
+   "n": 134,
+   "category": "labour",
+   "month": "2022-01",
+   "est_cost_usd": 1.2864
+  },
+  {
+   "n": 135,
+   "category": "fx",
+   "month": "2022-01",
+   "est_cost_usd": 1.296
+  },
+  {
+   "n": 136,
+   "category": "housing",
+   "month": "2022-01",
+   "est_cost_usd": 1.3056
+  },
+  {
+   "n": 137,
+   "category": "wars_geopolitics",
+   "month": "2022-01",
+   "est_cost_usd": 1.3152
+  },
+  {
+   "n": 138,
+   "category": "services_costs",
+   "month": "2021-11",
+   "est_cost_usd": 1.3248
+  },
+  {
+   "n": 139,
+   "category": "services_costs",
+   "month": "2021-11",
+   "est_cost_usd": 1.3344
+  },
+  {
+   "n": 140,
+   "category": "food_prices",
+   "month": "2021-11",
+   "est_cost_usd": 1.344
+  },
+  {
+   "n": 141,
+   "category": "food_prices",
+   "month": "2021-11",
+   "est_cost_usd": 1.3536
+  },
+  {
+   "n": 142,
+   "category": "labour",
+   "month": "2021-11",
+   "est_cost_usd": 1.3632
+  },
+  {
+   "n": 143,
+   "category": "labour",
+   "month": "2021-11",
+   "est_cost_usd": 1.3728
+  },
+  {
+   "n": 144,
+   "category": "fx",
+   "month": "2021-11",
+   "est_cost_usd": 1.3824
+  },
+  {
+   "n": 145,
+   "category": "housing",
+   "month": "2021-11",
+   "est_cost_usd": 1.392
+  },
+  {
+   "n": 146,
+   "category": "housing",
+   "month": "2021-11",
+   "est_cost_usd": 1.4016
+  },
+  {
+   "n": 147,
+   "category": "wars_geopolitics",
+   "month": "2021-11",
+   "est_cost_usd": 1.4112
+  },
+  {
+   "n": 148,
+   "category": "services_costs",
+   "month": "2021-06",
+   "est_cost_usd": 1.4208
+  },
+  {
+   "n": 149,
+   "category": "food_prices",
+   "month": "2021-06",
+   "est_cost_usd": 1.4304
+  },
+  {
+   "n": 150,
+   "category": "food_prices",
+   "month": "2021-06",
+   "est_cost_usd": 1.44
+  },
+  {
+   "n": 151,
+   "category": "labour",
+   "month": "2021-06",
+   "est_cost_usd": 1.4496
+  },
+  {
+   "n": 152,
+   "category": "labour",
+   "month": "2021-06",
+   "est_cost_usd": 1.4592
+  },
+  {
+   "n": 153,
+   "category": "fx",
+   "month": "2021-06",
+   "est_cost_usd": 1.4688
+  },
+  {
+   "n": 154,
+   "category": "housing",
+   "month": "2021-06",
+   "est_cost_usd": 1.4784
+  },
+  {
+   "n": 155,
+   "category": "wars_geopolitics",
+   "month": "2021-06",
+   "est_cost_usd": 1.488
+  },
+  {
+   "n": 156,
+   "category": "services_costs",
+   "month": "2022-10",
+   "est_cost_usd": 1.4976
+  },
+  {
+   "n": 157,
+   "category": "services_costs",
+   "month": "2022-10",
+   "est_cost_usd": 1.5072
+  },
+  {
+   "n": 158,
+   "category": "food_prices",
+   "month": "2022-10",
+   "est_cost_usd": 1.5168
+  },
+  {
+   "n": 159,
+   "category": "labour",
+   "month": "2022-10",
+   "est_cost_usd": 1.5264
+  },
+  {
+   "n": 160,
+   "category": "labour",
+   "month": "2022-10",
+   "est_cost_usd": 1.536
+  },
+  {
+   "n": 161,
+   "category": "fx",
+   "month": "2022-10",
+   "est_cost_usd": 1.5456
+  },
+  {
+   "n": 162,
+   "category": "housing",
+   "month": "2022-10",
+   "est_cost_usd": 1.5552
+  },
+  {
+   "n": 163,
+   "category": "housing",
+   "month": "2022-10",
+   "est_cost_usd": 1.5648
+  },
+  {
+   "n": 164,
+   "category": "wars_geopolitics",
+   "month": "2022-10",
+   "est_cost_usd": 1.5744
+  },
+  {
+   "n": 165,
+   "category": "services_costs",
+   "month": "2022-09",
+   "est_cost_usd": 1.584
+  },
+  {
+   "n": 166,
+   "category": "food_prices",
+   "month": "2022-09",
+   "est_cost_usd": 1.5936
+  },
+  {
+   "n": 167,
+   "category": "food_prices",
+   "month": "2022-09",
+   "est_cost_usd": 1.6032
+  },
+  {
+   "n": 168,
+   "category": "labour",
+   "month": "2022-09",
+   "est_cost_usd": 1.6128
+  },
+  {
+   "n": 169,
+   "category": "fx",
+   "month": "2022-09",
+   "est_cost_usd": 1.6224
+  },
+  {
+   "n": 170,
+   "category": "fx",
+   "month": "2022-09",
+   "est_cost_usd": 1.632
+  },
+  {
+   "n": 171,
+   "category": "housing",
+   "month": "2022-09",
+   "est_cost_usd": 1.6416
+  },
+  {
+   "n": 172,
+   "category": "housing",
+   "month": "2022-09",
+   "est_cost_usd": 1.6512
+  },
+  {
+   "n": 173,
+   "category": "wars_geopolitics",
+   "month": "2022-09",
+   "est_cost_usd": 1.6608
+  },
+  {
+   "n": 174,
+   "category": "services_costs",
+   "month": "2021-07",
+   "est_cost_usd": 1.6704
+  },
+  {
+   "n": 175,
+   "category": "services_costs",
+   "month": "2021-07",
+   "est_cost_usd": 1.68
+  },
+  {
+   "n": 176,
+   "category": "food_prices",
+   "month": "2021-07",
+   "est_cost_usd": 1.6896
+  },
+  {
+   "n": 177,
+   "category": "food_prices",
+   "month": "2021-07",
+   "est_cost_usd": 1.6992
+  },
+  {
+   "n": 178,
+   "category": "labour",
+   "month": "2021-07",
+   "est_cost_usd": 1.7088
+  },
+  {
+   "n": 179,
+   "category": "fx",
+   "month": "2021-07",
+   "est_cost_usd": 1.7184
+  },
+  {
+   "n": 180,
+   "category": "fx",
+   "month": "2021-07",
+   "est_cost_usd": 1.728
+  },
+  {
+   "n": 181,
+   "category": "housing",
+   "month": "2021-07",
+   "est_cost_usd": 1.7376
+  },
+  {
+   "n": 182,
+   "category": "housing",
+   "month": "2021-07",
+   "est_cost_usd": 1.7472
+  },
+  {
+   "n": 183,
+   "category": "wars_geopolitics",
+   "month": "2021-07",
+   "est_cost_usd": 1.7568
+  },
+  {
+   "n": 184,
+   "category": "services_costs",
+   "month": "2021-12",
+   "est_cost_usd": 1.7664
+  },
+  {
+   "n": 185,
+   "category": "food_prices",
+   "month": "2021-12",
+   "est_cost_usd": 1.776
+  },
+  {
+   "n": 186,
+   "category": "labour",
+   "month": "2021-12",
+   "est_cost_usd": 1.7856
+  },
+  {
+   "n": 187,
+   "category": "fx",
+   "month": "2021-12",
+   "est_cost_usd": 1.7952
+  },
+  {
+   "n": 188,
+   "category": "housing",
+   "month": "2021-12",
+   "est_cost_usd": 1.8048
+  },
+  {
+   "n": 189,
+   "category": "housing",
+   "month": "2021-07",
+   "est_cost_usd": 1.8144
+  },
+  {
+   "n": 190,
+   "category": "housing",
+   "month": "2021-07",
+   "est_cost_usd": 1.824
+  },
+  {
+   "n": 191,
+   "category": "wars_geopolitics",
+   "month": "2021-07",
+   "est_cost_usd": 1.8336
+  },
+  {
+   "n": 192,
+   "category": "services_costs",
+   "month": "2021-12",
+   "est_cost_usd": 1.8432
+  },
+  {
+   "n": 193,
+   "category": "services_costs",
+   "month": "2021-12",
+   "est_cost_usd": 1.8528
+  },
+  {
+   "n": 194,
+   "category": "food_prices",
+   "month": "2021-12",
+   "est_cost_usd": 1.8624
+  },
+  {
+   "n": 195,
+   "category": "food_prices",
+   "month": "2021-12",
+   "est_cost_usd": 1.872
+  },
+  {
+   "n": 196,
+   "category": "labour",
+   "month": "2021-12",
+   "est_cost_usd": 1.8816
+  },
+  {
+   "n": 197,
+   "category": "labour",
+   "month": "2021-12",
+   "est_cost_usd": 1.8912
+  },
+  {
+   "n": 198,
+   "category": "fx",
+   "month": "2021-12",
+   "est_cost_usd": 1.9008
+  },
+  {
+   "n": 199,
+   "category": "fx",
+   "month": "2021-12",
+   "est_cost_usd": 1.9104
+  },
+  {
+   "n": 200,
+   "category": "housing",
+   "month": "2021-12",
+   "est_cost_usd": 1.92
+  },
+  {
+   "n": 201,
+   "category": "housing",
+   "month": "2021-12",
+   "est_cost_usd": 1.9296
+  },
+  {
+   "n": 202,
+   "category": "wars_geopolitics",
+   "month": "2021-12",
+   "est_cost_usd": 1.9392
+  },
+  {
+   "n": 203,
+   "category": "services_costs",
+   "month": "2022-11",
+   "est_cost_usd": 1.9488
+  },
+  {
+   "n": 204,
+   "category": "services_costs",
+   "month": "2022-11",
+   "est_cost_usd": 1.9584
+  },
+  {
+   "n": 205,
+   "category": "food_prices",
+   "month": "2022-11",
+   "est_cost_usd": 1.968
+  },
+  {
+   "n": 206,
+   "category": "food_prices",
+   "month": "2022-11",
+   "est_cost_usd": 1.9776
+  },
+  {
+   "n": 207,
+   "category": "labour",
+   "month": "2022-11",
+   "est_cost_usd": 1.9872
+  },
+  {
+   "n": 208,
+   "category": "labour",
+   "month": "2022-11",
+   "est_cost_usd": 1.9968
+  },
+  {
+   "n": 209,
+   "category": "fx",
+   "month": "2022-11",
+   "est_cost_usd": 2.0064
+  },
+  {
+   "n": 210,
+   "category": "housing",
+   "month": "2022-11",
+   "est_cost_usd": 2.016
+  },
+  {
+   "n": 211,
+   "category": "housing",
+   "month": "2022-11",
+   "est_cost_usd": 2.0256
+  },
+  {
+   "n": 212,
+   "category": "wars_geopolitics",
+   "month": "2022-11",
+   "est_cost_usd": 2.0352
+  },
+  {
+   "n": 213,
+   "category": "services_costs",
+   "month": "2023-01",
+   "est_cost_usd": 2.0448
+  },
+  {
+   "n": 214,
+   "category": "services_costs",
+   "month": "2023-01",
+   "est_cost_usd": 2.0544
+  },
+  {
+   "n": 215,
+   "category": "food_prices",
+   "month": "2023-01",
+   "est_cost_usd": 2.064
+  },
+  {
+   "n": 216,
+   "category": "food_prices",
+   "month": "2023-01",
+   "est_cost_usd": 2.0736
+  },
+  {
+   "n": 217,
+   "category": "labour",
+   "month": "2023-01",
+   "est_cost_usd": 2.0832
+  },
+  {
+   "n": 218,
+   "category": "labour",
+   "month": "2023-01",
+   "est_cost_usd": 2.0928
+  },
+  {
+   "n": 219,
+   "category": "fx",
+   "month": "2023-01",
+   "est_cost_usd": 2.1024
+  },
+  {
+   "n": 220,
+   "category": "housing",
+   "month": "2023-01",
+   "est_cost_usd": 2.112
+  },
+  {
+   "n": 221,
+   "category": "housing",
+   "month": "2023-01",
+   "est_cost_usd": 2.1216
+  },
+  {
+   "n": 222,
+   "category": "wars_geopolitics",
+   "month": "2023-01",
+   "est_cost_usd": 2.1312
+  },
+  {
+   "n": 223,
+   "category": "services_costs",
+   "month": "2021-05",
+   "est_cost_usd": 2.1408
+  },
+  {
+   "n": 224,
+   "category": "food_prices",
+   "month": "2021-05",
+   "est_cost_usd": 2.1504
+  },
+  {
+   "n": 225,
+   "category": "food_prices",
+   "month": "2021-05",
+   "est_cost_usd": 2.16
+  },
+  {
+   "n": 226,
+   "category": "labour",
+   "month": "2021-05",
+   "est_cost_usd": 2.1696
+  },
+  {
+   "n": 227,
+   "category": "labour",
+   "month": "2021-05",
+   "est_cost_usd": 2.1792
+  },
+  {
+   "n": 228,
+   "category": "fx",
+   "month": "2021-05",
+   "est_cost_usd": 2.1888
+  },
+  {
+   "n": 229,
+   "category": "housing",
+   "month": "2021-05",
+   "est_cost_usd": 2.1984
+  },
+  {
+   "n": 230,
+   "category": "housing",
+   "month": "2021-05",
+   "est_cost_usd": 2.208
+  },
+  {
+   "n": 231,
+   "category": "wars_geopolitics",
+   "month": "2021-05",
+   "est_cost_usd": 2.2176
+  },
+  {
+   "n": 232,
+   "category": "services_costs",
+   "month": "2021-08",
+   "est_cost_usd": 2.2272
+  },
+  {
+   "n": 233,
+   "category": "services_costs",
+   "month": "2021-08",
+   "est_cost_usd": 2.2368
+  },
+  {
+   "n": 234,
+   "category": "food_prices",
+   "month": "2021-08",
+   "est_cost_usd": 2.2464
+  },
+  {
+   "n": 235,
+   "category": "food_prices",
+   "month": "2021-08",
+   "est_cost_usd": 2.256
+  },
+  {
+   "n": 236,
+   "category": "labour",
+   "month": "2021-08",
+   "est_cost_usd": 2.2656
+  },
+  {
+   "n": 237,
+   "category": "labour",
+   "month": "2021-08",
+   "est_cost_usd": 2.2752
+  },
+  {
+   "n": 238,
+   "category": "fx",
+   "month": "2021-08",
+   "est_cost_usd": 2.2848
+  },
+  {
+   "n": 239,
+   "category": "housing",
+   "month": "2021-08",
+   "est_cost_usd": 2.2944
+  },
+  {
+   "n": 240,
+   "category": "housing",
+   "month": "2021-08",
+   "est_cost_usd": 2.304
+  },
+  {
+   "n": 241,
+   "category": "wars_geopolitics",
+   "month": "2021-08",
+   "est_cost_usd": 2.3136
+  },
+  {
+   "n": 242,
+   "category": "services_costs",
+   "month": "2021-04",
+   "est_cost_usd": 2.3232
+  },
+  {
+   "n": 243,
+   "category": "services_costs",
+   "month": "2021-04",
+   "est_cost_usd": 2.3328
+  },
+  {
+   "n": 244,
+   "category": "food_prices",
+   "month": "2021-04",
+   "est_cost_usd": 2.3424
+  },
+  {
+   "n": 245,
+   "category": "food_prices",
+   "month": "2021-04",
+   "est_cost_usd": 2.352
+  },
+  {
+   "n": 246,
+   "category": "labour",
+   "month": "2021-04",
+   "est_cost_usd": 2.3616
+  },
+  {
+   "n": 247,
+   "category": "fx",
+   "month": "2021-04",
+   "est_cost_usd": 2.3712
+  },
+  {
+   "n": 248,
+   "category": "housing",
+   "month": "2021-04",
+   "est_cost_usd": 2.3808
+  },
+  {
+   "n": 249,
+   "category": "housing",
+   "month": "2021-04",
+   "est_cost_usd": 2.3904
+  },
+  {
+   "n": 250,
+   "category": "wars_geopolitics",
+   "month": "2021-04",
+   "est_cost_usd": 2.4
+  },
+  {
+   "n": 251,
+   "category": "services_costs",
+   "month": "2023-02",
+   "est_cost_usd": 2.4096
+  },
+  {
+   "n": 252,
+   "category": "services_costs",
+   "month": "2023-02",
+   "est_cost_usd": 2.4192
+  },
+  {
+   "n": 253,
+   "category": "food_prices",
+   "month": "2023-02",
+   "est_cost_usd": 2.4288
+  },
+  {
+   "n": 254,
+   "category": "food_prices",
+   "month": "2023-02",
+   "est_cost_usd": 2.4384
+  },
+  {
+   "n": 255,
+   "category": "labour",
+   "month": "2023-02",
+   "est_cost_usd": 2.448
+  },
+  {
+   "n": 256,
+   "category": "fx",
+   "month": "2023-02",
+   "est_cost_usd": 2.4576
+  },
+  {
+   "n": 257,
+   "category": "housing",
+   "month": "2023-02",
+   "est_cost_usd": 2.4672
+  },
+  {
+   "n": 258,
+   "category": "wars_geopolitics",
+   "month": "2023-02",
+   "est_cost_usd": 2.4768
+  },
+  {
+   "n": 259,
+   "category": "services_costs",
+   "month": "2022-12",
+   "est_cost_usd": 2.4864
+  },
+  {
+   "n": 260,
+   "category": "services_costs",
+   "month": "2022-12",
+   "est_cost_usd": 2.496
+  },
+  {
+   "n": 261,
+   "category": "food_prices",
+   "month": "2022-12",
+   "est_cost_usd": 2.5056
+  },
+  {
+   "n": 262,
+   "category": "labour",
+   "month": "2022-12",
+   "est_cost_usd": 2.5152
+  },
+  {
+   "n": 263,
+   "category": "labour",
+   "month": "2022-12",
+   "est_cost_usd": 2.5248
+  },
+  {
+   "n": 264,
+   "category": "fx",
+   "month": "2022-12",
+   "est_cost_usd": 2.5344
+  },
+  {
+   "n": 265,
+   "category": "housing",
+   "month": "2022-12",
+   "est_cost_usd": 2.544
+  },
+  {
+   "n": 266,
+   "category": "housing",
+   "month": "2022-12",
+   "est_cost_usd": 2.5536
+  },
+  {
+   "n": 267,
+   "category": "wars_geopolitics",
+   "month": "2022-12",
+   "est_cost_usd": 2.5632
+  },
+  {
+   "n": 268,
+   "category": "services_costs",
+   "month": "2023-08",
+   "est_cost_usd": 2.5728
+  },
+  {
+   "n": 269,
+   "category": "food_prices",
+   "month": "2023-08",
+   "est_cost_usd": 2.5824
+  },
+  {
+   "n": 270,
+   "category": "food_prices",
+   "month": "2023-08",
+   "est_cost_usd": 2.592
+  },
+  {
+   "n": 271,
+   "category": "labour",
+   "month": "2023-08",
+   "est_cost_usd": 2.6016
+  },
+  {
+   "n": 272,
+   "category": "labour",
+   "month": "2023-08",
+   "est_cost_usd": 2.6112
+  },
+  {
+   "n": 273,
+   "category": "fx",
+   "month": "2023-08",
+   "est_cost_usd": 2.6208
+  },
+  {
+   "n": 274,
+   "category": "housing",
+   "month": "2023-08",
+   "est_cost_usd": 2.6304
+  },
+  {
+   "n": 275,
+   "category": "housing",
+   "month": "2023-08",
+   "est_cost_usd": 2.64
+  },
+  {
+   "n": 276,
+   "category": "wars_geopolitics",
+   "month": "2023-08",
+   "est_cost_usd": 2.6496
+  },
+  {
+   "n": 277,
+   "category": "services_costs",
+   "month": "2023-07",
+   "est_cost_usd": 2.6592
+  },
+  {
+   "n": 278,
+   "category": "food_prices",
+   "month": "2023-07",
+   "est_cost_usd": 2.6688
+  },
+  {
+   "n": 279,
+   "category": "labour",
+   "month": "2023-07",
+   "est_cost_usd": 2.6784
+  },
+  {
+   "n": 280,
+   "category": "labour",
+   "month": "2023-07",
+   "est_cost_usd": 2.688
+  },
+  {
+   "n": 281,
+   "category": "fx",
+   "month": "2023-07",
+   "est_cost_usd": 2.6976
+  },
+  {
+   "n": 282,
+   "category": "housing",
+   "month": "2023-07",
+   "est_cost_usd": 2.7072
+  },
+  {
+   "n": 283,
+   "category": "housing",
+   "month": "2023-07",
+   "est_cost_usd": 2.7168
+  },
+  {
+   "n": 284,
+   "category": "wars_geopolitics",
+   "month": "2023-07",
+   "est_cost_usd": 2.7264
+  },
+  {
+   "n": 285,
+   "category": "services_costs",
+   "month": "2023-05",
+   "est_cost_usd": 2.736
+  },
+  {
+   "n": 286,
+   "category": "food_prices",
+   "month": "2023-05",
+   "est_cost_usd": 2.7456
+  },
+  {
+   "n": 287,
+   "category": "food_prices",
+   "month": "2023-05",
+   "est_cost_usd": 2.7552
+  },
+  {
+   "n": 288,
+   "category": "labour",
+   "month": "2023-05",
+   "est_cost_usd": 2.7648
+  },
+  {
+   "n": 289,
+   "category": "labour",
+   "month": "2023-05",
+   "est_cost_usd": 2.7744
+  },
+  {
+   "n": 290,
+   "category": "fx",
+   "month": "2023-05",
+   "est_cost_usd": 2.784
+  },
+  {
+   "n": 291,
+   "category": "housing",
+   "month": "2023-05",
+   "est_cost_usd": 2.7936
+  },
+  {
+   "n": 292,
+   "category": "housing",
+   "month": "2023-05",
+   "est_cost_usd": 2.8032
+  },
+  {
+   "n": 293,
+   "category": "wars_geopolitics",
+   "month": "2023-05",
+   "est_cost_usd": 2.8128
+  },
+  {
+   "n": 294,
+   "category": "services_costs",
+   "month": "2023-04",
+   "est_cost_usd": 2.8224
+  },
+  {
+   "n": 295,
+   "category": "services_costs",
+   "month": "2023-04",
+   "est_cost_usd": 2.832
+  },
+  {
+   "n": 296,
+   "category": "food_prices",
+   "month": "2023-04",
+   "est_cost_usd": 2.8416
+  },
+  {
+   "n": 297,
+   "category": "labour",
+   "month": "2023-04",
+   "est_cost_usd": 2.8512
+  },
+  {
+   "n": 298,
+   "category": "labour",
+   "month": "2023-04",
+   "est_cost_usd": 2.8608
+  },
+  {
+   "n": 299,
+   "category": "fx",
+   "month": "2023-04",
+   "est_cost_usd": 2.8704
+  },
+  {
+   "n": 300,
+   "category": "housing",
+   "month": "2023-04",
+   "est_cost_usd": 2.88
+  }
+ ]
+}
