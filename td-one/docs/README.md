@@ -66,6 +66,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [LITERATURE_SURVEY.md](LITERATURE_SURVEY.md) | TSFM + agentic forecasting literature with verified citations. |
 | [LITERATURE_AGENTIC_SURVEY.md](LITERATURE_AGENTIC_SURVEY.md) | Agentic forecasting, model selection, news augmentation — informing the post-exp23/exp37 methodology. |
 | [LITERATURE_SURVEY_AGENTIC.md](LITERATURE_SURVEY_AGENTIC.md) | Methodology-improvement survey: selection under instability, regime detection, leakage-safe feature discovery. |
+| [UQ_SURVEY.md](UQ_SURVEY.md) | Uncertainty quantification for TSFMs (2024+): conformal-for-time-series families, TSFM calibration, error-prediction meta-models; shortlist behind exp74. |
 | [REAL_DATA_SURVEY.md](REAL_DATA_SURVEY.md) | Real dataset candidates for validation. |
 | [REAL_DATA_INTEGRATION.md](REAL_DATA_INTEGRATION.md) | Real-data integration: OSFI M4 runoff benchmark (exp70 ❌), competitor spread (exp71 ❌, exp71b ❌ settled at full coverage: BoC 622m + Wayback 54m), FRED adds, Layer-2 meta-router (exp73: gating partial positive, lock-in ❌). |
 | [SCALE_UP_RUNBOOK.md](SCALE_UP_RUNBOOK.md) | End-to-end pipeline: simulate → PIT → segments → backtest. |
