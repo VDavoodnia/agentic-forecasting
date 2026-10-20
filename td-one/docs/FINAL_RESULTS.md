@@ -239,6 +239,24 @@ coverage no worse in any family, and M4 goes from no-op to cov80
 adequately-banked series (OSFI's 4 segments: harmful in every form
 tested, +62 CRPS pooled-signed) — the family gate is the guardrail.
 
+**exp85: shift-proof conformal (attacking the bank-blindness
+wall).** Five rounds against the pre-registered bar (fresh-seed
+S1@4σ cov80 ≥ 0.77 at ≤ +2% control CRPS harm). On the Chronos-2
+battery the bar is **cleared by the BC family** (bias-corrected
+adaptive conformal: a causal EWM bias track recenters the interval
+before per-side CQR scoring): fresh S1 pooled cov80 0.828–0.839 at
+native-level CRPS, and on Food CPI it beats plain CQR by 4.6–5.6%
+CRPS (paired p ≤ 7e-22) — the BC family ships as the stack's
+documented shift-regime UQ option in `td_one.uq.adaptive`.
+Changepoint-triggered bank surgery (reset / decay / pre-break
+penalty) adds ~nothing once CQR is in place. On the group
+forecaster the bar is **not cleared** (best 0.658, errors-surface
+reset): a per-origin decomposition attributes ~55% of the
+shortfall to origins whose banks are structurally empty of
+post-shift evidence (conformal not yet engaged, or holding only
+pre-shift scores) — the wall is the bank's information content,
+not its tuning. No default changes on either testbed.
+
 ---
 
 ## Other Validated Results

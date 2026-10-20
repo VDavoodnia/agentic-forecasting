@@ -12,8 +12,11 @@ current origin (`origin' + h' − 1 < origin`).
 | `evaluate.py` | Rolling evaluation driver: builds cases, rebuilds the bank per origin, scores every arm. |
 | `fusion.py` | exp76 fusion: F1 `MetaLevelCqr` (meta-informed conformal level; h≥3-gated form is the Food CPI champion), F2 conditional CQR (killed — cross-horizon score pooling bias). |
 | `pooled.py` | exp81 cross-series pooled conformal banks: signed max-scores, side-specific width normalization, own-score shrinkage (n0=24), round-lag PIT pooling. Ships family-gated (≥8 series); per-series CQR elsewhere. |
+| `adaptive.py` | exp85 shift-adaptive arms: changepoint-triggered bank surgery (reset / decay / pre-break penalty; scan, CUSUM, and errors-surface detectors) and BC-ACI bias-corrected conformal (causal EWM bias track, per-side corrected scores). The BC family ships as the documented shift-regime option: clears the fresh S1@4σ bar on the Chronos-2 battery and beats CQR on Food CPI CRPS by 4.6–5.6%. |
 
 Shipped configuration: per-series CQR default; pooled banks on
+many-series families; the exp85 BC family (bc_aci primary) as the
+shift-regime option alongside CQR;
 many-series families; F1 h3-gated fusion where story features and a
 long bank exist (feature set: story + the standalone inflation macro
 feature `mac_inflation` where Macro Signal coverage exists — exp83:

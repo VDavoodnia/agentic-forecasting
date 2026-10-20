@@ -278,4 +278,123 @@ a count gate of 5 is a permanent disable), decay half-life 6 → 3.
 Series-level gates in the group path also got length-fitted
 windows so the length guard can no longer silently disable them.
 
+**Infra note (round 4).** The heavy harness rebuilds the
+simulator per process (peak RSS ~2.2 GB) and the shared box was
+OOM-starved for hours by sibling jobs. Fix: `exp85_build_worlds.py`
+pickles the built worlds once (48 KB total; local artifacts —
+regenerate per seed with the builder, ~1 min each on an unloaded
+machine);
+`exp85_group_light.py` replays exp80's forecast loop verbatim on
+the pickles (same exp72/exp78 functions, ~3 s per unit).
+Fidelity check: on fresh seed 2024 the light rows reproduce the
+heavy rows **bit-identically for arms A/C90/DEC/BC/RST/CPBC**;
+only CP differs, and only because round 4's length-fitted window
+intentionally changes CP's detector input (in round 1's heavy run
+CP's detector was length-starved to None; now it can fire).
+
+Results (fresh, level 0.90 + conditional, detector=errors,
+hl 3, min_post 2; S1 group scope):
+
+| arm | A | C90 | RST | DEC | CP | BC | CPBC |
+|---|---|---|---|---|---|---|---|
+| S1 cov80 | 0.565 | 0.652 | **0.658** | 0.652 | 0.652 | 0.639 | 0.646 |
+| S1 CRPS | 0.16822 | 0.16283 | 0.16289 | 0.16296 | 0.16296 | 0.16297 | 0.16289 |
+| control cov80 | 0.767 | 0.824 | 0.824 | 0.789 | 0.789 | 0.798 | 0.798 |
+| control CRPS | 0.08657 | 0.08655 | 0.08655 | 0.08706 | 0.08706 | 0.08659 | 0.08655 |
+
+The errors-surface reset now engages (RST edges C90, +0.006) —
+but the bar (0.77) is nowhere in reach. The scan-detector variant
+of the same config is identical (RST 0.658): with length-fitted
+windows both surfaces fire, and the binding constraint is
+downstream of detection entirely.
+
+**Per-origin decomposition (the ceiling, measured).**
+Member-weighted cov80 by origin, fresh S1, group scope:
+
+| origin | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+|---|---|---|---|---|---|---|---|---|---|
+| A | .89 | .99 | .86 | .48 | .50 | .34 | .35 | .09 | .56 |
+| C90 | .89 | .99 | .86 | .48 | .50 | .44 | .51 | .49 | .72 |
+| RST | .89 | .99 | .86 | .48 | .50 | .44 | .51 | .57 | .72 |
+| BC | .89 | .99 | .86 | .48 | .43 | .44 | .46 | .49 | .72 |
+
+Three structural facts, in order of damage:
+
+1. **Origins 12–15 are conformal-free by construction** (bank
+   minimum 8 cases from t=8 → first engagement at origin 16),
+   and the S1 ramp already bites at origins 15–17 (coverage
+   0.34–0.50 for every arm). No bank method can act there.
+2. **Origins 16–18 have banks with ≤1 post-shift case** — the
+   scores that exist are pre-shift, and offsets are bounded by
+   them (the original wall, now localized to three origins).
+   The conditional vol-scaling is the only lever that responds
+   (C90 vs A at o17: +0.10, o18: +0.16) because trailing vol
+   rises as the ramp enters the history.
+3. **Where post-shift evidence exists, the reset works**:
+   origin 19 coverage 0.09 (A) → 0.49 (C90) → **0.57 (RST)**;
+   origin 20 reaches 0.72 for all conformal arms.
+
+Roughly 55% of the pooled shortfall vs 0.77 sits at origins
+15–17, where a causal bank is empty of post-shift evidence by
+construction. This is the same information-theoretic wall as
+testbed 1's straddle slice, but on this harness it covers a
+third of all origins instead of three cases in 36.
+
+**Protocol cross-check (same config):** S1 group cov80 — A 0.731,
+C90 0.776, RST 0.776, BC 0.756. Protocol worlds are gentler (the
+0.77 line is crossed there by plain C90); fresh seeds remain the
+binding set, and RST adds +0.006 fresh / +0.000 protocol over C90.
+BC is *worse* than C90 on both seed sets here (fresh 0.639;
+protocol CRPS harm vs A significant, p=0.013): the group
+forecaster's trailing-mean center re-centers within a month or
+two, so its errors carry no persistent bias for a BC track to
+correct — the exact opposite of Food CPI's Chronos bias, which
+is why BC wins on testbed 1 and not here.
+
+### Round 5 — aggression sweep (testbed 2): saturation
+
+Two maximal-aggression variants (level 0.95; hl 2 + min_post 1):
+pooled numbers move by ≤0.001 and **row-level diffs vs round 4
+are 1–2 cells out of 1008**. The conformal output on banks of
+4–12 scores with a large atom at 0 is effectively binary — the
+finite-sample quantile at any level in [0.80, 0.95] is the same
+order statistic (usually the max score), decay weights cannot
+move a weighted quantile off that atom, and count gates of 1
+vs 2 select the same post sets. Tuning has no travel left on
+this testbed; the ceiling is the bank's information content,
+not its hyperparameters. (Same saturation exp80 hit in its
+rounds 2/4, now confirmed for the adaptive variants.)
+
+### Testbed-2 verdict (pre-registered rule)
+
+**Bar NOT cleared on fresh seeds by any arm in five rounds.**
+Best adaptive arm: errors-surface reset, S1 cov80 **0.658**
+(C90 0.652, A 0.565); control constraints satisfied everywhere
+(cov80 0.824 ∈ [0.77, 0.85], CRPS harm ≈ 0). Per the frozen ship
+rule there is **no default flip**: the group forecaster keeps
+`conformal=False` by default (exp80's verdict stands), with the
+adaptive machinery shipped as documented options
+(`conformal_adaptive` ∈ {reset, decay, cp, bc, cp_bc},
+`conformal_detector` ∈ {scan, cusum, errors}). What five rounds
+bought: the detector stack now actually runs on short series
+(length-fitted windows + errors surface), the reset is worth
++0.006 pooled and +0.08 at the worst origin when evidence
+exists, and the residual gap is attributed — origins 15–17
+need a mechanism that widens *without* bank evidence of the
+shift (exogenous triggers, e.g. the Macro Signal Service's
+risk channel, are the named successor direction; untested here).
+
+## Ship summary
+
+| testbed | ships | default change |
+|---|---|---|
+| 1 (Chronos-2 UQ) | `td_one.uq.adaptive` BC family (bc_aci primary, bc_cqr, bc variants) as the documented shift-regime UQ option; beats CQR on food CRPS by 4.6–5.6% (p ≤ 7e-22) and clears the fresh bar | none (option alongside CQR; CQR stays the general default) |
+| 2 (group forecaster) | adaptive conformal modes + errors detector as options in `v2_forecaster_fn`; reset is the best adaptive arm | none (bar not cleared; conformal stays opt-in per exp80) |
+
+Tests: `tests/test_uq_adaptive.py` (19) +
+`tests/test_group_forecaster_exp85.py` (7) cover detection on
+both surfaces, reset/decay/BC mechanics, detector plumbing,
+invalid-parameter rejection, and prefix-vs-full PIT safety on
+both testbeds' code paths.
+
 
