@@ -1,0 +1,86 @@
+{
+  "artifact": "News store: SQLite news DB (21,234 articles) + chunk embeddings + GDELT gap list",
+  "group": "news",
+  "created": "2026-10-20",
+  "source": "exp83 backfill fetch + exp87 runtime state; fetchers in scripts/fetch_news_*.py, fetch_article_bodies.py",
+  "encoding": "base64: each part file is the base64 encoding (no line breaks) of one 3 MiB slice of the zip; decode all parts and concatenate in numeric order to rebuild the zip",
+  "archive": {
+    "name": "news_store.zip",
+    "size": 27513478,
+    "sha256": "f397f5e816cf2b25318680779f32c993ce347143a45a5fac340b37b11d17ff3f"
+  },
+  "parts": [
+    {
+      "name": "news_store.zip.001.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "ef75a741eaa2cb0df932a0be3cb155fb819de9eb1dbfcd992dbc18484c769bb0",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.002.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "7b72c17c9db5725c427f14f97dc2ad5a914880c261e7f3b21b9185f850ae3691",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.003.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "b9a1ede5ba43cad979db16469fd59f32f7d2e059a372ce128973ca8eab6ded2c",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.004.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "7deab4474ce21c633f6ce598fdc11f75bfad25470877d07e8915eb7582292a9d",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.005.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "4f430409c7c58424bcf019e6b73f1147dc1b5f05e5271cde90823403fca26b18",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.006.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "49b6ada5cea1f68ea15bd1e2f477a6adca377877abf2307701412fb65f31d3c1",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.007.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "6895cae134a32820c4acff889bb77ca4c07f8491ae9607f5c730347cef0d4909",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.008.b64",
+      "binary_size": 3145728,
+      "binary_sha256": "029a693349d77c5fdbc9dee2c9fb92d6ebbb5dd6dfa00c3dae224000e9160a7a",
+      "encoded_size": 4194304
+    },
+    {
+      "name": "news_store.zip.009.b64",
+      "binary_size": 2347654,
+      "binary_sha256": "adcc177d40e42d51a6e0c196f3d7064f3ef9da930c58004e1560139628f675be",
+      "encoded_size": 3130208
+    }
+  ],
+  "files": [
+    {
+      "name": "news_2026.db",
+      "size": 15368192,
+      "sha256": "449a6cc7889b88aa88546d6905fcbf784b315d636e215c329d312a4c7ed0f2ed"
+    },
+    {
+      "name": "news_embeddings_v1.npz",
+      "size": 22640635,
+      "sha256": "aab05e967e42f573a902165911989f49a1ca53923b040c37d1270a34683c6f03"
+    },
+    {
+      "name": "gdelt_gaps_remaining.json",
+      "size": 11571,
+      "sha256": "83a088ffc18a758ec26cc7e15f63206028dd8968e44b9152fbb5e717102dd7f8"
+    }
+  ],
+  "total_bytes": 38020398
+}
