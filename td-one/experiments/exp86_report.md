@@ -146,7 +146,7 @@ exp67 strength lives.
 (0.09043; +0.03167). **Neither Chronos arm ships.** The fresh-seed
 replication was still run, as diagnosis (below).
 
-### Fresh seeds 2024/555/9001 (702 cells) — replication as diagnosis
+### Fresh seeds 2024/555/9001 (729 cells) — replication as diagnosis
 
 | World | A | B | C | D | BL25 |
 |---|---|---|---|---|---|
@@ -241,7 +241,7 @@ fresh-seed guard. Durable findings:
 
 Protocol pass: 702 cells, 194 unique full-context Chronos calls
 (rest cache hits), ≈35 min wall under multi-agent contention.
-Fresh pass: 702 cells, completed after two OOM kills and a
+Fresh pass: 729 cells, completed after two OOM kills and a
 retry-driver resume (7 GB box shared with six other experiment
 tracks; the disk cache made every retry cheap). R4 (last-12):
 702 cells, 185 model calls + 223 cache hits, 920 s. All post-pass
