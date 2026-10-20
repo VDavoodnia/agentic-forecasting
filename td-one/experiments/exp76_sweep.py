@@ -65,6 +65,8 @@ def main() -> None:
         "meta_numeric": MetaArm(FEATS_NUM),
         "cqr_meta_level_num": uqf.MetaLevelCqr(FEATS_NUM),
         "cqr_conditional_num": uqf.ConditionalCqr(FEATS_NUM),
+        # Round-3 champion on Food CPI in numeric-feature form.
+        "cqr_meta_level_h3_num": uqf.MetaLevelCqr(FEATS_NUM, min_h=3),
     }
     results = run_study(cases_by_config, arms)
 
@@ -77,24 +79,17 @@ def main() -> None:
         cid: summarize(results, lambda r, c=cid: r.config_id == c)
         for cid in sorted(cases_by_config)
     }
+    # Per-case payload is a compact CRPS pivot (config|origin|h -> arm ->
+    # crps): the full row dump exceeds the push connector's file-size
+    # limit; coverage/width aggregates live in the summaries above.
+    pivot: dict[str, dict[str, float]] = {}
+    for r in results:
+        pivot.setdefault(f"{r.config_id}|{r.origin}|{r.h}", {})[r.arm] = r.crps
     payload = {
         "config": {"n_rows": len(rows), "arms": list(arms)},
         "summary_by_family": summary,
         "per_config": per_config,
-        "cases": [
-            {
-                "config_id": r.config_id,
-                "origin": r.origin,
-                "h": r.h,
-                "arm": r.arm,
-                "coverage80": r.coverage80,
-                "coverage90": r.coverage90,
-                "width_ratio": r.width_ratio,
-                "crps": r.crps,
-                "crps_native": r.crps_native,
-            }
-            for r in results
-        ],
+        "crps_pivot": pivot,
     }
     OUT.write_text(json.dumps(payload, indent=1))
     print(f"wrote {OUT} ({len(results)} case-results)")

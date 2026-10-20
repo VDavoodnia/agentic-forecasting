@@ -163,14 +163,26 @@ planted shifts (exp72, p<1e-8).
 
 ---
 
-## Uncertainty Layer — CQR (exp74)
+## Uncertainty Layer — CQR, fused with the uncertainty signal (exp74, exp76)
 
 Conformalized quantile regression is the default uncertainty layer,
 replacing fixed conformal widening. On Food CPI (n=666): CRPS **1.2824
 vs 1.3035** native (p=1.7e-04), coverage 0.824 at 80% and 0.904 at 90%
-(native 0.799 / 0.884), at only 1.078× the interval width. Never harmful
-on any tested scope; adaptive conformal (ACI) is a regime-gated option
-for volatile subsets.
+(native 0.799 / 0.884), at only 1.078× the interval width.
+
+exp76 fused CQR with the narrative/meta uncertainty signal: modulating
+the conformal level by predicted-error percentile (horizon-gated)
+improves Food CPI further to **1.2587 (−1.8% vs CQR, p=2.0e-05)** with
+coverage 0.854 — the best uncertainty arm tested, where a long
+forecast history and the story pipeline exist. A five-benchmark sweep
+(Tourism, M3, M4, OSFI runoff, SMM) corrects the earlier "never
+harmful" claim: pooled, CQR is CRPS-neutral (+0.2%, p=0.057) — it is a
+**coverage-repair** layer (it wins outright on OSFI runoff, −1.3%),
+and the fusion gain does not transfer to many-series benchmarks with
+short per-series histories. Adaptive conformal (ACI) remains a
+regime-gated option for volatile subsets. Macro news signals, tested
+as uncertainty features, add nothing measurable over story features
+in the current (calm) window.
 
 ---
 

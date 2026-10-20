@@ -114,12 +114,21 @@ class MetaLevelCqr:
         k_grid: tuple[float, ...] = (0.0, 0.05, 0.1, 0.15, 0.2, 0.25),
         min_meta_bank: int = MIN_META_BANK,
         replay_n: int = 48,
+        min_h: int = 0,
+        widen_only: bool = False,
     ) -> None:
         self.features = features
         self.level = level
         self.k_grid = k_grid
         self.min_meta_bank = min_meta_bank
         self.replay_n = replay_n
+        # Round-2 variants (exp76 diagnosis): the level modulation's
+        # Food CPI win concentrates at longer horizons and its synth
+        # harm in shift scenarios comes from narrowing already-tight
+        # intervals; min_h gates short horizons to plain CQR and
+        # widen_only floors the modulated level at the nominal level.
+        self.min_h = min_h
+        self.widen_only = widen_only
         self._key: tuple[int, int] | None = None
         self._model: Any = None
         self._preds: np.ndarray | None = None
@@ -174,12 +183,16 @@ class MetaLevelCqr:
         return best_k
 
     def __call__(self, case: ForecastCase, bank: list[ForecastCase]) -> tuple[float, float]:
+        if case.h < self.min_h:
+            return arm_cqr(case, bank, level=self.level)
         self._refresh(case, bank)
         if self._model is None:
             return arm_cqr(case, bank, level=self.level)
         pred = float(self._model.predict(meta_matrix([case], self.features))[0])
         r = self._rank(pred, case.h, bank)
         lvl = modulated_level(r, self.level, self._k)
+        if self.widen_only:
+            lvl = max(lvl, self.level)
         s_lo, s_hi = self._scores.get(case.h, (np.array([]), np.array([])))
         if len(s_lo) < 8:
             return arm_cqr(case, bank, level=lvl)
@@ -224,13 +237,21 @@ class ConditionalCqr:
         features: list[str],
         level: float = 0.8,
         min_bank: int = MIN_META_BANK,
+        shrink: float = 1.0,
     ) -> None:
         self.features = features
         self.level = level
         self.min_bank = min_bank
+        # Round-2 variant: shrink<1 partially pools the conditional
+        # offset toward the global (unconditional) CQR offset —
+        # off = global + shrink * (pred - global). shrink=1.0 is the
+        # round-1 pure-conditional design; shrink=0.0 is plain CQR.
+        self.shrink = shrink
         self._key: tuple[int, int] | None = None
         self._lo: Any = None
         self._hi: Any = None
+        self._g_lo = 0.0
+        self._g_hi = 0.0
 
     def _refresh(self, case: ForecastCase, bank: list[ForecastCase]) -> None:
         key = (case.origin, len(bank))
@@ -242,18 +263,26 @@ class ConditionalCqr:
             return
         s_lo = np.array([max(c.interval_edges()[1] - c.y, 0.0) for c in bank])
         s_hi = np.array([max(c.y - c.interval_edges()[2], 0.0) for c in bank])
+        self._g_lo = finite_quantile(s_lo, self.level)
+        self._g_hi = finite_quantile(s_hi, self.level)
         if len(np.unique(s_lo)) < 2 and len(np.unique(s_hi)) < 2:
             return
         self._lo = _fit_score_model(bank, self.features, s_lo, self.level)
         self._hi = _fit_score_model(bank, self.features, s_hi, self.level)
+
+    def _offset(self, model: Any, x: np.ndarray, global_q: float) -> float:
+        if model is None:
+            return global_q if self.shrink < 1.0 else 0.0
+        pred = max(float(model.predict(x)[0]), 0.0)
+        return global_q + self.shrink * (pred - global_q)
 
     def __call__(self, case: ForecastCase, bank: list[ForecastCase]) -> tuple[float, float]:
         self._refresh(case, bank)
         if self._lo is None and self._hi is None:
             return arm_cqr(case, bank, level=self.level)
         x = meta_matrix([case], self.features)
-        off_lo = max(float(self._lo.predict(x)[0]), 0.0) if self._lo is not None else 0.0
-        off_hi = max(float(self._hi.predict(x)[0]), 0.0) if self._hi is not None else 0.0
+        off_lo = self._offset(self._lo, x, self._g_lo)
+        off_hi = self._offset(self._hi, x, self._g_hi)
         _m, q10, q90 = case.interval_edges()
         return scales_from_interval(case, q10 - off_lo, q90 + off_hi)
 

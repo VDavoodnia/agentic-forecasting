@@ -97,6 +97,52 @@ def test_cqr_meta_level_fallback_small_bank():
     assert arm(case, bank) == pytest.approx(M.arm_cqr(case, bank))
 
 
+def test_cqr_meta_level_min_h_gates_short_horizons():
+    # Round-2 diagnosis: F1's food-CPI win concentrates at h>=4 while h=1
+    # is significantly worse; min_h keeps short horizons at plain CQR.
+    bank = _volatile_bank()
+    case = _case(500, 1, y=0.0, feats={"vol_12": 3.0})
+    arm = F.MetaLevelCqr(M.META_FEATURES_NUMERIC, k_grid=(0.2,), min_h=3)
+    assert arm(case, bank) == pytest.approx(M.arm_cqr(case, bank))
+
+
+def test_cqr_meta_level_widen_only_never_narrows():
+    # A low-uncertainty case would normally modulate the level DOWN
+    # (narrower than plain CQR); widen_only must floor at the nominal.
+    # Smoothly graded bank (90 distinct vols) so score quantiles at
+    # different conformal levels are actually distinct.
+    bank = [
+        _case(i, 1, y=float(1.3 * v), feats={"vol_12": float(v)})
+        for i, v in enumerate(np.linspace(0.2, 3.0, 90))
+    ]
+    lo = _case(500, 1, y=0.0, feats={"vol_12": 0.2})
+    plain = M.arm_cqr(lo, bank)
+    narrow = F.MetaLevelCqr(M.META_FEATURES_NUMERIC, k_grid=(0.25,))(lo, bank)
+    wide = F.MetaLevelCqr(M.META_FEATURES_NUMERIC, k_grid=(0.25,), widen_only=True)(lo, bank)
+    assert narrow[0] + narrow[1] < plain[0] + plain[1]  # setup really narrows
+    assert wide[0] >= plain[0] and wide[1] >= plain[1]
+
+
+def test_conditional_cqr_shrink_zero_equals_plain_cqr():
+    # shrink=0 pools fully to the global conformal offset; on a
+    # single-horizon bank that is exactly plain CQR.
+    bank = _volatile_bank()
+    case = _case(500, 1, y=0.0, feats={"vol_12": 3.0})
+    arm = F.ConditionalCqr(M.META_FEATURES_NUMERIC, shrink=0.0)
+    assert arm(case, bank) == pytest.approx(M.arm_cqr(case, bank))
+
+
+def test_conditional_cqr_shrink_partial_is_between():
+    bank = _volatile_bank()
+    case = _case(500, 1, y=0.0, feats={"vol_12": 3.0})
+    plain = F.ConditionalCqr(M.META_FEATURES_NUMERIC, shrink=0.0)(case, bank)
+    full = F.ConditionalCqr(M.META_FEATURES_NUMERIC, shrink=1.0)(case, bank)
+    half = F.ConditionalCqr(M.META_FEATURES_NUMERIC, shrink=0.5)(case, bank)
+    for i in (0, 1):
+        lo_b, hi_b = min(plain[i], full[i]), max(plain[i], full[i])
+        assert lo_b - 1e-9 <= half[i] <= hi_b + 1e-9
+
+
 def test_conditional_cqr_responds_to_feature():
     bank = _volatile_bank()
     hi = _case(500, 1, y=0.0, feats={"vol_12": 3.0})

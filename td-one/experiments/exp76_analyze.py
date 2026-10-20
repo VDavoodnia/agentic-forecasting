@@ -64,6 +64,21 @@ COMPARISONS = [
     ("food_macro_subset", "meta_full_live", "native"),
     ("pooled_food", "cqr", "native"),
     ("pooled_synth", "cqr", "native"),
+    # Round-2 variants vs plain CQR and vs the round-1 fused arms.
+    ("pooled_food", "cqr_meta_level_h3", "cqr"),
+    ("pooled_food", "cqr_meta_level_wide", "cqr"),
+    ("pooled_food", "cqr_conditional_shrunk", "cqr"),
+    ("pooled_food", "cqr_meta_level_h3", "cqr_meta_level"),
+    ("pooled_food", "cqr_meta_level_wide", "cqr_meta_level"),
+    ("pooled_food", "cqr_conditional_shrunk", "cqr_conditional"),
+    ("pooled_synth", "cqr_meta_level_h3", "cqr"),
+    ("pooled_synth", "cqr_meta_level_wide", "cqr"),
+    ("pooled_synth", "cqr_conditional_shrunk", "cqr"),
+    # S8 round 2: inflation-only macro feature (diagnosis-led).
+    ("food_overlap", "meta_story_inf", "meta_story"),
+    ("food_overlap", "meta_story_inf", "meta_full_live"),
+    ("food_macro_subset", "meta_story_inf", "meta_story"),
+    ("food_macro_subset", "meta_story_inf", "meta_full_live"),
 ]
 
 

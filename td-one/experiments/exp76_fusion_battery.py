@@ -164,10 +164,17 @@ def main() -> None:
         "meta_story": MetaArm(FEATS_STORY),
         "meta_full": MetaArm(FEATS_FULL),
         "meta_full_live": MetaArm(FEATS_FULL_LIVE),
+        "meta_story_inf": MetaArm(FEATS_STORY + ["mac_inflation"]),
         "cqr_meta_level": uqf.MetaLevelCqr(FEATS_STORY),
         "cqr_meta_level_num": uqf.MetaLevelCqr(FEATS_NUM),
         "cqr_conditional": uqf.ConditionalCqr(FEATS_STORY),
         "cqr_conditional_num": uqf.ConditionalCqr(FEATS_NUM),
+        # Round-2 variants (diagnosis-driven; see exp76_report.md log).
+        "cqr_meta_level_h3": uqf.MetaLevelCqr(FEATS_STORY, min_h=3),
+        "cqr_meta_level_wide": uqf.MetaLevelCqr(FEATS_STORY, widen_only=True),
+        "cqr_conditional_shrunk": uqf.ConditionalCqr(FEATS_STORY, shrink=0.5),
+        # Round-4: F2's last iteration (stronger shrinkage) before verdict.
+        "cqr_conditional_shrunk25": uqf.ConditionalCqr(FEATS_STORY, shrink=0.25),
     }
     results = run_study(cases_by_config, arms)
 
