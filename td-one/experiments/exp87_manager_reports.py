@@ -73,7 +73,8 @@ from td_one.agent.risk_reporter import (  # noqa: E402
 from td_one.news.macro_signal import signals_asof  # noqa: E402
 
 NEWS_DB = TD / "data" / "news" / "news_2026.db"
-LOCAL_DB_DIR = Path("/tmp/exp87")
+# Persistent + gitignored (data/ rule); /tmp proved volatile mid-run.
+LOCAL_DB_DIR = TD / "data" / "news" / "exp87_local"
 RESULTS_PATH = TD / "experiments" / "exp87_results.json"
 CACHE_PATH = TD / "experiments" / "exp87_cache.json"
 SAMPLES_DIR = TD / "experiments" / "exp87_samples"
@@ -91,6 +92,10 @@ SEGMENTS: dict[str, dict[str, Any]] = {
         "queries": [
             "insured mortgages Canada CMHC housing market mortgage renewals",
         ],
+        "driver_queries": [
+            "Bank of Canada interest rate decision mortgage payments Canada",
+            "Canada housing market home prices mortgage stress test rules",
+        ],
         "macro_cats": ["housing", "inflation", "labour", "central_bank_rates"],
     },
     "uninsured": {
@@ -98,6 +103,10 @@ SEGMENTS: dict[str, dict[str, Any]] = {
         "rule": "OSFI M4 segment: uninsured mortgage balances",
         "queries": [
             "uninsured mortgages Canada renewals interest rates refinancing housing",
+        ],
+        "driver_queries": [
+            "Bank of Canada interest rate decision mortgage payments Canada",
+            "Canada housing market home prices mortgage stress test rules",
         ],
         "macro_cats": ["housing", "inflation", "labour", "central_bank_rates"],
     },
@@ -107,6 +116,10 @@ SEGMENTS: dict[str, dict[str, Any]] = {
         "queries": [
             "variable rate insured mortgages Bank of Canada interest rate payments Canada",
         ],
+        "driver_queries": [
+            "Bank of Canada interest rate decision mortgage payments Canada",
+            "Canada housing market home prices mortgage stress test rules",
+        ],
         "macro_cats": ["central_bank_rates", "housing", "inflation", "labour"],
     },
     "variable_uninsured": {
@@ -114,6 +127,10 @@ SEGMENTS: dict[str, dict[str, Any]] = {
         "rule": "OSFI M4 segment: variable-rate uninsured mortgage balances",
         "queries": [
             "variable rate mortgages Canada Bank of Canada rate payments refinancing",
+        ],
+        "driver_queries": [
+            "Bank of Canada interest rate decision mortgage payments Canada",
+            "Canada housing market home prices mortgage stress test rules",
         ],
         "macro_cats": ["central_bank_rates", "housing", "inflation", "labour"],
     },
@@ -123,6 +140,15 @@ SEGMENTS: dict[str, dict[str, Any]] = {
         "queries": [
             "US mortgage prepayment refinancing interest rates housing market",
         ],
+        # R3 fix (R2 diagnosis): R2 unioned the CANADA driver queries into
+        # every segment, so SMM explanations cited a Bank of Canada
+        # article — both of R2's judge-0 citations were that cross-border
+        # mismatch. SMM gets US driver queries + a jurisdiction filter.
+        "driver_queries": [
+            "Federal Reserve interest rate decision United States mortgage rates",
+            "United States housing market refinancing applications mortgage prepayment",
+        ],
+        "exclude_terms": ["bank of canada", "canada", "canadian"],
         "macro_cats": ["central_bank_rates", "housing", "inflation", "fx"],
     },
 }
@@ -455,7 +481,7 @@ def run_round(
         if flagged:
             queries = list(meta["queries"])
             if cfg.multi_query:
-                queries += list(cfg.extra_queries)
+                queries += list(meta.get("driver_queries", []))
             raw: list[dict[str, Any]] = []
             for query in queries:
                 for a in index.search(
@@ -472,7 +498,16 @@ def run_round(
                             "score": a.score,
                         }
                     )
-            kept = filter_pit(raw, origin, cfg.window_months)[: cfg.top_n]
+            kept = filter_pit(raw, origin, cfg.window_months)
+            # Jurisdiction scoping (R3): e.g. SMM is a US series in a
+            # Canada-heavy corpus — drop titles naming the wrong
+            # jurisdiction's institutions (deterministic, counted).
+            excl = [t.lower() for t in meta.get("exclude_terms", [])]
+            if excl:
+                n_before = len(kept)
+                kept = [a for a in kept if not any(t in str(a["title"]).lower() for t in excl)]
+                rec["n_excluded_jurisdiction"] = n_before - len(kept)
+            kept = kept[: cfg.top_n]
             rec["articles"] = kept
             snap = macro_snapshot(con, origin, seg)
             rec["signal_months"] = snap["months"]
@@ -645,17 +680,27 @@ def render_month_report(
 
 
 def build_index() -> Any:
-    """Semantic index over a local DB copy (fresh embeddings, full DB).
+    """Build the semantic index; mode from EXP87_INDEX env var.
 
-    The shipped index builds its cache single-batched over all 21,234
-    titles; on this 2-core box that crawls. We pre-build the identical
-    npz cache ourselves — same model, same format — with batch 512,
-    restricted to articles dated >= 2024-01-01. Every report origin is
-    >= 2025-04 and retrieval windows are <= 6 months, so the earliest
-    retrievable article is 2024-11; the 2024-01 floor excludes nothing
-    any round can reach (documented in exp87_report.md).
+    ``shipped`` (default): the shipped ``SemanticNewsIndex`` over the
+    real DB, loading the existing embedding cache (17,738 articles;
+    in-window coverage 75-80% — the cache predates the macro backfill).
+    Instant, and it is the tooling state the project actually ships.
+
+    ``fresh``: a local DB copy in /tmp with a pre-built cache over all
+    articles dated >= 2024-01-01 (10,514). The shipped cache-build is
+    single-batched and crawls on this 2-core box, so the identical npz
+    (same model, same format) is pre-built here with batch 512. Every
+    report origin is >= 2025-04 and retrieval windows are <= 6 months,
+    so the earliest retrievable article is 2024-11; the 2024-01 floor
+    excludes nothing any round can reach. Used once the background
+    build lands; each round records which mode it ran.
     """
-    from td_one.rag.semantic import EmbeddingClient, SemanticNewsIndex
+    from td_one.rag.semantic import SemanticNewsIndex
+
+    if os.environ.get("EXP87_INDEX", "shipped") != "fresh":
+        return SemanticNewsIndex()
+    from td_one.rag.semantic import EmbeddingClient
 
     LOCAL_DB_DIR.mkdir(parents=True, exist_ok=True)
     local_db = LOCAL_DB_DIR / "news_2026.db"
@@ -673,7 +718,9 @@ def build_index() -> Any:
         titles = [r[2] for r in rows]
         print(f"[exp87] encoding {len(titles)} titles (batch 512)...", flush=True)
         emb = client._model.encode(  # noqa: SLF001 - same model, bigger batch
-            titles, batch_size=512, normalize_embeddings=True,
+            titles,
+            batch_size=512,
+            normalize_embeddings=True,
             show_progress_bar=True,
         )
         np.savez_compressed(
@@ -699,16 +746,41 @@ def main() -> None:
 
     cfgs: dict[str, RoundCfg] = {
         "R1": ROUND1,
-        # Filled after R1 diagnosis; see exp87_report.md iteration log.
+        # R2 (after R1 diagnosis): R1 cleared the bar, but 7/45 flagged
+        # segment-months retrieved ZERO articles — all 7 lacked a news
+        # citation (the only misses on bar 2). Cause: the semantic
+        # top-50 is global, so the 3-month window filter discarded most
+        # candidates (starvation concentrated in variable_uninsured and
+        # 2026 origins). Levers: search_k 50 -> 1000 (window keeps far
+        # more candidates), window 3 -> 6 months, top_n 5 -> 6, plus
+        # two macro-driver queries unioned with the segment query.
         "R2": RoundCfg(
             name="R2",
             window_months=6,
             top_n=6,
+            search_k=1000,
             multi_query=True,
-            extra_queries=(
-                "Bank of Canada interest rate decision mortgage payments Canada",
-                "Canada housing market home prices mortgage stress test rules",
-            ),
+        ),
+        # R3 (after R2 diagnosis): same density as R2, but driver
+        # queries are per-segment (R2's global Canada queries polluted
+        # SMM — both judge-0 citations were a Bank of Canada article
+        # cited for US prepayment) + a jurisdiction title filter for
+        # SMM. See SEGMENTS['smm'].
+        "R3": RoundCfg(
+            name="R3",
+            window_months=6,
+            top_n=6,
+            search_k=1000,
+            multi_query=True,
+        ),
+        # R4 = R3's exact configuration on the FRESH full-corpus index
+        # (EXP87_INDEX=fresh): the index-coverage robustness check.
+        "R4": RoundCfg(
+            name="R4",
+            window_months=6,
+            top_n=6,
+            search_k=1000,
+            multi_query=True,
         ),
     }
     cfg = cfgs[args.round]
@@ -733,6 +805,7 @@ def main() -> None:
         results = json.loads(RESULTS_PATH.read_text())
     results.setdefault("rounds", {})[cfg.name] = {
         "cfg": asdict(cfg),
+        "index_mode": os.environ.get("EXP87_INDEX", "shipped"),
         "metrics": metrics,
         "records": records,
         "gen_api_calls": gen.api_calls,
