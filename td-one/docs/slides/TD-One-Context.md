@@ -752,7 +752,7 @@ one-cell updates where its "kept" column had gone stale (spread,
 macro signals, LLM grouper). (4) The shipped range layer now reads:
 CQR default, pooled banks, fusion champion feature set = story +
 signed inflation macro signal (exp83), BC family as the documented
-shift-regime option (exp85) — in Section 1, the models table (new
+shift-regime option (exp85), across Section 1, the models table (new
 rows: BC family, pooled router, segment scout), Appendix A (exp83
 retest row, exp85 rounds block, exp88 grouping row), Appendix B
 (new parameter rows), and the glossary (ARI, bias-corrected
