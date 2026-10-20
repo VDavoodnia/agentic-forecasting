@@ -17,9 +17,10 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts.fetch_macro_signal_news import CATEGORIES, last_complete_months  # noqa: E402
 from td_one.llm_rungs.vector_client import VectorProxyClient  # noqa: E402
 from td_one.news.macro_signal import extract_pending  # noqa: E402
-from scripts.fetch_macro_signal_news import CATEGORIES, last_complete_months  # noqa: E402
 
 
 def main() -> None:

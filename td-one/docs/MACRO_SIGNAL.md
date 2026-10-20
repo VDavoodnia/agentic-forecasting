@@ -46,7 +46,8 @@ For each `(month, category)`:
 1. **Fetch** (`scripts/fetch_macro_signal_news.py`): 22 categories x 36 months via Perplexity, resume-safe, budgeted. Coverage report below is honest — empty cells stay empty.
 2. **Extract** (`scripts/run_macro_signal_extraction.py`): Gemini Flash via the Vector proxy, resume-safe.
 3. **Calibrate** (`experiments/exp70_macro_signal_calibration.py`): FRED anchors, pre-registered gate (>55% directional accuracy on train), holdout reported.
-   - **Kill criteria are tripwires, not executions.** A failed gate produces a diagnosis (noisy / mistimed / miscalibrated / thin / anti-correlated) and tries principled variants: timing offsets (signal leads/lags by a month), certainty-weighting, strong-signals-only. A category that passes on a variant goes `LIVE(variant)` with the variant recorded.
+   - **Kill criteria are tripwires, not executions.** A failed gate produces a diagnosis (noisy / mistimed / miscalibrated / thin / anti-correlated) and tries principled variants. A category that passes on a variant goes `LIVE(variant)` with the variant recorded.
+   - **Enforced iteration rule (Vandad 2026-10-19):** diagnose → improve → reiterate for 4–5 rounds before anything is called dead. exp70 runs 5 rounds per category (base → timing offsets → certainty-weighting → strong-only → 2-month smoothing) and logs what each round taught. exp71 does the same for integration (base encoding → certainty-weighted encoding → lead-1 timing → news_weight search → drop-one-category ablation). The iteration log ships with the results.
 4. **Integrate** (exp71): live categories only, CRPS vs no-signal on SMM, paired test. Same philosophy: if it doesn't beat baseline, diagnose (wrong aggregation? wrong timing? wrong feature encoding?) and try one alternative before concluding.
 
 ## Coverage (Phase 1 — in progress)

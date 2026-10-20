@@ -216,62 +216,127 @@ def main() -> None:
             if len(train)
             else {}
         )
-        # Alternative designs (researcher mindset: diagnose before killing).
+        # 4-5 diagnosis-driven rounds (standing rule): each round tries one
+        # principled fix and logs what it taught. R5 is the last; a category
+        # still failing after R5 is recorded dead WITH its iteration log.
+        s_all = sub["direction"]
+        r_all = realized_change(load_anchor(kind), transform).reindex(s_all.index)
         s_tr = train["direction"]
         r_tr = realized_change(load_anchor(kind), transform).reindex(s_tr.index)
+
+        def r5_smoothed(s_all: pd.Series, r_all: pd.Series) -> tuple[float, int]:
+            sm = s_all.rolling(2).mean()
+            df = pd.DataFrame({"s": sm, "r": r_all}).dropna()
+            df = df[df.index <= TRAIN_END]
+            return dir_accuracy(df["s"].to_numpy(float), df["r"].to_numpy(float))
+
+        rounds: list[dict] = []
+        # R1: base metric
+        rounds.append(
+            {
+                "round": 1,
+                "design": "base offset 0",
+                "acc": tr["dir_acc"],
+                "taught": "raw signal quality before any fix",
+            }
+        )
+        # R2: timing offsets
         offsets = {o: offset_accuracy(s_tr, r_tr, o) for o in (-1, 0, 1)}
+        best_o = max(offsets, key=lambda o: offsets[o][0] if offsets[o][0] == offsets[o][0] else -1)
+        rounds.append(
+            {
+                "round": 2,
+                "design": "timing offsets -1/0/+1",
+                "acc": offsets[best_o][0],
+                "detail": f"best offset {best_o:+d}",
+                "taught": "news is often forward- or backward-looking vs the release date",
+            }
+        )
+        # R3: certainty weighting
         wacc, _ = dir_accuracy_weighted(
             train["direction"].to_numpy(float),
             train["realized"].to_numpy(float),
             train["certainty"].to_numpy(float),
         )
+        rounds.append(
+            {
+                "round": 3,
+                "design": "certainty-weighted",
+                "acc": wacc,
+                "taught": "whether LLM certainty predicts correctness",
+            }
+        )
+        # R4: strong signals only
         strong_mask = train["direction"].abs() >= 2
         strong_acc, strong_n = dir_accuracy(
             train["direction"][strong_mask].to_numpy(float),
             train["realized"][strong_mask].to_numpy(float),
         )
-        variants = {
-            "offset_-1": offsets[-1][0],
-            "offset_0": offsets[0][0],
-            "offset_+1": offsets[1][0],
-            "certainty_weighted": wacc,
-            "strong_only_|dir|>=2": strong_acc,
-            "strong_only_n": strong_n,
-        }
-        best_variant = max(
-            ((k, v) for k, v in variants.items() if v == v and k != "strong_only_n"),
-            key=lambda kv: kv[1],
-            default=(None, float("nan")),
+        rounds.append(
+            {
+                "round": 4,
+                "design": "strong-only |dir|>=2",
+                "acc": strong_acc,
+                "detail": f"n={strong_n}",
+                "taught": "whether weak (±1) signals are noise to be dropped",
+            }
         )
-        live = tr["dir_acc"] == tr["dir_acc"] and tr["dir_acc"] > GATE  # NaN-safe
-        # Tripwire, not execution: a category that fails on the base metric
-        # but passes on a principled variant goes "live (variant)" with the
-        # variant recorded — the diagnosis says why.
-        live_variant = None
-        if not live and best_variant[1] == best_variant[1] and best_variant[1] > GATE:  # NaN-safe
-            live, live_variant = True, best_variant[0]
+        # R5: 2-month smoothing (noise reduction)
+        sm_acc, sm_n = r5_smoothed(s_all, r_all)
+        rounds.append(
+            {
+                "round": 5,
+                "design": "2-month rolling-mean direction",
+                "acc": sm_acc,
+                "detail": f"n={sm_n}",
+                "taught": "whether month-to-month jitter is the dominant failure mode",
+            }
+        )
+
+        passing = [r for r in rounds if r["acc"] == r["acc"] and r["acc"] > GATE]
+        live = passing[0]["design"] if passing else None
         diagnosis = diagnose(cat, tr, offsets, cert, len(train))
+        iteration_log = [
+            {
+                "round": r["round"],
+                "design": r["design"],
+                "acc": r["acc"],
+                "pass": bool(r["acc"] == r["acc"] and r["acc"] > GATE),
+                "taught": r["taught"],
+            }
+            for r in rounds
+        ]
         results[cat] = {
             "anchor": kind,
             "transform": transform,
             "train": tr,
             "holdout": ho,
             "certainty_bins_train": cert,
-            "variants": variants,
+            "rounds": iteration_log,
             "diagnosis": diagnosis,
-            "live": bool(live),
-            "live_via_variant": live_variant,
+            "live": live is not None,
+            "live_via": live,
         }
-        status = "LIVE" if live and not live_variant else ("LIVE(variant)" if live else "dead")
+        status = (
+            "LIVE"
+            if live and rounds[0]["acc"] == rounds[0]["acc"] and rounds[0]["acc"] > GATE
+            else ("LIVE(variant)" if live else "dead")
+        )
         print(
-            f"{cat:20s} train acc={tr['dir_acc']:.2f} (n={tr['n_signal']}) "
+            f"{cat:20s} R1 acc={rounds[0]['acc']:.2f} (n={tr['n_signal']}) "
             f"corr={tr['corr']:+.2f} | holdout acc={ho['dir_acc']:.2f} "
             f"(n={ho['n_signal']}) | {status}"
         )
+        if live and not status == "LIVE":
+            print(f"  rescued by: {live}")
         if not live:
             print(f"  diagnosis: {diagnosis}")
-        elif live_variant:
-            print(f"  live via variant: {live_variant} = {best_variant[1]:.2f}")
+            taught = " / ".join(
+                f"R{r['round']}({r['design']})={r['acc']:.2f}"
+                for r in iteration_log
+                if r["acc"] == r["acc"]
+            )
+            print(f"  iteration log: {taught}")
 
     anchored = set(ANCHORS)
     unanchored = sorted(set(sig["category"].unique()) - anchored)

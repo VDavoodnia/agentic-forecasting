@@ -25,30 +25,48 @@ import json
 import logging
 import sqlite3
 from dataclasses import dataclass
+from typing import TypedDict
 
 logger = logging.getLogger(__name__)
+
+
+class SignalJSON(TypedDict):
+    direction: int
+    risk: str
+    certainty: float
+    summary: str
+
 
 # Per-category rubric: what direction -2..+2 means. Must agree with the
 # calibration anchors in experiments/exp70 (sign conventions live here).
 DIRECTION_GUIDE: dict[str, str] = {
-    "immigration_law": "Policy direction: -2 = sharply loosening (more open), +2 = sharply tightening (restrictive).",
+    "immigration_law": (
+        "Policy direction: -2 = sharply loosening (more open), "
+        "+2 = sharply tightening (restrictive)."
+    ),
     "food_prices": "Price direction: -2 = falling fast, +2 = rising fast.",
     "basic_needs": "Cost-of-living direction: -2 = falling fast, +2 = rising fast.",
-    "income_tax": "Household tax burden direction: -2 = falling fast (cuts/credits), +2 = rising fast.",
+    "income_tax": (
+        "Household tax burden direction: -2 = falling fast (cuts/credits), +2 = rising fast."
+    ),
     "minimum_wage": "Wage-floor direction: -2 = cuts/freezes, +2 = large broad increases.",
     "salary_region": "Wage direction: -2 = falling fast, +2 = rising fast.",
     "school_childcare": "Cost/policy-burden direction: -2 = falling fast, +2 = rising fast.",
     "services_costs": "Services price direction: -2 = falling fast, +2 = rising fast.",
     "inflation": "Inflation direction: -2 = disinflating fast, +2 = accelerating fast.",
-    "elections_politics": "Political disruption: -2 = strong stability/continuity, +2 = major disruption/shift.",
+    "elections_politics": (
+        "Political disruption: -2 = strong stability/continuity, +2 = major disruption/shift."
+    ),
     "wars_geopolitics": "Conflict intensity: -2 = de-escalation, +2 = major escalation.",
     "pandemics_health": "Outbreak severity: -2 = subsiding, +2 = severe/worsening.",
     "flight_prices": "Fare direction: -2 = falling fast, +2 = rising fast.",
     "car_prices": "Price direction: -2 = falling fast, +2 = rising fast.",
-    "global_trade": "Trade openness: -2 = opening up, +2 = barriers rising (tariffs/frictions).",
+    "global_trade": ("Trade openness: -2 = opening up, +2 = barriers rising (tariffs/frictions)."),
     "ai_startups": "Sector momentum: -2 = bust, +2 = boom.",
     "markets_sp500": "Market direction: -2 = sharp selloff, +2 = strong rally.",
-    "central_bank_rates": "Policy stance: -2 = strong dovish tilt (cuts), +2 = strong hawkish tilt (hikes).",
+    "central_bank_rates": (
+        "Policy stance: -2 = strong dovish tilt (cuts), +2 = strong hawkish tilt (hikes)."
+    ),
     "housing": "Market heat: -2 = sharp cooling, +2 = strong heating.",
     "labour": "Unemployment direction: -2 = falling fast, +2 = rising fast.",
     "fx": "CAD direction: -2 = weakening fast, +2 = strengthening fast.",
@@ -82,7 +100,7 @@ def ensure_signal_table(con: sqlite3.Connection) -> None:
 
 def get_category_articles(
     con: sqlite3.Connection, category: str, ym: str, max_articles: int = 15
-) -> list[dict]:
+) -> list[dict[str, object]]:
     """Articles for one (category, month) cell. PIT: pub_date within month."""
     rows = con.execute(
         """SELECT a.pub_date, a.title, a.url
@@ -90,9 +108,7 @@ def get_category_articles(
            WHERE c.category = ? AND a.pub_date LIKE ? ORDER BY a.pub_date""",
         (category, f"{ym}%"),
     ).fetchall()
-    return [
-        {"pub_date": r[0], "title": r[1], "url": r[2]} for r in rows[:max_articles]
-    ]
+    return [{"pub_date": r[0], "title": r[1], "url": r[2]} for r in rows[:max_articles]]
 
 
 def signals_asof(con: sqlite3.Connection, origin_ym: str) -> dict[str, MacroSignal]:
@@ -112,27 +128,33 @@ def signals_asof(con: sqlite3.Connection, origin_ym: str) -> dict[str, MacroSign
     return out
 
 
-def _prompt(category: str, ym: str, articles: list[dict]) -> str:
+def _rubric(category: str) -> str:
+    """Short rubric line for the extraction prompt."""
+    return DIRECTION_GUIDE.get(category, "Direction: -2 = strongly neg, +2 = strongly pos.")
+
+
+def _prompt(category: str, ym: str, articles: list[dict[str, object]]) -> str:
     titles = "\n".join(f"- [{a['pub_date']}] {a['title']}" for a in articles)
     return f"""You are a macro analyst summarizing one month of news for a forecasting system.
 
 Month: {ym}
 Category: {category}
-Direction rubric: {DIRECTION_GUIDE.get(category, 'Direction: -2 = strongly negative, +2 = strongly positive.')}
+Direction rubric: {_rubric(category)}
 
 Headlines ({len(articles)} articles):
 {titles}
 
 Task: synthesize these headlines into ONE structured signal for this month and category.
 - direction: integer from -2 to +2 per the rubric (0 = neutral/no signal).
-- risk: "low", "med", or "high" — how risky the macro backdrop is for household finances in this category.
-- certainty: 0.0 to 1.0 — your confidence. Few/contradictory headlines => low certainty.
+- risk: "low", "med", or "high" — macro risk to household finances in this category.
+- certainty: 0.0 to 1.0 — confidence. Few/contradictory headlines => low.
 - summary: 1-2 sentences citing specific headline titles in quotes.
 
-Respond with ONLY a JSON object: {{"direction": int, "risk": "...", "certainty": float, "summary": "..."}}"""
+Respond with ONLY a JSON object:
+{{"direction": int, "risk": "...", "certainty": float, "summary": "..."}}"""
 
 
-def _parse(raw: str) -> dict | None:
+def _parse(raw: str) -> SignalJSON | None:
     text = raw.strip()
     if text.startswith("```"):
         text = text.split("\n", 1)[1].rsplit("```", 1)[0]
@@ -157,15 +179,14 @@ def _parse(raw: str) -> dict | None:
         return None
     if not summary:
         return None
-    return {"direction": direction, "risk": risk, "certainty": certainty,
-            "summary": summary[:1000]}
+    return {"direction": direction, "risk": risk, "certainty": certainty, "summary": summary[:1000]}
 
 
 def extract_signal(
     client: object,  # VectorProxyClient-compatible: .complete(prompt, json_mode=True)
     category: str,
     ym: str,
-    articles: list[dict],
+    articles: list[dict[str, object]],
     retries: int = 1,
 ) -> MacroSignal | None:
     """Run the LLM synthesis for one (month, category) cell.
@@ -185,26 +206,52 @@ def extract_signal(
         parsed = _parse(raw)
         if parsed:
             return MacroSignal(
-                month=ym, category=category, n_articles=len(articles), **parsed
+                month=ym,
+                category=category,
+                direction=parsed["direction"],
+                risk=parsed["risk"],
+                certainty=parsed["certainty"],
+                summary=parsed["summary"],
+                n_articles=len(articles),
             )
         logger.warning("extract %s %s: invalid JSON (attempt %d)", ym, category, attempt)
     return None
 
 
+def fetched_cells(con: sqlite3.Connection) -> set[tuple[str, str]]:
+    """(month, category) cells the fetcher has completed (fetch_log rows)."""
+    try:
+        rows = con.execute(
+            "SELECT ym, topic FROM fetch_log WHERE topic LIKE 'macro_signal:%'"
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return set()
+    return {(ym, topic.split(":", 1)[1]) for ym, topic in rows}
+
+
 def extract_pending(
-    db_path: str, client: object, months: list[str], categories: list[str]
+    db_path: str,
+    client: object,
+    months: list[str],
+    categories: list[str],
+    require_fetched: bool = True,
 ) -> dict[str, int]:
     """Extract signals for all (month, category) cells not yet in the table.
 
     Resume-safe: the macro_signals PK (month, category) is the log.
+    With ``require_fetched`` (default), only cells the fetcher has logged
+    as complete are processed — safe to run concurrently with the fetcher.
     Returns counts per category.
     """
     con = sqlite3.connect(db_path)
     try:
         ensure_signal_table(con)
+        complete = fetched_cells(con) if require_fetched else None
         counts: dict[str, int] = {}
         for ym in months:
             for cat in categories:
+                if complete is not None and (ym, cat) not in complete:
+                    continue
                 exists = con.execute(
                     "SELECT 1 FROM macro_signals WHERE month = ? AND category = ?",
                     (ym, cat),
@@ -219,8 +266,15 @@ def extract_pending(
                     "INSERT OR REPLACE INTO macro_signals"
                     " (month, category, direction, risk, certainty, summary, n_articles)"
                     " VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (sig.month, sig.category, sig.direction, sig.risk,
-                     sig.certainty, sig.summary, sig.n_articles),
+                    (
+                        sig.month,
+                        sig.category,
+                        sig.direction,
+                        sig.risk,
+                        sig.certainty,
+                        sig.summary,
+                        sig.n_articles,
+                    ),
                 )
                 con.commit()
                 counts[cat] = counts.get(cat, 0) + 1

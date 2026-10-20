@@ -111,22 +111,34 @@ def load_live_categories() -> list[str]:
 
 
 def news_features_fn(
-    live: list[str], db_path: Path, dates: pd.DatetimeIndex, encoding: str = "base"
+    live: list[str],
+    db_path: Path,
+    dates: pd.DatetimeIndex,
+    encoding: str = "base",
+    lag: int = 0,
+    cats: list[str] | None = None,
 ):
-    """Build the per-record news_features closure (PIT-safe via asof month)."""
+    """Build the per-record news_features closure (PIT-safe via asof month).
+
+    ``lag`` shifts the asof month back by ``lag`` months (timing variant).
+    ``cats`` restricts the signal vector to a subset of live categories
+    (ablation variant).
+    """
     con = sqlite3.connect(db_path)
+    use = cats if cats is not None else live
 
     def fn(r: dict) -> dict | None:
         o = int(r["origin"])
-        asof_ym = dates[o - 1].strftime("%Y-%m")
-        sigs = [s for c, s in signals_asof(con, asof_ym).items() if c in live]
+        asof = dates[o - 1 - lag]
+        asof_ym = asof.strftime("%Y-%m")
+        sigs = [s for c, s in signals_asof(con, asof_ym).items() if c in use]
         if not sigs:
             return None
         dirs = np.array([s.direction for s in sigs], float)
         certs = np.array([s.certainty for s in sigs], float)
         if encoding == "base":
             return {
-                "coverage": float(len(sigs) / len(live)),
+                "coverage": float(len(sigs) / len(use)),
                 "stress_signal": float(np.mean(dirs) / 2.0),
             }
         # alt: certainty-weighted encoding
@@ -151,8 +163,9 @@ def _paired(a: list[float], b: list[float]) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--alt", action="store_true", help="run the alt encoding too")
-    args = ap.parse_args()
+    ap.add_argument("--alt", action="store_true",
+                    help="legacy flag; rounds 2+ now run automatically on failure")
+    ap.parse_args()
 
     live = load_live_categories()
     if not live:
@@ -171,23 +184,25 @@ def main() -> None:
     feature_names = feature_names_for(values)
     records = build_records(values, origins, feature_names)
 
-    def make(news: bool):
+    def make(news: bool, weight: float = 0.3):
         def f() -> ProposedForecasterV2:
-            fc = ProposedForecasterV2(dataset="smm", use_llm_expert=False, use_news=news)
+            fc = ProposedForecasterV2(
+                dataset="smm", use_llm_expert=False, use_news=news, news_weight=weight
+            )
             fc.models = [*CLASSICAL]
             return fc
 
         return f
 
-    def run(encoding: str) -> dict:
+    def run(design: str, encoding: str, lag: int, weight: float, cats: list[str] | None) -> dict:
         res = blocked_cv_predict(
             records,
             feature_names,
-            make(True),
+            make(True, weight),
             n_folds=5,
             baseline=make(False),
             fold_mode="time",
-            news_features_fn=news_features_fn(live, DB, dates, encoding),
+            news_features_fn=news_features_fn(live, DB, dates, encoding, lag, cats),
         )
         a, b = res["crps"], res["baseline_crps"]
         stats = _paired(b, a)  # B(with news) vs A(without)
@@ -199,26 +214,78 @@ def main() -> None:
             else "SIGNAL HURTS"
         )
         print(
-            f"[{encoding}] B mean={np.mean(b):.6f} A mean={np.mean(a):.6f} "
+            f"[R] {design:40s} B={np.mean(b):.6f} A={np.mean(a):.6f} "
             f"diff={stats['mean_diff']:+.6f} p={stats['p']:.4f} "
             f"win={stats['win_rate']:.2f} -> {verdict}",
             flush=True,
         )
         return {
-            "encoding": encoding,
+            "design": design,
             "mean_B": float(np.mean(b)),
             "mean_A": float(np.mean(a)),
             "paired": stats,
             "verdict": verdict,
         }
 
-    results = {"date": datetime.now(UTC).isoformat(), "live": live, "origins": len(origins)}
-    results["base"] = run("base")
-    alt_res = None
-    if results["base"]["verdict"] != "SIGNAL HELPS" and args.alt:
-        print("base failed — trying alt encoding (diagnosis variant)", flush=True)
-        alt_res = run("alt")
-    results["alt"] = alt_res
+    # 4-5 diagnosis-driven rounds (standing rule, enforced).
+    rounds: list[dict] = []
+    rounds.append(
+        {
+            **run("base encoding, news_weight=0.3", "base", 0, 0.3, None),
+            "round": 1,
+            "taught": "raw integration quality",
+        }
+    )
+    if rounds[0]["verdict"] != "SIGNAL HELPS":
+        rounds.append(
+            {
+                **run("alt encoding: certainty-weighted", "alt", 0, 0.3, None),
+                "round": 2,
+                "taught": "whether weighting by certainty helps",
+            }
+        )
+    if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds):
+        rounds.append(
+            {
+                **run("lead-1 timing: signal from asof-1 month", "base", 1, 0.3, None),
+                "round": 3,
+                "taught": "whether signals lag the release calendar",
+            }
+        )
+    if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds):
+        w_results = [run(f"news_weight={w}", "base", 0, w, None) for w in (0.1, 0.5, 0.7)]
+        best_w = min(w_results, key=lambda r: r["paired"]["mean_diff"])
+        rounds.append(
+            {
+                **best_w,
+                "round": 4,
+                "taught": f"param search over news_weight {sorted([0.1, 0.5, 0.7])}",
+            }
+        )
+    if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds) and len(live) >= 2:
+        drop_results = [run(f"drop-{c}", "base", 0, 0.3, [x for x in live if x != c]) for c in live]
+        best_d = min(drop_results, key=lambda r: r["paired"]["mean_diff"])
+        rounds.append(
+            {
+                **best_d,
+                "round": 5,
+                "taught": "drop-one-category ablation: which category drives the result",
+            }
+        )
+
+    helped = any(r["verdict"] == "SIGNAL HELPS" for r in rounds)
+    print(
+        f"\nfinal verdict after {len(rounds)} rounds: "
+        f"{'SIGNAL HELPS' if helped else 'signal stays a research artifact'}",
+        flush=True,
+    )
+    results = {
+        "date": datetime.now(UTC).isoformat(),
+        "live": live,
+        "origins": len(origins),
+        "rounds": rounds,
+        "final": "HELPS" if helped else "ARTIFACT",
+    }
 
     out = ROOT / "experiments" / "exp71_macro_signal_results.json"
     out.write_text(json.dumps(results, indent=2))
