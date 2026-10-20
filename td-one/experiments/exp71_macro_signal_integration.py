@@ -150,6 +150,47 @@ def news_features_fn(
     return fn
 
 
+def build_signal_records(
+    records: list[dict],
+    feature_names: list[str],
+    live: list[str],
+    dates: pd.DatetimeIndex,
+    db_path: Path,
+    mode: str,
+) -> tuple[list[dict], list[str]]:
+    """Extend records with PIT-safe signal features (router-features arm).
+
+    mode="composite": [mean_dir/2, mean_cert, frac_positive] (3 dims).
+    mode="percat": one direction dim per live category (0 when missing).
+    """
+    con = sqlite3.connect(db_path)
+    extra_names = (
+        ["sig_mean_dir", "sig_mean_cert", "sig_frac_pos"]
+        if mode == "composite"
+        else [f"sig_{c}" for c in live]
+    )
+    out = []
+    for r in records:
+        o = int(r["origin"])
+        asof_ym = dates[o - 1].strftime("%Y-%m")
+        sigs = signals_asof(con, asof_ym)
+        if mode == "composite":
+            vals = [s for c, s in sigs.items() if c in live]
+            if vals:
+                dirs = np.array([s.direction for s in vals], float)
+                extra = [
+                    float(np.mean(dirs) / 2.0),
+                    float(np.mean([s.certainty for s in vals])),
+                    float(np.mean(dirs > 0)),
+                ]
+            else:
+                extra = [0.0, 0.0, 0.0]
+        else:
+            extra = [float(sigs[c].direction / 2.0) if c in sigs else 0.0 for c in live]
+        out.append({**r, "features": [*r["features"], *extra]})
+    return out, [*feature_names, *extra_names]
+
+
 def _paired(a: list[float], b: list[float]) -> dict:
     a_, b_ = np.asarray(a), np.asarray(b)
     t, p = ttest_rel(a_, b_)
@@ -163,8 +204,9 @@ def _paired(a: list[float], b: list[float]) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--alt", action="store_true",
-                    help="legacy flag; rounds 2+ now run automatically on failure")
+    ap.add_argument(
+        "--alt", action="store_true", help="legacy flag; rounds 2+ now run automatically on failure"
+    )
     ap.parse_args()
 
     live = load_live_categories()
@@ -194,6 +236,15 @@ def main() -> None:
 
         return f
 
+    def _verdict(stats: dict, mean_a: float) -> str:
+        # Effect-size floor: a p<0.05 on a <1% effect is not a win.
+        rel = stats["mean_diff"] / mean_a if mean_a else 0.0
+        if stats["p"] < 0.05 and rel <= -0.01:
+            return "SIGNAL HELPS"
+        if stats["p"] < 0.05 and rel >= 0.01:
+            return "SIGNAL HURTS"
+        return "NEGLIGIBLE"
+
     def run(design: str, encoding: str, lag: int, weight: float, cats: list[str] | None) -> dict:
         res = blocked_cv_predict(
             records,
@@ -206,13 +257,42 @@ def main() -> None:
         )
         a, b = res["crps"], res["baseline_crps"]
         stats = _paired(b, a)  # B(with news) vs A(without)
-        verdict = (
-            "SIGNAL HELPS"
-            if stats["p"] < 0.05 and stats["mean_diff"] < 0
-            else "NEUTRAL"
-            if abs(stats["mean_diff"]) / np.mean(a) < 0.02
-            else "SIGNAL HURTS"
+        verdict = _verdict(stats, float(np.mean(a)))
+        print(
+            f"[R] {design:40s} B={np.mean(b):.6f} A={np.mean(a):.6f} "
+            f"diff={stats['mean_diff']:+.6f} p={stats['p']:.4f} "
+            f"win={stats['win_rate']:.2f} -> {verdict}",
+            flush=True,
         )
+        return {
+            "design": design,
+            "mean_B": float(np.mean(b)),
+            "mean_A": float(np.mean(a)),
+            "paired": stats,
+            "verdict": verdict,
+        }
+
+    def run_features(design: str, mode: str) -> dict:
+        """Signal-as-features arm: extend record features.
+
+        Compare against the same forecaster on original features (both CV,
+        paired by origin).
+        """
+        recs_b, feats_b = build_signal_records(records, feature_names, live, dates, DB, mode)
+        cv_b = blocked_cv_predict(
+            recs_b, feats_b, make(False), n_folds=5, baseline="equal", fold_mode="time"
+        )
+        cv_a = blocked_cv_predict(
+            records,
+            feature_names,
+            make(False),
+            n_folds=5,
+            baseline="equal",
+            fold_mode="time",
+        )
+        b, a = cv_b["crps"], cv_a["crps"]
+        stats = _paired(b, a)
+        verdict = _verdict(stats, float(np.mean(a)))
         print(
             f"[R] {design:40s} B={np.mean(b):.6f} A={np.mean(a):.6f} "
             f"diff={stats['mean_diff']:+.6f} p={stats['p']:.4f} "
@@ -262,13 +342,33 @@ def main() -> None:
                 "taught": f"param search over news_weight {sorted([0.1, 0.5, 0.7])}",
             }
         )
+    if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds):
+        # R5: different mechanism — signals as router FEATURES (learned),
+        # not a hand-set modulation. Task Phase 4 allows both.
+        rounds.append(
+            {
+                **run_features(
+                    "signal-as-features: composite [mean_dir, mean_cert, frac_pos]", "composite"
+                ),
+                "round": 5,
+                "taught": "learned use of the signal via the router vs fixed modulation",
+            }
+        )
+    if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds) and len(live) >= 2:
+        rounds.append(
+            {
+                **run_features("signal-as-features: per-category directions", "percat"),
+                "round": 6,
+                "taught": "whether the router can pick useful categories from 7 dims",
+            }
+        )
     if not any(r["verdict"] == "SIGNAL HELPS" for r in rounds) and len(live) >= 2:
         drop_results = [run(f"drop-{c}", "base", 0, 0.3, [x for x in live if x != c]) for c in live]
         best_d = min(drop_results, key=lambda r: r["paired"]["mean_diff"])
         rounds.append(
             {
                 **best_d,
-                "round": 5,
+                "round": 7,
                 "taught": "drop-one-category ablation: which category drives the result",
             }
         )

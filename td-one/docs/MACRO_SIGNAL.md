@@ -50,12 +50,19 @@ For each `(month, category)`:
    - **Enforced iteration rule (Vandad 2026-10-19):** diagnose → improve → reiterate for 4–5 rounds before anything is called dead. exp70 runs 5 rounds per category (base → timing offsets → certainty-weighting → strong-only → 2-month smoothing) and logs what each round taught. exp71 does the same for integration (base encoding → certainty-weighted encoding → lead-1 timing → news_weight search → drop-one-category ablation). The iteration log ships with the results.
 4. **Integrate** (exp71): live categories only, CRPS vs no-signal on SMM, paired test. Same philosophy: if it doesn't beat baseline, diagnose (wrong aggregation? wrong timing? wrong feature encoding?) and try one alternative before concluding.
 
-## Coverage (Phase 1 — in progress)
+## Results (2026-10-20)
 
-*Table fills when the fetch completes.*
+- **exp70 calibration:** 7/9 anchored categories live over 5 rounds (fx corr +0.63 holdout 0.79; food_prices holdout 0.82; inflation rescued-by-timing R2=0.93; wars_geopolitics via smoothing; services_costs via strong-only). Dead: basic_needs (anti-correlated, sign-inversion hypothesis recorded not applied), central_bank_rates (structurally silent, n=1). 13 categories unanchored. Certainty does not calibrate. Full table: [exp70 report](exp70_macro_signal_report.md).
+- **exp71 SMM integration:** ❌ honest negative — 7 rounds all NEGLIGIBLE (effect ~1e-7 CRPS; effect-size floor ≥1% enforced). Diagnosis: signal dilution (mean |stress| 0.167) + a structural block — all 28 SMM origins in the signal window label 'calm' (stressed months were 2022, pre-coverage), so the router is degenerate and both regime experts collapse to one model. The signal store itself is live; Food CPI integration is the open next test. Full log: [exp71 report](exp71_macro_signal_report.md).
 
-## Calibration results (Phase 3 — pending)
+## Coverage (Phase 1 — complete)
 
-*exp70_macro_signal_results.json lands here.*
+792 cells fetched (22 categories × 36 months 2023-10..2026-09); 725 signals extracted (67 zero-article cells). Coverage honestly below the ~20/month target — category means: wars 8.0, markets 7.6, central_bank_rates/fx/elections 6.3, pandemics 6.2, ai_startups 6.1, global_trade 5.6, immigration 4.8, small_business 4.5, services 4.3, inflation/school 4.2, basic_needs 4.1, flights 3.9, minimum_wage 3.7, car 3.2, income_tax 3.0, housing 2.8, labour 2.7, food 2.1, salary_region 1.7 (22 zero-months — thinnest).
 
-## Integration verdict (Phase 4 — pending)
+## Calibration results (Phase 3 — complete)
+
+See Results above and [exp70 report](exp70_macro_signal_report.md); data in `exp70_macro_signal_results.json`.
+
+## Integration verdict (Phase 4 — complete)
+
+❌ honest negative on SMM (mechanism-blocked); signal store stays a live research artifact. See Results above and [exp71 report](exp71_macro_signal_report.md).

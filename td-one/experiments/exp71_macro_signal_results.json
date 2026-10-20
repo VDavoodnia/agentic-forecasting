@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-20T04:05:32.774813+00:00",
+  "live": [
+    "inflation",
+    "services_costs",
+    "food_prices",
+    "labour",
+    "fx",
+    "housing",
+    "wars_geopolitics"
+  ],
+  "origins": 28,
+  "rounds": [
+    {
+      "design": "base encoding, news_weight=0.3",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": 2.710505431213761e-20,
+        "p": 0.48895664638483083,
+        "win_rate": 0.21428571428571427,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 1,
+      "taught": "raw integration quality"
+    },
+    {
+      "design": "alt encoding: certainty-weighted",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": 1.4133349748471755e-19,
+        "p": 0.05476477353833288,
+        "win_rate": 0.21428571428571427,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 2,
+      "taught": "whether weighting by certainty helps"
+    },
+    {
+      "design": "lead-1 timing: signal from asof-1 month",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": 2.807309196614253e-20,
+        "p": 0.3220521282921813,
+        "win_rate": 0.10714285714285714,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 3,
+      "taught": "whether signals lag the release calendar"
+    },
+    {
+      "design": "news_weight=0.1",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": -1.0938825490255535e-19,
+        "p": 0.049063468219467006,
+        "win_rate": 0.32142857142857145,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 4,
+      "taught": "param search over news_weight [0.1, 0.5, 0.7]"
+    },
+    {
+      "design": "signal-as-features: composite [mean_dir, mean_cert, frac_pos]",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": 0.0,
+        "p": NaN,
+        "win_rate": 0.0,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 5,
+      "taught": "learned use of the signal via the router vs fixed modulation"
+    },
+    {
+      "design": "signal-as-features: per-category directions",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807132,
+      "paired": {
+        "mean_diff": 0.0,
+        "p": NaN,
+        "win_rate": 0.0,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 6,
+      "taught": "whether the router can pick useful categories from 7 dims"
+    },
+    {
+      "design": "drop-housing",
+      "mean_B": 0.0006865824206807132,
+      "mean_A": 0.0006865824206807133,
+      "paired": {
+        "mean_diff": -4.743384504624082e-20,
+        "p": 0.6154147412723803,
+        "win_rate": 0.21428571428571427,
+        "n": 28
+      },
+      "verdict": "NEGLIGIBLE",
+      "round": 7,
+      "taught": "drop-one-category ablation: which category drives the result"
+    }
+  ],
+  "final": "ARTIFACT"
+}
