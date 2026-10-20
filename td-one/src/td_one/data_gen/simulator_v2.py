@@ -195,6 +195,7 @@ def v2_switching_logit(
     age_months: int,
     cohort_effect: float = 0.0,
     macro_shift: float = 0.0,
+    beta_overrides: dict[str, float] | None = None,
 ) -> float:
     """Compute the v2 structural switching logit.
 
@@ -216,11 +217,34 @@ def v2_switching_logit(
         age_months: Mortgage age at maturity in months (for seasoning).
         cohort_effect: Cohort random effect (v1).
         macro_shift: FRED macro logit shift for the maturity month.
+        beta_overrides: Optional coefficient replacements keyed by
+            constant name (e.g. ``{"V2_BETA_RATE_SPREAD": -0.4}``) —
+            the S5/S7 coefficient-schedule hook used by
+            ``data_gen/shift_scenarios.py``. Unknown names raise.
 
     Returns:
         Logit of the switching probability.
 
     """
+    coefs: dict[str, float] = {
+        "V2_BETA_0": V2_BETA_0,
+        "BETA_PAYMENT_SHOCK": BETA_PAYMENT_SHOCK,
+        "BETA_OFFER_S": BETA_OFFER_S,
+        "V2_BETA_RATE_SPREAD": V2_BETA_RATE_SPREAD,
+        "BETA_FAMILY_SQUEEZE": BETA_FAMILY_SQUEEZE,
+        "BETA_OSFI_EXEMPT": BETA_OSFI_EXEMPT,
+        "BETA_UTIL_TREND": BETA_UTIL_TREND,
+        "BETA_LIFE_EVENT": BETA_LIFE_EVENT,
+        "BETA_DIGITAL": BETA_DIGITAL,
+        "BETA_ADVISOR": BETA_ADVISOR,
+        "BETA_BURNOUT": BETA_BURNOUT,
+        "BETA_SEASONING": BETA_SEASONING,
+    }
+    if beta_overrides:
+        for name, value in beta_overrides.items():
+            if name not in coefs:
+                raise ValueError(f"unknown beta override: {name}")
+            coefs[name] = value
     # Burnout dampens rate sensitivity (selection: sensitive borrowers left).
     damp = 1.0 - BURNOUT_DAMP * min(n_prior_refinances, 2)
     # S-curve: arctan saturates the rate incentive (not linear).
@@ -228,18 +252,18 @@ def v2_switching_logit(
     # Seasoning ramp: unseasoned mortgages switch less.
     seasoning = min(1.0, age_months / SEASONING_MONTHS)
     return (
-        V2_BETA_0
-        + BETA_PAYMENT_SHOCK * payment_shock
-        + BETA_OFFER_S * s_curve * damp
-        + V2_BETA_RATE_SPREAD * rate_spread
-        + BETA_FAMILY_SQUEEZE * family_squeeze
-        + BETA_OSFI_EXEMPT * osfi_exempt
-        + BETA_UTIL_TREND * util_drift_ppm
-        + BETA_LIFE_EVENT * life_event_6m
-        + BETA_DIGITAL * is_digital
-        + BETA_ADVISOR * has_advisor
-        + BETA_BURNOUT * n_prior_refinances
-        + BETA_SEASONING * (seasoning - 1.0)
+        coefs["V2_BETA_0"]
+        + coefs["BETA_PAYMENT_SHOCK"] * payment_shock
+        + coefs["BETA_OFFER_S"] * s_curve * damp
+        + coefs["V2_BETA_RATE_SPREAD"] * rate_spread
+        + coefs["BETA_FAMILY_SQUEEZE"] * family_squeeze
+        + coefs["BETA_OSFI_EXEMPT"] * osfi_exempt
+        + coefs["BETA_UTIL_TREND"] * util_drift_ppm
+        + coefs["BETA_LIFE_EVENT"] * life_event_6m
+        + coefs["BETA_DIGITAL"] * is_digital
+        + coefs["BETA_ADVISOR"] * has_advisor
+        + coefs["BETA_BURNOUT"] * n_prior_refinances
+        + coefs["BETA_SEASONING"] * (seasoning - 1.0)
         + cohort_effect
         + macro_shift
     )
