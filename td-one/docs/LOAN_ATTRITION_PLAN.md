@@ -1,5 +1,7 @@
 # Loan Attrition: Grouped Forecasting + TSFM Red-Teaming — Build Plan
 
+> **Status: CURRENT — last updated 2026-10-20 (active program doc)**
+
 **Status:** Track 1 built (2026-10-19); exp66 honest negative on CRPS.
 **Reframed 2026-10-19:** grouping is for *explainability*, not for beating
 CRPS. exp66b reruns with full v2 architecture to measure the explainability
@@ -101,7 +103,20 @@ cohorts.
   genuine positive: **LLM + stats (no tool context) is the
   classifier of record** — beats deterministic bins pooled over 5
   seeds (+0.0198 bin error, CI excludes zero).
-- See `experiments/exp66e_report.md` and `experiments/exp66g_report.md`.
+- **exp78 (2026-10-20):** fixed the structural defect exp72 flagged —
+  `v2_forecaster_fn` constructed `ProposedForecasterV2` but never fitted
+  it, so `predict` always raised and the blanket `except` returned a
+  point mass. Now: naive center + PIT-safe Gaussian spread from trailing
+  naive one-step errors (`spread_method="gaussian"` default,
+  `quantile_spread=False` reproduces old output). Validation on
+  SimulatorV2 (3 seeds): fixed beats point-mass on control (−0.0287
+  CRPS, p=4.2e-45, cov80 0.075→0.714) and S1@4σ (−0.0326, p=1.5e-36);
+  Gaussian beat the empirical spread ablation in both scopes. The
+  exp66c +0.009–0.016 grouping cost was largely a point-mass ×
+  window-mean-scoring artifact: on exp66c's own metric it is +0.003
+  with the fix (seed 42); grouping = explainability verdict stands.
+  Layer-2 smoke clean (traces emit). Default switched; exp75/exp72
+  reproduction needs `quantile_spread=False`.
 
 ## Direction
 

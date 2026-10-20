@@ -1,5 +1,7 @@
 # Phase 2 Update — Since the LLM Ladder (exp63)
 
+> **Status: CURRENT — last updated 2026-10-20**
+
 *What was added after the classical/LLM benchmark program closed, framed
 around the mortgage-attrition problem. Results marked ✅ are final and
 verified on `main`. Items marked ⏳ are experiments in flight — nothing
@@ -37,7 +39,7 @@ flowchart TD
 | Macro-signal integration (SMM) | honest negative — degenerate router at all signal-window origins; store validates | exp71-MS |
 | Macro-signal integration (Food CPI) | **honest negative, mechanism-blocked:** all 33 signal-window origins "calm", router degenerate, both experts collapse to the LLM expert → forecasts identical to ~1e-16. The hypothesis that Food CPI spans non-degenerate regimes is refuted. **Program stance: calibration question is untested, not refuted; macro signals are now uncertainty features (exp74/exp76 line), not forecast-router inputs.** Selection-on-target check passed (minus-food_prices arm equally null) | exp77 |
 | Integration: shifts × group forecaster | Q1 groups isolate regional shocks: NOT supported (p=0.22, oracle geography identical). Q2 fallback: working safety valve, blunt size-based trigger. Q3 **Layer-2 protects the group forecaster too** (−0.021..−0.031, p<1e-8, win 0.65–0.68, control + all shifts) | exp72 |
-| Track-1 group forecaster calibration ⚠️ | exp72 found `v2_forecaster_fn` emits flat point-mass quantiles (CRPS 0.165 vs 0.13 Gaussian on same histories) — Track-1 group forecasts are miscalibrated on monthly actuals; exp66b/c comparability affected (they scored window means). Fix queued, not yet shipped | exp72 |
+| Track-1 group forecaster calibration ✅ FIXED | exp72 found `v2_forecaster_fn` emitted flat point-mass quantiles (root cause: router never fitted → predict asserted → blanket except returned the tiled last value). Fixed in exp78: naive center + PIT-safe Gaussian spread. Control CRPS 0.132→0.104 (p=4.2e-45), cov80 0.075→0.714; S1@4σ −0.033 (p=1.5e-36). exp66c's grouping cost was largely this bug × window-mean scoring: +0.0164→+0.0033 (seed 42) with the fix | exp78 |
 | Risk classifier of record | LLM + stats only, pooled over 5 seeds beats deterministic bins (+0.0198 bin error, CI excludes zero) | exp66g |
 
 ## ✅ Honest negatives (with diagnoses in the reports)
