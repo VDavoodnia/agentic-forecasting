@@ -1,5 +1,19 @@
 # exp66c: Deterministic Grouping + LLM Explanations — Report
 
+> **CORRECTION 2026-10-20 (exp78):** The per-group forecasts below came
+> from `v2_forecaster_fn`, which exp78 proved never ran the v2 router:
+> it called `predict()` without ever calling `fit()`, a blanket
+> `except` swallowed the `AssertionError`, and 100% of calls returned
+> the last value tiled across all five quantile levels (a point mass).
+> The near-identical per-group forecasts noted in the risk-bin section
+> below were a symptom of this defect. The reported grouping cost
+> (+0.009–0.016) was largely the point-mass bug interacting with
+> window-mean scoring — the global arm's point mass sat almost exactly
+> on the window mean (0.00042). On this report's own scoring with the
+> exp78 fix, the cost is +0.0033 (seed 42). The qualitative verdict
+> (grouping = explainability layer; global stays forecaster of record)
+> is not overturned. See `experiments/exp78_report.md`.
+
 **Date:** 2026-10-19
 **Status:** Complete. Implements the exp66b pivot.
 **Thesis:** LLM group *discovery* is flaky (not reproducible); deterministic

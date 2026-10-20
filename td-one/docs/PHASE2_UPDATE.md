@@ -32,7 +32,7 @@ flowchart TD
 | CQR uncertainty layer | Food CPI CRPS 1.2824 vs 1.3035 (p=1.7e-04); coverage at nominal at ~1.03–1.08× width; new default UQ layer | exp74 |
 | Story features predict uncertainty | story+numeric beats numeric-only, paired t=−6.92, p=2.0e-11 | exp74 |
 | ACI (adaptive conformal) | conditional win on volatile subsets (p=3.6e-05) — regime-gated option | exp74 |
-| Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); cost quantified (+0.009–0.016 CRPS); risk reports, not forecasts | exp66c/d |
+| Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); grouping cost +0.0033 CRPS on exp66c's own scoring with the exp78 fix (the published +0.009–0.016 was largely the point-mass artifact — see exp78 row below); risk reports, not forecasts | exp66c/d |
 | SHAP clustering | 2× cohort recovery vs raw features (ARI 0.091 vs 0.046) | exp66e |
 | Competitor spread | settled negative at aggregate level with 54 real broker months; in-sample r=−0.345, OOS +39.3% MSE (p=0.019) — regime artifact | exp71b |
 | **Macro Signal Service calibration** | 7/9 anchored categories LIVE (fx corr +0.63 holdout 0.79; food holdout 0.82; labour/inflation/housing/services/wars); certainty does not calibrate; dead: basic_needs (anti-correlated), central_bank_rates (n=1, correctly silent) | exp70-MS |

@@ -1,5 +1,15 @@
 # exp66d: Cohort Recovery + LLM Risk Classifier — Report
 
+> **CORRECTION 2026-10-20 (exp78):** The per-group forecasts behind
+> this report's worked examples (`docs/GROUPING_EXAMPLES.md`, which
+> labels them "the v2 per-group forecast") came from
+> `v2_forecaster_fn`, which exp78 proved never ran the v2 router:
+> `predict()` was called without `fit()`, a blanket `except` swallowed
+> the error, and every call returned a point-mass naive fallback.
+> Fixed in exp78 (naive center + Gaussian spread). The cohort-recovery
+> (ARI) results in this report do not involve the forecaster. See
+> `experiments/exp78_report.md`.
+
 **Date:** 2026-10-19
 **Status:** Complete. Follow-up to exp66c (deterministic grouping + LLM explanations).
 **Setup:** seed 42, 4,000 customers, 36 months, 10 deterministic groups

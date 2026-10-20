@@ -5,7 +5,11 @@
 **Status:** Track 1 built (2026-10-19); exp66 honest negative on CRPS.
 **Reframed 2026-10-19:** grouping is for *explainability*, not for beating
 CRPS. exp66b reruns with full v2 architecture to measure the explainability
-gain vs CRPS cost. Kill criterion is OFF — report cost/benefit honestly.
+gain vs CRPS cost. **Correction (exp78, 2026-10-20):** the "full v2
+architecture" never actually ran in the group forecaster —
+`v2_forecaster_fn` called `predict()` without `fit()`, the error was
+swallowed by a blanket `except`, and every call returned a point-mass
+naive fallback (see the exp78 entry under Track 1 below). Kill criterion is OFF — report cost/benefit honestly.
 
 ## exp66 verdict (2026-10-19)
 
@@ -33,7 +37,10 @@ explainability. **exp66c** implements the pivot:
 - LLM keeps the explanation role via citation-enforced `risk_reporter.py`.
 - Results: 10 reproducible groups (2–4 conditions each), **10/10 citation
   pass** with a total citation contract; grouping costs CRPS vs global
-  (+0.009–0.016) and vs hand-written (+0.006–0.010), beats random by ~40%.
+  (+0.009–0.016 as published — **corrected in exp78:** most of that
+  figure was the point-mass bug × window-mean scoring; on exp66c's own
+  metric the cost is +0.0033 with the fixed forecaster, seed 42) and
+  vs hand-written (+0.006–0.010), beats random by ~40%.
 - **Honest negative inside the win:** static-attribute risk bins do not
   calibrate — LOW-bin groups realized *higher* test attrition (0.128)
   than HIGH-bin (0.087). Do not ship static risk bins as predictions.
@@ -164,8 +171,11 @@ Two tracks, eventually combined:
    executable `pandas.DataFrame.query()` rules + one-sentence rationales.
    Validator rejects bad queries, outcome-column references, tiny groups,
    excessive overlap. **PIT rule:** zero post-origin info in the prompt.
-2. **`group_forecaster.py`** — per-group `ProposedForecasterV2`; groups
-   under `min_group_n` fall back to global (shrinkage).
+2. **`group_forecaster.py`** — designed as per-group
+   `ProposedForecasterV2`; as built, the v2 call was never fitted, so
+   every forecast was the point-mass naive fallback (exp78). Since
+   exp78: naive center + Gaussian spread. Groups under `min_group_n`
+   fall back to global (shrinkage).
 3. **`risk_reporter.py`** — deterministic risk bins (LOW/MEDIUM/HIGH from
    training tertiles, widened by conformal intervals); LLM explanations
    with **citation enforcement** — every factual sentence cites a `[stat]`
@@ -221,8 +231,9 @@ say so — but don't kill grouping for losing on CRPS alone.
    semantic retriever, reranker → `tests/test_semantic_rag.py`
 3. `src/td_one/agent/llm_grouper.py` — prompt builder (+ news summaries),
    JSON parsing, validation loop → `tests/test_llm_grouper.py` (mock)
-4. `src/td_one/agent/group_forecaster.py` — per-group v2, fallback →
-   `tests/test_group_forecaster.py`
+4. `src/td_one/agent/group_forecaster.py` — per-group v2 (in practice
+   the point-mass naive fallback until the exp78 fix; see the Track-1
+   exp78 entry), fallback → `tests/test_group_forecaster.py`
 5. `src/td_one/agent/risk_reporter.py` — bins, news retrieval, citation
    checker → `tests/test_risk_reporter.py`
 6. `experiments/exp66_grouped_attrition.py` + `exp66_report.md`
@@ -387,7 +398,9 @@ protected v2 on OSFI?
 - **Methodological flag:** Track-1's `v2_forecaster_fn` emits flat
   point-mass quantiles — CRPS 0.165 vs 0.13 for a proper Gaussian
   group forecaster on identical histories. Affects exp66b/c
-  comparability on noisy per-month metrics; flagged, not changed.
+  comparability on noisy per-month metrics; flagged here, then
+  root-caused and **fixed in exp78** (predict-without-fit; the group
+  forecaster now runs naive center + Gaussian spread by default).
 - Honest negative on the James–Stein τ sweep (adds nothing).
 
 ## Standing constraints

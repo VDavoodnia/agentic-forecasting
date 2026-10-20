@@ -261,9 +261,12 @@ vs 69.4% best classical on 119 meetings.
   0.000497 vs ETS (-12.2%, p=0.076, not significant). The TSFM-in-pool
   test was never repeated on Tourism.
 - **The committee was never run per-segment on the synthetic mortgage
-  book.** exp66b designed "full v2 per group" but the run never
-  completed. Mortgage segment runs that exist used M0, classical, and
-  TSFM models (early experiments exp1 to exp25). On the one US real
+  book.** exp66b designed "full v2 per group"; its runs executed, but
+  through `v2_forecaster_fn`, which (exp78) never fitted the router —
+  every call returned the point-mass naive fallback, so no v2
+  committee forecast ever ran per group. Mortgage segment runs that
+  exist used M0, classical, and TSFM models (early experiments exp1
+  to exp25). On the one US real
   mortgage series (Freddie Mac SMM), v2 tied its own classical version
   (p=0.69).
 - **On OSFI M4 real Canadian runoff (exp70)**, v2 tied naive overall
@@ -359,8 +362,12 @@ Grouping verdicts overall: LLM-proposed groups were unstable and
 forecast worse than random groups (exp66: CRPS 0.01705 vs random
 0.00690 vs global 0.00227; pre-registered kill). Deterministic groups
 are reproducible and readable but forecasting per group still costs
-accuracy vs the global model (+0.009 to +0.016 CRPS, measured against
-window means; see the exp78 caveat in 5.5), and static risk bins
+accuracy vs the global model (+0.0033 CRPS on exp66c's own
+window-mean scoring with the exp78-fixed forecaster, seed 42; the
+originally published +0.009 to +0.016 was largely the point-mass
+artifact — the broken global arm's point mass sat almost exactly on
+the window mean, 0.00042, flattering the baseline; see the exp78
+item in section 5), and static risk bins
 INVERTED on test (LOW bin realized 0.128 vs HIGH 0.087) because
 switching is driven by the time-varying rate path, not static traits.
 Agreed position: grouping is an explanation layer; the forecaster of
@@ -486,16 +493,22 @@ planted answer key) has never been run in that agent form.
    keying offset (lookahead) in exp74's story/macro features. The
    p=2.0e-11 figure is under re-measurement; the deck cites the CQR
    result only.
-8. **exp72 group-forecaster defect**: `v2_forecaster_fn` emits flat
-   point-mass quantiles, so group forecasts have zero-width ranges
-   (coverage 0% on monthly actuals). exp66b/c comparability is
-   affected (they scored window means, where point masses look fine).
-   **exp78** built the fix (ranges rebuilt from the series' own
-   trailing errors; Gaussian spread is the default in the working
-   tree). Early synthetic numbers: CRPS 0.1999 (old) to 0.1612
-   (Gaussian), coverage80 0.0 to 0.557. Still below the 0.80 target;
-   validation and report are in flight. The deck states this
-   plainly on the negatives slide.
+8. **exp72 group-forecaster defect — root-caused and fixed (exp78,
+   complete)**: `v2_forecaster_fn` called `predict()` without ever
+   calling `fit()`; the `AssertionError` was swallowed by a blanket
+   `except`, so 100% of calls returned the last value tiled across
+   all five quantile levels — the v2 router never ran in the group
+   forecaster (interval coverage 0.000 on monthly actuals, seed 7
+   control). exp66b/c comparability is affected (they scored window
+   means, where point masses look fine). **exp78** shipped the fix:
+   naive center + Gaussian spread from the series' own trailing
+   one-step errors, now the default (`quantile_spread=False`
+   reproduces the old output byte-for-byte). Validation
+   (SimulatorV2, seeds 7/42/123): group CRPS 0.1320 to 0.1042 on
+   control (−0.0287, p=4.2e-45, win 0.89), coverage80 0.075 to
+   0.714 — much improved but still below the 0.80 target. The deck
+   states this plainly on the negatives slide. Restoring the actual
+   router in the group forecaster is exp79, in flight.
 9. **Classifier of record settled** (exp66g): LLM plus statistics
    only. Counterfactual prompt context is dead (seed noise).
 10. **exp76 in flight**: CQR x story fusion plus a UQ sweep across
@@ -512,8 +525,10 @@ planted answer key) has never been run in that agent form.
 2. **exp76 verdict** will change the Future Work slide (range layer
    with news) when it lands: cite it, and retire the "in flight"
    wording.
-3. **exp78 verdict** will change the negatives slide (group ranges
-   row) and the grouping cost numbers in 4.6 when it lands.
+3. **exp78 verdict** — landed: the grouping cost numbers in 4.6 are
+   corrected in this edition (+0.0033 with the fix, seed 42). The
+   negatives slide (group ranges row) still needs its update when
+   deck work resumes.
 4. Vandad's repo norm is direct commits to main; Mehrazin's fork works
    on branch `mehrazin/work` with fork main as a clean mirror of
    upstream. The merge-back path for any code work is undecided.

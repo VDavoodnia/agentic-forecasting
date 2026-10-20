@@ -13,7 +13,14 @@ Each example follows the same five beats:
 
 1. **Rule** — the deterministic, reproducible `pandas` query defining the cohort.
 2. **Members** — who is in it (n, income, province).
-3. **Forecast** — the v2 per-group forecast (predicted mean attrition).
+3. **Forecast** — the per-group forecast from `v2_forecaster_fn`
+   (predicted mean attrition). **Correction (exp78, 2026-10-20):** that
+   function never ran the v2 router — `predict()` was called without
+   `fit()`, the error was swallowed, and every call returned its
+   point-mass naive fallback; the identical 0.0933 across all four
+   examples below is consistent with that defect. Since exp78 the
+   function returns a naive center + Gaussian spread; restoring the
+   actual router in the group forecaster is exp79, in flight.
 4. **Risk** — two independent risk reads: deterministic training-tertile bins
    vs the LLM classifier (stats + PIT-safe news).
 5. **Explanation** — the LLM's citation-grounded narrative. Every factual

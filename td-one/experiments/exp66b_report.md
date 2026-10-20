@@ -1,5 +1,15 @@
 # exp66b: Grouping for Explainability — Report
 
+> **CORRECTION 2026-10-20 (exp78):** This report describes the group
+> forecaster as "full v2 architecture" / per-group `ProposedForecasterV2`.
+> exp78 proved the v2 router never ran in `v2_forecaster_fn`: it called
+> `predict()` without ever calling `fit()`, a blanket `except` swallowed
+> the `AssertionError`, and 100% of calls returned the last value tiled
+> across all five quantile levels (a point mass; interval coverage
+> 0.000). Every group-forecast number below was produced by that naive
+> fallback, not by the router. Fixed in exp78 (naive center + Gaussian
+> spread, now the default). See `experiments/exp78_report.md`.
+
 **Date:** 2026-10-19
 **Status:** Infrastructure complete; LLM grouper flaky in full pipeline
 **Reframed goal:** Grouping for explainability, not CRPS. Kill criterion OFF.

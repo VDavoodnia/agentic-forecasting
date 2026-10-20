@@ -1,5 +1,16 @@
 # exp72: Integration — Track 2 shifts stress-test Track 1's group forecaster
 
+> **CORRECTION 2026-10-20 (exp78):** The methodological finding below
+> is confirmed and root-caused. The mechanism is stronger than the
+> "single expert = tiled last value" framing used in this report:
+> `v2_forecaster_fn` called `predict()` without ever calling `fit()`,
+> so the v2 router never ran at all — 100% of calls returned the
+> point-mass naive fallback (interval coverage 0.000). exp78 fixed it
+> (naive center + Gaussian spread, now the default;
+> `quantile_spread=False` reproduces the behavior measured here) and
+> re-measured the exp66c grouping cost at +0.0033 on exp66c's own
+> scoring. See `experiments/exp78_report.md`.
+
 **Status: PRE-REGISTERED (2026-10-19, before round 0).** Success criteria
 below are frozen. Results are filled in under each round without moving
 them.
