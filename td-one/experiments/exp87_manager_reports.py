@@ -645,13 +645,47 @@ def render_month_report(
 
 
 def build_index() -> Any:
-    """Semantic index over a local DB copy (fresh embeddings, full DB)."""
-    from td_one.rag.semantic import SemanticNewsIndex
+    """Semantic index over a local DB copy (fresh embeddings, full DB).
+
+    The shipped index builds its cache single-batched over all 21,234
+    titles; on this 2-core box that crawls. We pre-build the identical
+    npz cache ourselves — same model, same format — with batch 512,
+    restricted to articles dated >= 2024-01-01. Every report origin is
+    >= 2025-04 and retrieval windows are <= 6 months, so the earliest
+    retrievable article is 2024-11; the 2024-01 floor excludes nothing
+    any round can reach (documented in exp87_report.md).
+    """
+    from td_one.rag.semantic import EmbeddingClient, SemanticNewsIndex
 
     LOCAL_DB_DIR.mkdir(parents=True, exist_ok=True)
     local_db = LOCAL_DB_DIR / "news_2026.db"
     if not local_db.exists():
         shutil.copy(NEWS_DB, local_db)
+    cache = LOCAL_DB_DIR / "news_embeddings_v1.npz"
+    if not cache.exists():
+        con = sqlite3.connect(local_db)
+        rows = con.execute(
+            "SELECT rowid, pub_date, title, url, source FROM articles "
+            "WHERE pub_date >= '2024-01-01' ORDER BY rowid"
+        ).fetchall()
+        con.close()
+        client = EmbeddingClient()
+        titles = [r[2] for r in rows]
+        print(f"[exp87] encoding {len(titles)} titles (batch 512)...", flush=True)
+        emb = client._model.encode(  # noqa: SLF001 - same model, bigger batch
+            titles, batch_size=512, normalize_embeddings=True,
+            show_progress_bar=True,
+        )
+        np.savez_compressed(
+            cache,
+            ids=np.array([r[0] for r in rows]),
+            dates=np.array([r[1] for r in rows], dtype=object),
+            titles=np.array(titles, dtype=object),
+            urls=np.array([r[3] for r in rows], dtype=object),
+            sources=np.array([r[4] or "" for r in rows], dtype=object),
+            emb=np.asarray(emb, dtype=np.float32),
+        )
+        print(f"[exp87] embedding cache written: {cache}", flush=True)
     return SemanticNewsIndex(db_path=local_db)
 
 
