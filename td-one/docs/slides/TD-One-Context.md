@@ -362,8 +362,9 @@ Grouping verdicts overall: LLM-proposed groups were unstable and
 forecast worse than random groups (exp66: CRPS 0.01705 vs random
 0.00690 vs global 0.00227; pre-registered kill). Deterministic groups
 are reproducible and readable but forecasting per group still costs
-accuracy vs the global model (+0.0033 CRPS on exp66c's own
-window-mean scoring with the exp78-fixed forecaster, seed 42; the
+accuracy vs the global model (+0.0018 CRPS on exp66c's own
+window-mean scoring with the exp79 trailing-mean-center forecaster,
+seed 42; +0.0033 with the exp78 naive-center fix; the
 originally published +0.009 to +0.016 was largely the point-mass
 artifact — the broken global arm's point mass sat almost exactly on
 the window mean, 0.00042, flattering the baseline; see the exp78
@@ -502,13 +503,29 @@ planted answer key) has never been run in that agent form.
    control). exp66b/c comparability is affected (they scored window
    means, where point masses look fine). **exp78** shipped the fix:
    naive center + Gaussian spread from the series' own trailing
-   one-step errors, now the default (`quantile_spread=False`
+   one-step errors, the default at the time (`quantile_spread=False`
    reproduces the old output byte-for-byte). Validation
    (SimulatorV2, seeds 7/42/123): group CRPS 0.1320 to 0.1042 on
    control (−0.0287, p=4.2e-45, win 0.89), coverage80 0.075 to
    0.714 — much improved but still below the 0.80 target. The deck
-   states this plainly on the negatives slide. Restoring the actual
-   router in the group forecaster is exp79, in flight.
+   states this plainly on the negatives slide. **exp79** then settled
+   the two questions exp78 left open (complete, 2026-10-20).
+   (a) Center: the **trailing-6-mean center is now the production
+   default** in `v2_forecaster_fn` (`center="trailing_mean"`; the
+   naive center stays available as `center="naive"`). Group scope,
+   seeds 7/42/123: control CRPS 0.0899 vs naive-center 0.1042
+   (−0.0072, p=0.034); S1@4σ 0.1193 vs 0.1456 (−0.0243, p=4.7e-07);
+   S1 cov80 0.713 vs 0.602. A fresh-seed replication
+   (2024/555/9001) confirmed the win (pooled −0.0171, p=1.6e-05).
+   (b) The **real fitted v2 router as the group forecaster's center
+   LOSES — honest negative**: control group CRPS 0.0925, worse than
+   the naive center (p=0.012; global scope p=1.6e-06), coverage
+   0.618 vs 0.714. Diagnosed: fitted per series on 12–29-point
+   histories it gets at most ~13 backtest records, too few for its
+   regimes to separate. It ships only as an option
+   (`router_forecaster_fn`), with no silent-fallback path and
+   anti-regression tests. With the new center, the exp66c grouping
+   cost fell to +0.00176.
 9. **Classifier of record settled** (exp66g): LLM plus statistics
    only. Counterfactual prompt context is dead (seed noise).
 10. **exp76 in flight**: CQR x story fusion plus a UQ sweep across
@@ -526,9 +543,13 @@ planted answer key) has never been run in that agent form.
    with news) when it lands: cite it, and retire the "in flight"
    wording.
 3. **exp78 verdict** — landed: the grouping cost numbers in 4.6 are
-   corrected in this edition (+0.0033 with the fix, seed 42). The
-   negatives slide (group ranges row) still needs its update when
-   deck work resumes.
+   corrected (+0.0033 with the exp78 fix, seed 42). **exp79 verdict**
+   — also landed: the trailing-mean center is the group forecaster's
+   default and the fitted router was rejected (see section 5,
+   item 8). The deck's `exp79 pending` marker is removed and the
+   Exec Summary, negatives row, and Future Work block now carry the
+   settled state; the grouping cost in 4.6 is updated to +0.0018
+   (exp79 center, seed 42).
 4. Vandad's repo norm is direct commits to main; Mehrazin's fork works
    on branch `mehrazin/work` with fork main as a clean mirror of
    upstream. The merge-back path for any code work is undecided.
@@ -557,6 +578,18 @@ pre-registered at pass time, so the deck says "in flight" and the
 HTML carries an `exp79 pending` comment marker at the center block.
 (4) Consistency spot-check of all touched claims against the cited
 reports; em dash count is 0.
+
+**exp79 touch-up pass (2026-10-20, after the deck fix pass).**
+exp79 completed after the pass above, so the deck's `exp79 pending`
+marker and "in flight" wording are now replaced with the settled
+state everywhere: Exec Summary next steps, the group-ranges
+negatives row, and the Future Work block (now headed "Group
+forecaster center: settled"). The trailing six-month average is the
+default center (control 0.0899 vs 0.1042, p=0.034; S1@4σ 0.1193 vs
+0.1456, p=4.7e-07, cov80 0.713; fresh-seed replication p=1.6e-05);
+the fitted router is recorded as tested and rejected (per-series
+backtest records too few, ≤13); grouping cost +0.0018.
+`docs/FINAL_RESULTS.md` gained the matching exp78/exp79 passage.
 
 ## 7. Repo pointers (relative to `td-one/`)
 

@@ -161,6 +161,25 @@ uninsured-segment damage (+10.7%, p=0.030) is mechanically blocked to
 +0.8% (n.s.). Layer-2 gating also protects the group forecaster under
 planted shifts (exp72, p<1e-8).
 
+### Group forecaster: center settled, router rejected (exp78, exp79)
+
+The loan-attrition group forecaster carried a silent defect: exp78
+found its router had never actually run — a skipped `fit()` call and a
+swallowed error meant every forecast was the last value repeated
+(interval coverage 0.000). The fix rebuilt ranges from each series'
+own past errors (control CRPS 0.1320 → 0.1042, p=4.2e-45; coverage
+0.075 → 0.714). exp79 then settled the forecast center: the **trailing
+six-month average is now the production default** (control group CRPS
+0.0899 vs naive-center 0.1042, p=0.034; under a 4σ rate shock 0.1193
+vs 0.1456, p=4.7e-07, coverage 0.713; confirmed on fresh seeds,
+p=1.6e-05). The real fitted v2 router was tested as the center and
+**rejected**: fitted per series on 12–29-point histories it has at
+most 13 backtest records, too few for its regimes to separate, and it
+scored significantly worse than the naive center on control
+(p=0.012). It ships only as an option whose failures raise loudly
+instead of silently degrading. Grouping cost, re-measured with the
+settled center: **+0.0018 CRPS**.
+
 ---
 
 ## Uncertainty Layer — CQR, fused with the uncertainty signal (exp74, exp76)
@@ -199,7 +218,7 @@ in the current (calm) window.
 
 ## What Didn't Work (Honest Negatives)
 
-We publish negatives with the same rigor as positives. Killed tracks: macro features for classical models, news-as-predictor, LLM-as-combiner, learned combination weights, learned regimes, kitchen-sink ensembling, high reasoning effort.
+We publish negatives with the same rigor as positives. Killed tracks: macro features for classical models, news-as-predictor, LLM-as-combiner, learned combination weights, learned regimes, kitchen-sink ensembling, high reasoning effort, the fitted v2 router as the group forecaster's center (per-series records too few, exp79).
 
 Each was tested with proper significance testing and closed on evidence, not intuition.
 
