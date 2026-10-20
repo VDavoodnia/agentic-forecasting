@@ -195,7 +195,12 @@ class SeedData:
     train_rates: dict[str, float]
 
 
-def build_seed_data(seed: int) -> SeedData:
+def build_seed_data(seed: int, grouper: str = "tree") -> SeedData:
+    """Build seed data.
+
+    ``grouper`` is 'tree' (deterministic pipeline) or 'province'
+    (oracle-geography ablation: groups are provinces).
+    """
     from td_one.data_gen.simulator_v2 import MortgageSimulatorV2
 
     sim = MortgageSimulatorV2(
@@ -237,16 +242,33 @@ def build_seed_data(seed: int) -> SeedData:
         .last()
         .reset_index()
     )
-    det = fit_deterministic_groups(
-        meta_train,
-        n_clusters=N_CLUSTERS,
-        seed=GROUPER_SEED,
-        min_group_n=MIN_GROUP_N,
-        max_tree_depth=3,
-    )
     out_mids = set(out_df["mortgage_id"].astype(str))
     meta_out = meta_train[meta_train["mortgage_id"].astype(str).isin(out_mids)].copy()
-    group_of = assign_by_rules(meta_out, det.groups)
+    if grouper == "province":
+        from td_one.agent.grouping import GroupDefinition
+
+        det_groups = [
+            GroupDefinition(group_id=p, rule=f"province == '{p}'")
+            for p in ("ON", "BC", "AB", "QC", "MB")
+        ]
+        group_of = {
+            str(mid): meta_out.loc[i, "province"]
+            for i, mid in meta_out["mortgage_id"].astype(str).items()
+        }
+
+        class _Det:
+            groups = det_groups
+
+        det = _Det()
+    else:
+        det = fit_deterministic_groups(
+            meta_train,
+            n_clusters=N_CLUSTERS,
+            seed=GROUPER_SEED,
+            min_group_n=MIN_GROUP_N,
+            max_tree_depth=3,
+        )
+        group_of = assign_by_rules(meta_out, det.groups)
     # Borrowers with outcomes but no pre-onset snapshot: cannot assign
     # PIT-cleanly; drop their episodes (counted).
     keep = out_df["mortgage_id"].astype(str).isin(group_of)
@@ -266,10 +288,14 @@ def build_seed_data(seed: int) -> SeedData:
     on_share = (
         meta_out.assign(is_on=meta_out["province"] == "ON").groupby("group_id")["is_on"].mean()
     )
-    order = on_share.sort_values(ascending=False)
-    n_half = max(1, len(order) // 2)
-    a_set = set(order.index[:n_half])
-    region_of = {gid: ("A" if gid in a_set else "B") for gid in on_share.index}
+    if grouper == "province":
+        # Oracle geography: ON vs the rest (40/60 portfolio split).
+        region_of = {gid: ("A" if gid == "ON" else "B") for gid in on_share.index}
+    else:
+        order = on_share.sort_values(ascending=False)
+        n_half = max(1, len(order) // 2)
+        a_set = set(order.index[:n_half])
+        region_of = {gid: ("A" if gid in a_set else "B") for gid in on_share.index}
 
     # Donor/recipient for S7mix by pre-onset realised attrition.
     train_rates = {
@@ -660,6 +686,7 @@ def main() -> None:
     ap.add_argument("--margin", type=float, default=0.02)
     ap.add_argument("--min-group-n", type=int, default=MIN_GROUP_N)
     ap.add_argument("--migration-rate", type=float, default=MIGRATION_RATE)
+    ap.add_argument("--grouper", default="tree", choices=("tree", "province"))
     ap.add_argument("--out", default="experiments/exp72_results.json")
     ap.add_argument("--tag", default="round0")
     ap.add_argument(
@@ -687,14 +714,14 @@ def main() -> None:
         if args.seed_cache:
             cache_dir = Path(args.seed_cache)
             cache_dir.mkdir(parents=True, exist_ok=True)
-            cache_path = cache_dir / f"seeddata_{seed}.pkl"
+            cache_path = cache_dir / f"seeddata_{args.grouper}_{seed}.pkl"
         sd = None
         if cache_path is not None and cache_path.exists():
             with open(cache_path, "rb") as f:
                 sd = pickle.load(f)
             print(f"  loaded cached seed data ({cache_path})", flush=True)
         else:
-            sd = build_seed_data(seed)
+            sd = build_seed_data(seed, grouper=args.grouper)
             if cache_path is not None:
                 with open(cache_path, "wb") as f:
                     pickle.dump(sd, f, protocol=pickle.HIGHEST_PROTOCOL)

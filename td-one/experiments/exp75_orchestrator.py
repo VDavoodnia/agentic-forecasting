@@ -65,6 +65,8 @@ from td_one.agent.factor_agents import (  # noqa: E402
 from td_one.agent.layer2_tools import pinball_crps, summarize_backtest  # noqa: E402
 from td_one.agent.orchestrator import (  # noqa: E402
     DeterministicOrchestrator,
+    LLMOrchestrator,
+    LLMOrchestratorCache,
     OrchestratorConfig,
     fit_uncertainty_params,
     world_pressure,
@@ -662,8 +664,15 @@ def run_llm_arms(
             continue
         gs = bed.group_series_by_unit.get(unit) if bed.group_series_by_unit else None
         out[unit] = run_unit_llm(
-            unit, u, bed.bed, bed.target_kind, bed.base_name, bed.burnin,
-            llm_orch, factor_cache, gs,
+            unit,
+            u,
+            bed.bed,
+            bed.target_kind,
+            bed.base_name,
+            bed.burnin,
+            llm_orch,
+            factor_cache,
+            gs,
         )
         print(f"  arm C unit {unit} done", flush=True)
     return out
@@ -747,17 +756,21 @@ def run_bed_arms(
 ) -> dict[str, UnitResults]:
     out = {}
     for unit, u in bed.units.items():
+        gs = bed.group_series_by_unit.get(unit) if bed.group_series_by_unit else None
         out[unit] = run_unit(
             unit,
             u,
             bed.bed,
             bed.target_kind,
+            base_name=bed.base_name,
             config=config,
             drop_families=drop_families,
             drop_factors=drop_factors,
             drop_diags=drop_diags,
             factor_cache=factor_cache,
+            group_series_by_index=gs,
             arms=arms,
+            burnin=bed.burnin,
         )
     return out
 
@@ -786,8 +799,8 @@ def main() -> None:
 
     fcache = FactorCache(FACTOR_CACHE_PATH)
     results: dict[str, Any] = {}
-    if RESULTS_JSON.exists():
-        results = json.loads(RESULTS_JSON.read_text())
+    results_dir = ROOT / "experiments" / "exp75_results"
+    results_dir.mkdir(parents=True, exist_ok=True)
 
     beds: list[BedData] = []
     if args.bed in ("osfi", "real", "all"):
@@ -835,8 +848,16 @@ def main() -> None:
             results[f"{bed.bed}::search"] = search
             print("search done", flush=True)
 
-    RESULTS_JSON.write_text(json.dumps(results, indent=1))
-    print(f"wrote {RESULTS_JSON}")
+    # Per-bed result files (process-safe; avoids clobbering between parallel runs).
+    for bed in beds:
+        bed_path = results_dir / f"{bed.bed}.json"
+        bed_path.write_text(
+            json.dumps(
+                {k: v for k, v in results.items() if k == bed.bed or k.startswith(bed.bed + "::")},
+                indent=1,
+            )
+        )
+        print(f"wrote {bed_path}", flush=True)
 
     if args.llm:
         from td_one.llm_rungs.vector_client import VectorProxyClient  # noqa: PLC0415
@@ -858,7 +879,17 @@ def main() -> None:
                 if a_crps is not None and len(a_crps) == len(cres_u["C"]):
                     merged[unit]["C_vs_A"] = paired(cres_u["C"], a_crps)
             results[f"{bed.bed}::armC"] = merged
-            RESULTS_JSON.write_text(json.dumps(results, indent=1))
+            bed_path = results_dir / f"{bed.bed}.json"
+            bed_path.write_text(
+                json.dumps(
+                    {
+                        k: v
+                        for k, v in results.items()
+                        if k == bed.bed or k.startswith(bed.bed + "::")
+                    },
+                    indent=1,
+                )
+            )
             print(f"wrote arm C for {bed.bed}", flush=True)
 
 

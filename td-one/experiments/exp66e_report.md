@@ -149,6 +149,18 @@ neutral as prompt context.
 4. **Risk tools for the classifier: counterfactuals only, provisionally.**
    +0.348 vs +0.120 on one seed is worth a multi-seed confirmation
    before any claim. News alignment should not be used (−0.174).
+
+   **Update (exp66g, 2026-10-20):** the multi-seed confirmation came
+   back **NOT CONFIRMED** — pooled MAE B=0.0629 vs A=0.0611 (delta
+   −0.0018, CI covers 0), B vs C also n.s. Five iteration rounds
+   (engagement prompt tuning, format ablation, 0.5σ/2σ param search,
+   interpretation guidance, shuffled-content control) all converged
+   on inert: shuffled counterfactuals perform the same as real
+   ones. The claim is now **killed with evidence**; see
+   [exp66g_report.md](exp66g_report.md). Genuine exp66g positive:
+   stats-only LLM beats bins on bin error (+0.0198, CI excludes 0).
+   `counterfactual_flips` stays a valid *analyst* explanation
+   device — it is dead only as classifier prompt context.
 5. **exp66d's LLM-classifier result is downgraded.** With 3 seeds and
    controlled information, the LLM-vs-bins advantage is +0.154 with CI
    covering zero, and the news effect is +0.031 [−0.45, +0.50]. The

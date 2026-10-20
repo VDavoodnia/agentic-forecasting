@@ -240,17 +240,40 @@ def fit_uncertainty_params(
 ) -> tuple[float, float]:
     """Grid-search (alpha, beta) on validation.
 
-    Smallest params achieving coverage >= target without blowing up mean
-    width beyond max_width_ratio x native.
+    Round-2 redesign (diagnosed in exp75 Round 1): the original rule
+    picked the smallest params with validation coverage >= target and
+    fell back to (1, 1) — maximum widening — when nothing qualified;
+    both choices caused systematic test-time overshoot. New rule:
+
+    1. If the *native* validation coverage already meets the target,
+       return (0, 0) — never widen a calibrated base.
+    2. Otherwise pick the params whose validation coverage is *closest*
+       to the target (band objective) among mean widths within the cap,
+       breaking ties toward smaller params.
+    3. If nothing widens at all (quiet validation diagnostics), return
+       (0, 0) — do no harm.
     """
+    if not len(val_actuals):
+        return (0.0, 0.0)
     orch = DeterministicOrchestrator()
+    native_widths: list[float] = []
+    native_cov: float = 0.0
+    for act, grid in zip(val_actuals, val_base_grids, strict=True):
+        g = np.asarray(grid, dtype=float)
+        lo, hi = np.minimum(g[0], g[8]), np.maximum(g[0], g[8])
+        native_cov += float(np.mean((np.asarray(act, dtype=float) >= lo)
+                                    & (np.asarray(act, dtype=float) <= hi)))
+        native_widths.append(float(np.mean(hi - lo)))
+    native_cov /= len(val_actuals)
+    native_mean_width = float(np.mean(native_widths))
+    if native_cov >= coverage_target:
+        return (0.0, 0.0)
     best: tuple[float, float] | None = None
-    best_cov = -1.0
+    best_key: tuple[float, float] | None = None
     for alpha in (0.0, 0.25, 0.5, 1.0):
         for beta in (0.0, 0.25, 0.5, 1.0):
             covs: list[float] = []
             widths: list[float] = []
-            native_widths: list[float] = []
             for act, grid, diags, sigs in zip(
                 val_actuals, val_base_grids, val_diags, val_signals, strict=True
             ):
@@ -259,23 +282,14 @@ def fit_uncertainty_params(
                 lo, hi = np.minimum(g[0], g[8]), np.maximum(g[0], g[8])
                 covs.append(float(np.mean((act >= lo) & (act <= hi))))
                 widths.append(float(np.mean(hi - lo)))
-                gg = np.asarray(grid)
-                nw = float(np.mean(np.maximum(gg[0], gg[8]) - np.minimum(gg[0], gg[8])))
-                native_widths.append(nw)
             cov = float(np.mean(covs))
-            wr = float(np.mean(widths) / (np.mean(native_widths) + 1e-12))
-            if (
-                cov >= coverage_target
-                and wr <= max_width_ratio
-                and (best is None or (alpha + beta) < sum(best))
-            ):
-                best = (alpha, beta)
-            if cov > best_cov:
-                best_cov = cov
-    if best is None:
-        # Fall back to the best-coverage params seen.
-        return 1.0, 1.0
-    return best
+            wr = float(np.mean(widths) / (native_mean_width + 1e-12))
+            if wr > max_width_ratio:
+                continue
+            key = (abs(cov - coverage_target), alpha + beta)
+            if best_key is None or key < best_key:
+                best_key, best = key, (alpha, beta)
+    return best if best is not None else (0.0, 0.0)
 
 
 # ---------------------------------------------------------------------------

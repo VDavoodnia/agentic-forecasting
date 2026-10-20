@@ -10,6 +10,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference. |
 | [REDESIGN.md](REDESIGN.md) | What we keep, what we kill, what we try next — with evidence. Governs future work. |
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
+| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark — mortgage-framed, final + in-flight split. |
 
 ## The story (for new readers)
 

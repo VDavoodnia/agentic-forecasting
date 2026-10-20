@@ -309,10 +309,41 @@ without failure evidence.
   series — synthetic or real, reactive or anticipatory, single-call or
   scaffolded. Full report: `experiments/exp69c_report.md`.
 
-## Integration (exp70)
+## Integration (exp72)
+
 Track 2's shift scenarios stress-test Track 1's group forecaster.
 S3 (regional divergence) is the natural meeting point: Track 1 groups the
 entities, Track 2 shifts the groups.
+
+**Protocol** (pre-registered in `experiments/exp72_report.md`, placebo-
+controlled like exp67): MortgageSimulatorV2 portfolio → deterministic
+groups fitted on pre-onset metadata only → per-group group forecaster vs
+global (portfolio) forecaster vs Layer-2 meta-router, rolling origins
+(pre/straddle/post), CRPS diff (shifted − control, same seed/origin/group),
+paired tests, member-weighted. Shifts: S1 (rate shock), S3 (regional
+divergence via group-level S3 helper `apply_divergence`, regions = median
+split on training ON-share), S7 (composition drift via β-schedule and
+S7mix = post-onset episode migration donor→recipient), at 1σ and 4σ.
+
+**Questions.** (Q1) Do group-level forecasts degrade less than the global
+forecast under S3 (groups isolate the diverging region)? (Q2) Does the
+`min_group_n` fallback trigger appropriately as groups shrink/drift under
+S7? (Q3) Does Layer-2 gating protect the group forecaster the way it
+protected v2 on OSFI?
+
+**Findings (iteration log in the report).**
+- Round 0: placebo gate passes (exactly 0). Q1 null. Q2 not evaluable
+  (94% fallback — `min_group_n=60` exceeded every group's trailing-6
+  volume). Q3: Layer-2 wins big — mostly because Track-1's
+  `v2_forecaster_fn` emits *flat point-mass* quantiles.
+- Round 1 (proper-Gaussian `GROUPQ` arms, min_group_n=30): Q1Q
+  directional on S3 (S3@4σ −0.0065, p=0.093), not significant.
+  Fallback helps when it fires (donor CRPS 0.121→0.086 vs no-fallback
+  0.143→0.120) but the trigger is blunt. Q3Q survives the wiring fix
+  (LAYER2Q − GROUPQ = −0.031, p=4.6e-07) — candidate selection itself
+  adds value.
+- Round 2: James–Stein shrinkage arms (τ=10/50), 3rd seed, S7mix at
+  25%/month migration sensitivity — results in the report.
 
 ## Standing constraints
 - PIT safety is a gate (no `observed_asof > origin` anywhere).

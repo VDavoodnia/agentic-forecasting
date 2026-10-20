@@ -169,6 +169,51 @@ from the rows JSON — fixed in the round-2 code).
 - S7mix sensitivity at migration 0.25/month (separate run).
 - `analyze()` rewritten Q3 section (both pairings, no leaked keys).
 
+## Round 2 — shrinkage arms, 3rd seed, migration sensitivity
+
+Ran 2026-10-20. Also fixed here: `analyze()` Q3 key collision (round-1
+Q1Q/Q3Q had to be computed offline; the in-code analysis is now correct
+for both pairings).
+
+- **Placebo gate: PASS** (0.0, third consecutive run).
+- **Q1Q, 3 seeds (n=161 pairs):** S3@4σ −0.0050 (p=0.064); S3@1σ
+  −0.0017 (p=0.33); S1@4σ −0.0034 (**p=0.047**); S1@1σ −0.0023
+  (p=0.12). Direction consistent in all four cells; the headline
+  S3@4σ cell is marginal (misses 0.05), S1@4σ crosses.
+- **Shrinkage does not help.** Control CRPS: SHRINK_10 0.1174 /
+  SHRINK_50 0.1173 vs GROUPQ 0.1175 / GLOBALQ 0.1176 — the blend is a
+  wash; S-cell degradations ≈ GROUPQ's. Partial pooling toward global
+  adds nothing the Gaussian group forecaster doesn't already have
+  (the trailing-mean already shrinks noise; the blend mostly dilutes
+  the group signal). **τ sweep closed: no.**
+- **LAYER2Q still dominates:** control 0.0864 vs GROUPQ 0.1175.
+- **Q2 @ migration 25%/month** (donors empty by onset+5, n→0):
+  - Seed-7 donor (n≈8/mo): fallback fires at the final 2 origins in
+    S7mix, never in control → **the trigger DOES discriminate when a
+    group actually empties**, but late (trailing-6 lag).
+  - Seed-123 donor (n≈19/mo): never fires inside the scored window —
+    trailing-6 sums lag the collapse.
+  - Seed-42 donor (n≈3–5/mo): fires always (size, not drift).
+  - **Empty-group pathology:** once the donor is empty its realised
+    rate is 0; NOFB (own trailing mean ≈ 0) scores CRPS 0.0000 while
+    GROUPQ's fallback-to-global scores 0.0751 — **fallback is the
+    wrong answer for a dead group.** Fallback protects against noise
+    in thin-but-alive groups (round 1) and mishandles death.
+  - Q2 answer: the `min_group_n` trigger is a *size* gate with lag,
+    not a drift detector; it fires appropriately for chronic smallness
+    and belatedly for collapse. Design fix noted (not shipped):
+    distinguish "thin" (fall back) from "dead" (recent n = 0 → own
+    trailing mean).
+
+### Round 3 (power) + Round 4 (oracle geography)
+
+- Round 3: 5 seeds (7, 42, 123, 2024, 777), tree grouper — the
+  pre-declared confirmation batch for Q1Q.
+- Round 4: `--grouper province` — groups ARE provinces (region A = ON,
+  B = rest). If oracle-pure geography isolates S3 cleanly, the tree
+  grouper is the bottleneck; if not, group-level forecasting itself
+  is the limit.
+
 ## Iteration log
 
 _(rounds appended as run)_

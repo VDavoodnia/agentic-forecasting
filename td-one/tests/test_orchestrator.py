@@ -143,6 +143,39 @@ def test_fit_uncertainty_params_returns_pair():
     assert isinstance(a, float) and isinstance(b, float)
 
 
+def test_fit_uncertainty_never_widens_calibrated_base():
+    # Native coverage = 1.0 (actual 0 inside [-1, 1] grids) >= 0.80 target:
+    # even with noisy diagnostics the fit must return (0, 0).
+    acts = [np.array([0.0]) for _ in range(20)]
+    grids = [np.tile(np.linspace(-1, 1, 9)[:, None], (1, 1)) for _ in range(20)]
+    diags = [[_ds("stability", 1, 0.9), _ds("disagreement", 1, 0.9)] for _ in range(20)]
+    a, b = fit_uncertainty_params(acts, grids, diags, [[] for _ in range(20)])
+    assert (a, b) == (0.0, 0.0)
+
+
+def test_fit_uncertainty_quiet_validation_do_no_harm():
+    # Undercovering base (actual 2.0 outside [-1, 1]) but validation
+    # diagnostics are quiet (U = R = 0): no (alpha, beta) can widen, so
+    # the fit must return (0, 0) — not the old (1, 1) fallback.
+    acts = [np.array([2.0]) for _ in range(20)]
+    grids = [np.tile(np.linspace(-1, 1, 9)[:, None], (1, 1)) for _ in range(20)]
+    diags = [[_ds("stability", 0, 0.0), _ds("disagreement", 0, 0.0)] for _ in range(20)]
+    a, b = fit_uncertainty_params(acts, grids, diags, [[] for _ in range(20)])
+    assert (a, b) == (0.0, 0.0)
+
+
+def test_fit_uncertainty_rescues_undercovering_base():
+    # Undercovering base + active stability diagnostics: some widening
+    # must be chosen (params not both zero). Actual 1.2 is reachable:
+    # U = 0.45 (mean of stability 0.9, disagreement 0) and alpha = 0.5
+    # gives m = 1.225 -> q90 = 1.225 > 1.2.
+    acts = [np.array([1.2]) for _ in range(20)]
+    grids = [np.tile(np.linspace(-1, 1, 9)[:, None], (1, 1)) for _ in range(20)]
+    diags = [[_ds("stability", 1, 0.9), _ds("disagreement", 0, 0.0)] for _ in range(20)]
+    a, b = fit_uncertainty_params(acts, grids, diags, [[] for _ in range(20)])
+    assert a + b > 0.0
+
+
 def test_parse_llm_decision_valid():
     d = parse_llm_decision('{"choice": "v2", "shift": "up", "confidence": "high", "reason": "x"}')
     assert d["choice"] == "v2" and d["shift"] == "up"

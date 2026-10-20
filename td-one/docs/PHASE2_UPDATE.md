@@ -1,0 +1,74 @@
+# Phase 2 Update — Since the LLM Ladder (exp63)
+
+*What was added after the classical/LLM benchmark program closed, framed
+around the mortgage-attrition problem. Results marked ✅ are final and
+verified on `main`. Items marked ⏳ are experiments in flight — nothing
+below closes or kills any track.*
+
+## The system now has four layers around Proposed Method v2
+
+```mermaid
+flowchart TD
+    A[Macro Signal Service<br/>monthly news signals, calibrated] --> O[Mini-agent orchestrator<br/>~25 factor signals → decision]
+    N[News DB<br/>17,906 articles + bodies] --> A
+    O --> L2[Layer-2 decision stage<br/>analyst tools + validation gating]
+    V2[Proposed Method v2<br/>regime router + gated LLM expert] --> L2
+    L2 --> UQ[CQR uncertainty layer<br/>story-informed intervals]
+    G[Deterministic groups<br/>+ cited LLM narratives] --> R[Risk reports]
+    UQ --> R
+```
+
+## ✅ Final results
+
+| Result | Numbers | Where |
+|---|---|---|
+| Gated LLM expert (v2) on Food CPI | CRPS 0.5322 vs v1 0.9661, p=4.3e-06; gate OFF on Tourism/M3/M4 (v2 = v1) | exp64 |
+| SMM + LLM | neutral, p=0.69 — LLM ties TimesFM-calibrated | exp65 |
+| OSFI M4 real-data benchmark | v2 ties naive on total runoff; runoff-rate near-unforecastable at aggregate level | exp70 |
+| Red-team breaking points | S1 rate shock: ~3× CRPS at 4σ for all models; Chronos-2 coverage 0.89→0.53 | exp67 |
+| Layer-2 gating | uninsured harm +10.7% (p=0.030) → +0.8% (n.s.); h=3 beats v2 −6.8% (p=0.015); ships as v2's deployment wrapper on single-series targets | exp73 |
+| CQR uncertainty layer | Food CPI CRPS 1.2824 vs 1.3035 (p=1.7e-04); coverage at nominal at ~1.03–1.08× width; new default UQ layer | exp74 |
+| Story features predict uncertainty | story+numeric beats numeric-only, paired t=−6.92, p=2.0e-11 | exp74 |
+| ACI (adaptive conformal) | conditional win on volatile subsets (p=3.6e-05) — regime-gated option | exp74 |
+| Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); cost quantified (+0.009–0.016 CRPS); risk reports, not forecasts | exp66c/d |
+| SHAP clustering | 2× cohort recovery vs raw features (ARI 0.091 vs 0.046) | exp66e |
+| Competitor spread | settled negative at aggregate level with 54 real broker months; in-sample r=−0.345, OOS +39.3% MSE (p=0.019) — regime artifact | exp71b |
+
+## ✅ Honest negatives (with diagnoses in the reports)
+
+- **Anticipatory LLM overlays** (exp69/69b/69c): fail on synthetic and real
+  shocks; even the oracle arm fails — timing precision is the binding
+  constraint. This diagnosis motivated the uncertainty pivot.
+- **News as direct forecast context**: no gain in three tests (exp44/46 line,
+  re-confirmed).
+- **Uplift modelling** for cohort recovery: ARI 0.002 (exp66e).
+- **Lock-in correction in Layer-2**: the lock-in level carries no in-sample
+  signal on OSFI runoff (|r| ≤ 0.043); gated variants correctly stay silent
+  but add nothing (exp73).
+
+## Data assets added this phase
+
+| Asset | Coverage |
+|---|---|
+| OSFI M4 balances (StatCan 10100006) | 121 months, 2016–2026, 4 segments |
+| BoC posted rates (Valet) | 622 months, 1975–2026 |
+| Broker discount rates (Wayback/Ratehub) | 54 months, 2022–2026 |
+| News DB | 17,906 articles; 544 with full bodies; fixed-512 chunking |
+| Demographic + macro news topics | 27 topics (12 demographic, 15 macro) |
+
+## ⏳ In flight (do not cite as results yet)
+
+- **Macro Signal Service** — ~22-category monthly signals + calibration gate
+  (see `docs/MACRO_SIGNAL.md` when it lands).
+- **exp72** — planted shifts stress-testing the group forecaster.
+- **exp75** — mini-agent orchestrator (~22 factor agents + diagnostics →
+  decision engine), five test beds.
+- **exp76** — CQR × story fusion + UQ sweep across Tourism/M3/M4/OSFI/SMM.
+- **exp66g** — multi-seed confirmation of the counterfactual risk tool.
+
+## Framing note (for slides/reports)
+
+Everything in this phase is expressed in mortgage/loan terms: the target is
+portfolio runoff and borrower attrition; the stress scenarios are rate
+cycles, policy interventions, and regional divergence; the explainability
+layer produces per-cohort risk narratives a lending team can act on.
