@@ -1,0 +1,851 @@
+{
+  "config": {
+    "seeds": [
+      42,
+      123,
+      7,
+      2024,
+      555
+    ],
+    "variants": [
+      "R1_prompt_cite",
+      "R2_skip_empty",
+      "R3a_std0.5",
+      "R3b_std2.0",
+      "R4_guidance",
+      "R5_shuffled"
+    ],
+    "n_bootstrap": 2000
+  },
+  "baseline_mae": {
+    "llm-stats": 0.06113731809281605,
+    "llm-stats+counterfactual": 0.06291538306976106,
+    "llm-stats+shap": 0.06721776613050286,
+    "bins": 0.08098417745777133
+  },
+  "variants": {
+    "R1_prompt_cite": {
+      "mae": 0.0659666522950233,
+      "vs_stats": {
+        "delta": -0.0048293342022072555,
+        "ci_lo": -0.0115727351140367,
+        "ci_hi": 0.0016243736583808695
+      },
+      "vs_baseline_cf": {
+        "delta": -0.0030512692252622486,
+        "ci_lo": -0.011203371812344872,
+        "ci_hi": 0.002184839079509044
+      }
+    },
+    "R2_skip_empty": {
+      "mae": 0.06634098594747045,
+      "vs_stats": {
+        "delta": -0.005203667854654412,
+        "ci_lo": -0.011290532413592413,
+        "ci_hi": -0.0003122044053608525
+      },
+      "vs_baseline_cf": {
+        "delta": -0.003425602877709405,
+        "ci_lo": -0.011845735183928936,
+        "ci_hi": 0.002378069019875806
+      }
+    },
+    "R3a_std0.5": {
+      "mae": 0.06479730942337047,
+      "vs_stats": {
+        "delta": -0.0036599913305544324,
+        "ci_lo": -0.010107190778890116,
+        "ci_hi": 0.002270431924163844
+      },
+      "vs_baseline_cf": {
+        "delta": -0.0018819263536094255,
+        "ci_lo": -0.009567524604804076,
+        "ci_hi": 0.0039217455439757715
+      }
+    },
+    "R3b_std2.0": {
+      "mae": 0.06160813455510246,
+      "vs_stats": {
+        "delta": -0.0004708164622864164,
+        "ci_lo": -0.008555064384934802,
+        "ci_hi": 0.008993579470348982
+      },
+      "vs_baseline_cf": {
+        "delta": 0.0013072485146585905,
+        "ci_lo": -0.008260276090145471,
+        "ci_hi": 0.01087477311946266
+      }
+    },
+    "R4_guidance": {
+      "mae": 0.06234035089834636,
+      "vs_stats": {
+        "delta": -0.0012030328055303158,
+        "ci_lo": -0.006808764744491733,
+        "ci_hi": 0.003400134148435631
+      },
+      "vs_baseline_cf": {
+        "delta": 0.0005750321714146911,
+        "ci_lo": -0.00804849251416078,
+        "ci_hi": 0.007317830797338084
+      }
+    },
+    "R5_shuffled": {
+      "mae": 0.06510831157885319,
+      "vs_stats": {
+        "delta": -0.003970993486037119,
+        "ci_lo": -0.017307198054848837,
+        "ci_hi": 0.008197390992105301
+      },
+      "vs_baseline_cf": {
+        "delta": -0.0021929285090921125,
+        "ci_lo": -0.013742916371359848,
+        "ci_hi": 0.0077419270509219915
+      }
+    }
+  },
+  "levels": {
+    "42": {
+      "R1_prompt_cite": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R2_skip_empty": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R3a_std0.5": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R3b_std2.0": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R4_guidance": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R5_shuffled": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      }
+    },
+    "123": {
+      "R1_prompt_cite": {
+        "g0": "HIGH",
+        "g1": "HIGH",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R2_skip_empty": {
+        "g0": "HIGH",
+        "g1": "HIGH",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3a_std0.5": {
+        "g0": "HIGH",
+        "g1": "HIGH",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3b_std2.0": {
+        "g0": "HIGH",
+        "g1": "MEDIUM",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R4_guidance": {
+        "g0": "HIGH",
+        "g1": "HIGH",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R5_shuffled": {
+        "g0": "MEDIUM",
+        "g1": "HIGH",
+        "g2": "HIGH",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      }
+    },
+    "7": {
+      "R1_prompt_cite": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R2_skip_empty": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3a_std0.5": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3b_std2.0": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R4_guidance": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R5_shuffled": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "HIGH",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "MEDIUM"
+      }
+    },
+    "2024": {
+      "R1_prompt_cite": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "HIGH",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R2_skip_empty": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "MEDIUM",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3a_std0.5": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R3b_std2.0": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R4_guidance": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "LOW",
+        "g5": "HIGH",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "LOW"
+      },
+      "R5_shuffled": {
+        "g0": "LOW",
+        "g1": "HIGH",
+        "g2": "LOW",
+        "g3": "MEDIUM",
+        "g4": "LOW",
+        "g5": "MEDIUM",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "LOW",
+        "g9": "HIGH"
+      }
+    },
+    "555": {
+      "R1_prompt_cite": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "MEDIUM",
+        "g9": "HIGH"
+      },
+      "R2_skip_empty": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R3a_std0.5": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R3b_std2.0": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      },
+      "R4_guidance": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "MEDIUM",
+        "g8": "MEDIUM",
+        "g9": "HIGH"
+      },
+      "R5_shuffled": {
+        "g0": "LOW",
+        "g1": "LOW",
+        "g2": "LOW",
+        "g3": "LOW",
+        "g4": "LOW",
+        "g5": "LOW",
+        "g6": "LOW",
+        "g7": "LOW",
+        "g8": "HIGH",
+        "g9": "HIGH"
+      }
+    }
+  },
+  "justifications": {
+    "42": {
+      "R1_prompt_cite": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 10.71% and a very low predicted mean attrition of 1.23% [stat]. The counterfactual sensitivity confirms this low-risk status, as extending the loan term further suppresses predicted attrition levels [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 4.84% and a very low predicted mean attrition of 0.76% [stat]. The counterfactual sensitivity confirms this low risk assessment, as increasing the term length further decreases the already negligible predicted attrition probability [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The group exhibits a low historical attrition rate of 8.33% and a projected mean attrition of only 1.0% [stat]. The lack of sensitivity in counterfactual testing confirms this risk classification by demonstrating that the cohort's stability is not vulnerable to minor shifts in primary variables [url:None].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a 0.0% realized attrition rate across 242 members and a negligible predicted mean attrition of 0.0058 [stat]. The counterfactual sensitivity confirms this low-risk status as the provided data only outlines a transition between higher risk tiers, and the current profile remains well-buffered [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low realized attrition rate of 4.17% and a strong predicted mean attrition of 0.46% [stat]. The counterfactual sensitivity confirms this low-risk status, as an increase in term duration would only marginally decrease the already negligible predicted probability [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 6.45% and a very low predicted mean attrition of 0.68% [stat]. The counterfactual sensitivity confirms this risk assessment, as increasing the term length further suppresses the already minimal predicted attrition probability [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: With a high mean household income of 222,612 CAD and a low predicted mean attrition of 0.0262, the cohort demonstrates strong financial stability [stat]. This risk classification is confirmed by the counterfactual sensitivity analysis, which shows no single-feature change is sufficient to flip the group's predicted risk class [url:none].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.1053 and a forecasted attrition of only 0.0232 [stat]. The robustness of this classification is confirmed by the counterfactual sensitivity analysis, which shows that minor feature fluctuations do not shift the risk profile [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort's realized attrition rate of 0.2179 significantly exceeds the predicted mean attrition of 0.0242, indicating a substantial performance gap [stat]. The counterfactual sensitivity confirms this risk call as no single-feature adjustment sufficiently reduces the elevated vulnerability observed in this group [url:N].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort's observed historical attrition rate of 32.65% significantly exceeds the predicted mean attrition of 7.58%, confirming a high-risk classification that remains unchanged despite the identified counterfactual sensitivity [stat]."
+      },
+      "R2_skip_empty": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 10.71% and a very low predicted mean attrition of 1.23% [stat]. Furthermore, the cohort consists of 1,301 members with a mean household income of 86,479 CAD, indicating relative financial stability [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low train realized attrition rate of 4.84% and an even lower predicted mean attrition of 0.76% [stat]. With a sample size of 491 members and stable household incomes, the group demonstrates strong performance metrics [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 8.33% and a very conservative predicted attrition mean of 1% [stat]. Furthermore, the cohort size is small at 209 members, limiting overall portfolio exposure [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero historical realized attrition and a negligible predicted mean attrition of 0.0058 [stat]. Low risk is further supported by the current train_realized_attrition of 0.0 across 242 members [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates a very low historical attrition rate of 4.17% and a strong predicted mean attrition of only 0.46% [stat]. With a high mean household income of 202,770 CAD and a small test sample size of 7 episodes, the group maintains a stable credit profile [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very high mean household income and a train-realized attrition rate of only 6.45% [stat]. The predicted mean attrition remains exceptionally low at 0.68%, suggesting minimal risk exposure for the lender [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: This cohort exhibits high financial stability with an average household income of 222,612 CAD and a historically low realized attrition rate of 9.76% [stat]. The model projects a further decline in attrition to 2.62% for the 20 test episodes [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort's realized attrition rate of 10.53% is significantly higher than the predicted mean attrition of 2.32% [stat]. This discrepancy indicates historical instability within this specific borrower segment [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher historical attrition rate of 21.79% compared to the predicted mean attrition of only 2.42% [stat]. This discrepancy indicates that the current model is failing to capture the underlying risk factors for this segment of 625 borrowers [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 32.65% compared to the model's predicted mean attrition of 7.58% [stat]. This discrepancy indicates that borrowers with high mortgage balances and lower income thresholds are defaulting or refinancing at rates far exceeding baseline expectations [stat]."
+      },
+      "R3a_std0.5": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 10.71% and a very low predicted mean attrition of 1.23% across 114 test episodes [stat]. Sensitivity analysis indicates that the risk classification remains stable against top feature fluctuations [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort displays a very low predicted attrition rate of 0.76% and a historical realized attrition of only 4.84% [stat]. Furthermore, the cohort demonstrates structural stability, as sensitivity analysis shows that minor shifts in top drivers do not alter the risk classification [url:0].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 8.33% and a very conservative predicted attrition mean of 1% [stat]. Furthermore, the group demonstrates high stability as no single-feature adjustment to the primary risk drivers alters the assigned risk classification [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition during the training period and maintains a low predicted mean attrition of 0.0058 [stat]. This classification is supported by the lack of sensitivity to feature fluctuations in the counterfactual analysis [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low historical attrition rate of 4.17% and a strong predicted mean attrition of 0.46% [stat]. The group maintains a robust mean household income of 202,770 CAD, significantly exceeding the qualification threshold [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low predicted attrition rate of 0.68% and maintains a high mean household income of $221,424 [stat]. The historical attrition rate remains low at 6.45% among a stable group of 316 members [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a high mean household income of 222,612 CAD and a realized attrition rate of only 9.76% during the training period [stat]. Furthermore, the model predicts a very low mean attrition rate of 2.62% for this group, which shows robust stability against sensitivity testing [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 10.53% and a projected mean attrition rate of only 2.32% [stat]. Furthermore, the model shows high stability, as no individual feature changes alter the risk classification [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The observed training attrition rate of 21.79% significantly exceeds the predicted mean attrition of 2.42% for this cohort [stat]. Furthermore, the cohort members' mean household income of $83,983 is notably lower than the income cap for this segment, suggesting limited financial buffer against high mortgage rates [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 32.65% compared to the model's predicted mean attrition of 7.58% [stat]. Furthermore, the cohort consists of high-balance mortgage holders with low net incomes, which correlates with elevated default risk [stat]."
+      },
+      "R3b_std2.0": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort displays a low realized attrition rate of 10.71% and a very low predicted mean attrition of 1.23% [stat]. Furthermore, the model sensitivity analysis indicates that increased loan duration would further reduce risk exposure for this group [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 4.84% and a projected mean attrition rate of only 0.76% [stat]. With a mean household income of 82,062 CAD, these borrowers maintain stable financial profiles within their regional market [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 8.33% and a very low predicted mean attrition of 1% [stat]. Furthermore, the cohort consists of 209 members with a stable mean household income of 79,468 CAD [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort displays zero realized attrition during the training period and maintains a low predicted mean attrition of 0.0058 [stat]. With a mean household income of 84373.0 CAD and stable member metrics, current performance indicates minimal risk [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 4.17% and a model-predicted attrition probability of only 0.46% [stat]. With a high mean household income of $202,770, these borrowers possess strong financial capacity to maintain their mortgage obligations [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits high household income significantly above the threshold and a low historical attrition rate of 6.45% [stat]. The model predicts a minimal attrition rate of 0.68%, suggesting strong stability for this borrower profile [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 9.76% and a very low predicted mean attrition of 2.62% [stat]. Furthermore, the high mean household income of 222,612 CAD suggests strong financial resilience among the 211 members [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0232 despite a historical training attrition of 0.1053 [stat]. Increasing the term length further reduces the projected risk profile, indicating stability for these 200 members [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort displays a realized attrition rate of 21.79%, significantly exceeding the predicted mean attrition of 2.42% [stat]. This high volume of historical churn suggests elevated sensitivity to the current mortgage balance and income constraints [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort's historical attrition rate of 32.65% significantly exceeds the predicted mean attrition of 7.58% [stat]. Furthermore, the combination of high mortgage balances and restricted income in a high-interest environment indicates substantial financial vulnerability [stat]."
+      },
+      "R4_guidance": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 10.71% and a very low predicted mean attrition of 0.0123 [stat]. Stability is supported by a substantial borrower base of 1,301 members with a mean household income of 86,479 CAD [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 4.84% [stat] and a minimal predicted mean attrition of 0.76% [stat]. With 491 members and stable income parameters, the group demonstrates significant resilience under current lending conditions [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a significantly lower realized attrition rate of 8.33% compared to the historical training baseline, with a model-predicted mean attrition of only 1% [stat]. Furthermore, the lack of sensitivity in the counterfactual analysis indicates that the risk classification remains stable across key financial drivers [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition during the training period and a minimal predicted attrition rate of 0.0058 [stat]. Stable household income levels combined with favorable mortgage rates suggest strong repayment capacity for this group of 242 members [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 4.17% and a strong predicted mean attrition of 0.46% [stat]. Furthermore, the average household income of $202,770 is significantly higher than the cohort's income entry threshold [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low predicted attrition rate of 0.0068 and a historically low realized attrition rate of 0.0645 [stat]. The high mean household income of 221,424 CAD provides a strong buffer against financial volatility [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: This cohort demonstrates strong financial stability with a mean household income of 222,612 CAD and a realized attrition rate of only 0.0976 during the training period [stat]. The predicted mean attrition remains exceptionally low at 0.0262, and the risk classification shows no sensitivity to feature changes in current conditions [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0232 despite a realized historical attrition of 0.1053 [stat]. This group maintains a manageable mortgage balance of 332101 and shows high stability according to counterfactual sensitivity analysis [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 21.79%, significantly exceeding the predicted mean attrition of 2.42% [stat]. Furthermore, the mean household income of $83,983 is well below the upper income threshold for the group, indicating potential financial strain given the high mortgage balance [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 32.65% compared to the model's predicted mean attrition of 7.58% [stat]. Furthermore, the cohort consists of high-balance mortgage holders in Ontario with income levels well below the threshold for financial stability [stat]."
+      },
+      "R5_shuffled": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 10.71% and a very low predicted mean attrition of 1.23% [stat]. Furthermore, the cohort consists of 1301 members with a mean household income of 86,479 CAD, suggesting relative stability despite the presence of government benefits [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 4.84% and a very low predicted mean attrition of 0.76% [stat]. Furthermore, the lack of sensitivity to feature changes indicates strong stability within this group [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 8.33% and a very low predicted mean attrition of 1% [stat]. Furthermore, the group demonstrates high stability as no single-feature changes significantly alter the risk classification [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits zero realized attrition during the training period and maintains a very low predicted mean attrition of 0.0058 [stat]. The cohort's stability is further supported by a lack of sensitive feature volatility and a consistent, moderate household income level [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort displays a very low historical attrition rate of 4.17% and a model-predicted attrition probability of only 0.46% [stat]. High average household incomes and low reliance on government assistance suggest strong financial stability for these 200 members [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits high household income and a low historical attrition rate of 6.45% [stat]. The model predicts an extremely low mean attrition of 0.68%, supported by robust sensitivity analysis showing consistent risk stability [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 9.76% and a very low predicted mean attrition of 2.62% [stat]. Furthermore, members maintain a strong financial position with a high mean household income of $222,612 [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0232 despite a historical realized attrition of 0.1053 [stat]. The small test sample size of 20 episodes relative to the 200 members suggests stable performance under current conditions [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly high historical attrition rate of 21.79% despite a low model-predicted mean attrition of 2.42%, indicating a substantial divergence between empirical outcomes and model expectations [stat]. The population faces elevated risk due to being concentrated in Ontario with a mean income of $83,983 relative to the high mortgage balance threshold of $332,101 [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 32.65% compared to the predicted mean attrition of 7.58% [stat]. Furthermore, the cohort consists of highly leveraged borrowers with low net income relative to their mortgage balance in an expensive province [stat]."
+      }
+    },
+    "123": {
+      "R1_prompt_cite": {
+        "g0": "RISK: HIGH\nJUSTIFICATION: The cohort's train_realized_attrition of 30.51% significantly exceeds the predicted_mean_attrition of 6.2%, indicating a persistent model underestimation of risk [stat]. This high-risk call is confirmed by the counterfactual sensitivity analysis, which shows the classification remains stable despite variations in top drivers [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort's realized attrition rate of 0.2857 significantly exceeds the predicted mean attrition of 0.0561 [stat]. The high stability of the risk profile, confirmed by counterfactual sensitivity failing to flip the risk class, validates this high-risk designation [url:N].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: The cohort's historical realized attrition rate of 33.33% significantly exceeds the predicted mean attrition of 4.83%, indicating a high vulnerability to default [stat]. The lack of sensitivity to feature changes confirms this risk classification, as the high-balance and lower-income profile remains consistently volatile regardless of individual parameter shifts [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 11.9% and a significantly lower predicted attrition rate of 2.06% [stat]. The stability of this risk classification is confirmed by the counterfactual sensitivity analysis, which indicates that no single-feature change shifts the group into a higher risk category.",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort exhibits zero realized attrition [stat] and a low predicted mean attrition of 1.12% [stat]. The counterfactual sensitivity confirms this low-risk assessment, as increasing the term length further suppresses the already minimal attrition risk [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The group exhibits a significantly lower predicted attrition rate of 0.0439 compared to the realized historical rate of 0.2424 [stat]. This low risk call is confirmed by the counterfactual sensitivity analysis, which demonstrates that no single-feature change in top drivers can flip the cohort's risk classification [url:none].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.1304 and a stable predicted mean attrition of 0.0143 [stat]. This classification is confirmed by the counterfactual sensitivity analysis, which shows the risk status remains unchanged regardless of feature variations [url:0].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The observed training attrition of 0.1471 [stat] is mitigated by the low predicted mean attrition of 0.0185 [stat], while the counterfactual sensitivity confirms this low-risk status as increasing the term length further decreases the probability of attrition [url:1].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 7.89% and a minimal predicted mean attrition of 1.6% [stat]. The stability of this risk classification is confirmed by the counterfactual sensitivity analysis, which indicates that no single-feature change among the top drivers flips the risk class [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized historical attrition among 200 members [stat] and a negligible predicted mean attrition rate of 0.0057 [stat]. While sensitivity analysis shows that increasing term length, lowering mortgage rates, or incrementing the origination year reduces risk further, the current low-risk status is confirmed by the absence of historical defaults [stat]."
+      },
+      "R2_skip_empty": {
+        "g0": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant gap between the training realized attrition rate of 30.51% and the much lower predicted mean attrition of 6.2%, suggesting high model uncertainty and volatility [stat]. Furthermore, the cohort consists of 276 members with a relatively low mean household income of $86,517, increasing their vulnerability to interest rates exceeding 5.49% [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 28.57% compared to the predicted mean attrition of 5.61% [stat]. This discrepancy indicates that the current model is underestimating the default or churn risk for this specific income and balance profile [stat].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: This cohort exhibits a historical realized attrition rate of 33.33%, which significantly exceeds the predicted mean attrition of 4.83% [stat]. The concentration in Ontario combined with high mortgage balances relative to the mean household income of $87,547 suggests heightened sensitivity to elevated interest rates [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high average household income of 234,158 CAD and a historical attrition rate significantly lower than the broader portfolio [stat]. Given the minimal test sample size of 17 episodes and the favorable income bracket, the projected attrition remains stable [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero historical attrition during the training period [stat] and maintains a high mean household income of 203,683 CAD [stat]. Predicted mean attrition remains negligible at 0.0112 across 25 test episodes [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort displays a high mean household income of 227,241 CAD, significantly exceeding the entry threshold and suggesting strong financial resilience [stat]. Additionally, the predicted mean attrition rate of 0.0439 is substantially lower than the historical realized attrition of 0.2424 [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates a low historical attrition rate of 13.04% and a very conservative predicted attrition mean of 1.43% [stat]. With a mean household income of 89,026 CAD, the group maintains a financial profile that is unlikely to drive significant default risk [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 14.71% and a very low predicted mean attrition of 1.85% [stat]. Furthermore, the cohort consists of 221 members with an average household income of $90,517, indicating relative financial stability [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.89% and a significantly lower predicted mean attrition of 1.6% [stat]. Furthermore, the cohort consists of 467 members with a stable mean household income of 80,703 CAD [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero historical attrition [stat] and a negligible predicted mean attrition rate of 0.0057 [stat]. With a mean household income of 79,904 CAD, this group shows stable repayment behavior [stat]."
+      },
+      "R3a_std0.5": {
+        "g0": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 30.51% compared to a much lower model prediction, indicating model underperformance or high volatility [stat]. Given the low mean household income of $86,517 relative to the cohort's income cap, these borrowers remain sensitive to mortgage debt loads [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The observed training attrition rate of 28.57% significantly exceeds the predicted mean attrition of 5.61% for this cohort [stat]. Furthermore, the cohort consists of 200 members with a mean income of 84,362 CAD, indicating a high concentration of borrowers susceptible to mortgage balance pressures [stat].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: The group exhibits a high historical attrition rate of 33.33% despite the lower predicted mean attrition of 4.83% [stat]. High mortgage balances paired with below-average household incomes suggest significant financial strain for this cohort [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort maintains a high mean household income of 234,158 CAD and exhibits a very low predicted mean attrition rate of 0.0206 [stat]. Historical performance for this group shows a realized attrition rate of 0.119 despite limited testing episodes [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates high financial stability with an average household income of 203,683 CAD and a historical attrition rate of 0.0% [stat]. Furthermore, the predicted mean attrition remains negligible at 0.0112 across 25 test episodes [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a robust mean household income of 227,241 CAD, which is significantly higher than the entry threshold [stat]. The predicted mean attrition of 0.0439 is substantially lower than the historical training attrition rate of 0.2424, suggesting a stable outlook for this segment [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates a low predicted mean attrition rate of 0.0143 compared to a training realized attrition of 0.1304 [stat]. The stability of this risk classification is confirmed by sensitivity analysis, indicating no single-feature shifts alter the outcome [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 14.71% and a very low predicted mean attrition of 1.85% across 221 members [stat]. Sensitivity analysis indicates that the low-risk classification is stable against variations in key drivers [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.89% and a projected mean attrition rate of only 1.6% [stat]. Furthermore, the cohort remains resilient to sensitivity changes in top drivers, indicating stable borrower behavior [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero historical attrition during the training period and maintains a very low predicted mean attrition rate of 0.0057 [stat]. With a cohort size of 200 members and a mean household income of 79,904 CAD, the demographic profile remains stable with no external negative news reports [stat]."
+      },
+      "R3b_std2.0": {
+        "g0": "RISK: HIGH\nJUSTIFICATION: The cohort displays a high historical attrition rate of 30.51% despite a lower predicted mean attrition of 6.2% [stat]. This risk level is sensitive to loan duration, as an increase in term length significantly reduces the forecasted probability [stat].",
+        "g1": "RISK: MEDIUM\nJUSTIFICATION: The observed training attrition of 28.57% significantly exceeds the predicted mean attrition of 5.61%, indicating a high sensitivity to market volatility for this cohort [stat]. Although the model currently estimates lower future risk, the historical performance in this income bracket necessitates a cautious classification [stat].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 33.33% and maintains a high mortgage balance exceeding 397,366 CAD alongside a household income well below the eligibility threshold [stat]. Despite a low model-predicted mean attrition of 0.0483, the realized training volatility suggests elevated vulnerability within this group [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 11.9% and a projected mean attrition rate of only 2.06% [stat]. Furthermore, members maintain a high average household income of 234,158 CAD, suggesting strong financial resilience [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition during the training period and maintains a high mean household income of 203,683 CAD [stat]. With a very low predicted mean attrition rate of 0.0112, the group demonstrates strong stability [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0439 despite a historical realized attrition rate of 0.2424 [stat]. The high mean household income of 227,241 CAD suggests strong repayment capacity relative to the segment threshold [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 13.04% and a very low predicted mean attrition of 1.43% across the testing episodes [stat]. With an average household income of $89,026 CAD, the group maintains a strong financial buffer relative to their net income constraints [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.1471 and a very low predicted mean attrition of 0.0185 [stat]. The small sample size of 14 test episodes further suggests that current risk exposure remains minimal [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 7.89% and a projected mean attrition of only 1.6% [stat]. Furthermore, increasing the loan term duration significantly reduces the model's predicted risk profile [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition across 200 members and a very low predicted mean attrition of 0.0057 [stat]. Sensitivity analysis indicates that even in simulated scenarios, the probability of attrition remains negligible at or below 0.005 [stat]."
+      },
+      "R4_guidance": {
+        "g0": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 30.51% despite a lower predicted mean attrition of 6.2% [stat]. Furthermore, the cohort consists of 276 members with a relatively low mean household income of $86,517 in a high-cost market like Ontario [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort displays a high train_realized_attrition rate of 28.57%, which significantly exceeds the predicted mean attrition of 5.61% [stat]. This discrepancy indicates that the cohort's historical volatility is poorly captured by the current model, warranting a heightened risk classification [stat].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 33.33% and faces high debt loads exceeding $397,366 alongside income levels below the $124,218 threshold [stat]. These factors, combined with elevated mortgage rates, suggest heightened financial vulnerability for this borrower group [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high mean household income of 234158 CAD and a low predicted mean attrition rate of 0.0206 [stat]. Historical performance shows a train realized attrition of only 0.119 despite the group being concentrated in the high-cost Ontario market [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition during the training period and maintains a high mean household income of 203,683 CAD [stat]. With a very low predicted mean attrition rate of 0.0112, the group demonstrates significant financial stability [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a high mean household income of 227,241 CAD, which significantly exceeds the threshold for inclusion and provides a substantial buffer against financial instability [stat]. Furthermore, the model projects a very low mean attrition rate of 0.0439 for this group [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0143 despite a training period realized attrition of 0.1304 [stat]. Furthermore, the cohort's stability is supported by the lack of sensitivity to top driver changes in counterfactual testing [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 14.71% and a very low predicted mean attrition of 0.0185 [stat]. Furthermore, the small test sample size of 14 episodes suggests limited current volatility for this group of 221 members [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 7.89% and a projected mean attrition of only 1.6% [stat]. The small testing sample of 41 episodes and stable counterfactual sensitivity further support the assessment of low volatility [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits zero realized attrition during the training period and maintains a low predicted mean attrition rate of 0.0057 [stat]. With a mean household income of 79,904 CAD, these borrowers show high stability despite the presence of government-supplemented income [stat]."
+      },
+      "R5_shuffled": {
+        "g0": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a significant gap between realized historical attrition of 30.51% and a projected mean attrition rate of 6.2% [stat]. This discrepancy, combined with a relatively small test sample of 30 episodes, warrants a cautious risk classification [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly high historical attrition rate of 28.57%, which substantially exceeds the predicted mean attrition of 5.61% [stat]. This indicates a persistent vulnerability within the group that remains stable despite sensitivity testing [stat].",
+        "g2": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 33.33% [stat] and a predicted mean attrition rate of 4.83% [stat]. Despite a sample size of 666 members [stat], the high realized churn necessitates a cautious outlook [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort demonstrates a high mean household income of $234,158 and a low historical attrition rate of 11.9% [stat]. The model predicts a very low mean attrition of 2.06% for this group, which shows robust resistance to classification changes based on sensitivity testing [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates high financial stability with an average household income of 203,683 CAD and a train-realized attrition rate of 0.0 [stat]. The predicted attrition remains negligible at 0.0112 across 25 test episodes, indicating strong retention potential [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 24.24% compared to a much lower model-predicted mean of 4.39% [stat]. Sensitivity analysis confirms that the current risk profile is elevated across multiple feature dimensions, as positive shifts in mortgage rates or loan duration are required to lower the classification to medium [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 1.43% compared to a training realized attrition of 13.04%, suggesting strong historical stability [stat]. Furthermore, the cohort's sensitivity analysis confirms that the risk classification remains resilient to changes in key feature drivers [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted attrition rate of 0.0185 relative to the realized historical attrition of 0.1471 [stat]. Stable net income levels combined with a lack of adverse news indicators suggest strong repayment capacity for these 221 members [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 7.89% and a projected mean attrition rate of only 1.6% [stat]. Furthermore, the cohort consists of 467 members with a stable mean household income of $80,703 CAD, and sensitivity analysis confirms that top feature changes do not impact the risk classification [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort displays zero historical attrition and a negligible predicted attrition rate of 0.0057 despite a moderate sample size of 200 members [stat]. High resilience is further supported by the counterfactual sensitivity analysis which indicates no single-feature shift alters the current low-risk classification [stat]."
+      }
+    },
+    "7": {
+      "R1_prompt_cite": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 5% and a very low predicted mean attrition of 0.0088 [stat]. The counterfactual sensitivity confirming that extending the mortgage term further reduces risk supports this low-risk classification [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 3.33% and a very low predicted mean attrition of 0.43% [stat]. The provided counterfactual sensitivity does not apply as the initial risk level is already low, confirming the borrower group is highly stable [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 12.12% and a projected mean attrition of only 2.48% [stat]. The lack of sensitivity to feature shifts confirms this stable risk profile, as no single-feature adjustment flips the risk classification [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort's historical realized attrition rate of 17.54% significantly exceeds the predicted mean attrition of 3.18%, indicating a higher propensity for default than modeled [stat]. This risk classification is confirmed by the counterfactual sensitivity analysis, which shows no single-feature change is sufficient to flip the group's risk class [url:none].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The cohort displays a high historical attrition rate of 0.2747 despite a lower predicted mean of 0.0341 [stat]. The high stability indicated by the counterfactual sensitivity confirms this risk level as the class remains unchanged across feature fluctuations.",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort's realized attrition rate of 20.69% significantly exceeds the predicted mean attrition of 6.72% [stat]. This high risk is confirmed by the counterfactual sensitivity analysis, which indicates that the group's elevated risk profile remains stable despite feature changes [url:N].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low realized attrition rate of 5.5% and a predicted mean attrition of 1.06% [stat]. The stability of this risk class is confirmed by the counterfactual sensitivity analysis, which shows no single-feature change is sufficient to reclassify the group [url:N].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0097 [stat] relative to the observed training attrition of 0.125 [stat]. The counterfactual sensitivity confirms this classification, as extending the mortgage term further reduces the already low predicted attrition risk [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.12% and a minimal predicted mean attrition of 0.0166% [stat]. This risk classification is confirmed by the counterfactual sensitivity analysis, which indicates that no single-feature shift is sufficient to alter the stability of this borrower group [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0176 compared to a historical realized attrition of 0.1481 [stat]. The counterfactual sensitivity confirms this low-risk status, as increasing the term length further decreases predicted risk, suggesting the current duration is already favorable [stat]."
+      },
+      "R2_skip_empty": {
+        "g0": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 5% and a very low predicted mean attrition of 0.88% [stat]. The members maintain a high average household income of 204,808 CAD, which suggests strong financial stability [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 3.33% and a projected mean attrition rate of only 0.43% [stat]. This low risk profile is supported by a strong average household income of $228,258 across the 270 members [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a strong historical attrition rate of 12.12% with a significantly lower predicted mean attrition of 2.48% [stat]. The members maintain a high average household income of 232,110 CAD, suggesting robust financial resilience for the current sample size [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays a realized attrition rate of 17.54%, which is significantly higher than the predicted mean attrition of 3.18% [stat]. This discrepancy indicates that the cohort's performance under current conditions is substantially worse than initial modeling suggested [stat].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The cohort displays a realized attrition rate of 27.47%, which significantly exceeds the model's predicted mean attrition of 3.41% [stat]. Furthermore, the cohort consists of 572 members with a mean household income of $88,965, placing them in a vulnerable position given the high mortgage balance and interest rate range [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort demonstrates a high historical attrition rate of 20.69% compared to the predicted mean of 6.72% [stat]. Furthermore, the cohort consists of high-balance, lower-income borrowers in the Ontario market, which remains sensitive to elevated interest rates exceeding 6.30% [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 5.5% and a projected attrition rate of only 1.06% [stat]. The borrower profile is supported by a stable mean household income of 88,723 CAD [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort displays a low train-realized attrition rate of 12.5% and a very low predicted mean attrition of 0.97% [stat]. Furthermore, sensitivity analysis confirms that increasing the loan term reduces the already minimal risk profile [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 12% and a projected mean attrition rate of only 1.66% [stat]. Furthermore, the average household income of $82,510 provides strong repayment capacity for the specified mortgage payment caps [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 14.81% and a predicted mean attrition of only 1.76% [stat]. Furthermore, sensitivity analysis confirms that increasing the term length further decreases the probability of attrition [stat]."
+      },
+      "R3a_std0.5": {
+        "g0": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high mean household income of 204,808 CAD and a low historical attrition rate of 0.05, suggesting strong repayment capacity [stat]. Furthermore, the predicted mean attrition is minimal at 0.0088, and the risk classification remains stable across counterfactual sensitivity analysis [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 3.33% and a very low predicted mean attrition of 0.43% [stat]. With a high mean household income of $228,258, these borrowers show strong financial stability [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a high mean household income of 232,110 CAD, which correlates with stronger repayment capacity [stat]. Furthermore, the predicted mean attrition rate of 0.0248 is substantially lower than the observed historical attrition of 0.1212 [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The historical attrition rate of 17.54% significantly exceeds the predicted mean attrition of 3.18%, suggesting the model may be underestimating the volatility of this cohort [stat]. Given the relatively small sample size of 321 members, the deviation between realized and predicted performance warrants a cautious risk classification [stat].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 27.47% compared to the model's predicted mean attrition of 3.41% [stat]. This discrepancy indicates that current risk models may be underestimating the vulnerability of this group [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: This cohort exhibits a realized attrition rate of 20.69% during the training period, which significantly exceeds the predicted mean attrition of 6.72% [stat]. The concentration of borrowers in Ontario with relatively high mortgage balances and restricted income levels indicates a elevated vulnerability to current market volatility [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 5.5% and a projected mean attrition rate of only 1.06% [stat]. Furthermore, the model demonstrates high stability, as sensitivity analysis shows no significant single-feature shifts alter the group's low-risk classification [url:0].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0097 despite a train realized attrition of 0.125 [stat]. Sensitivity analysis indicates that the risk classification remains stable across key feature variations [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 12% and a minimal predicted mean attrition of 1.66% across 46 test episodes [stat]. The stable financial profile, characterized by a mean household income of 82,510 CAD, supports a favorable risk outlook [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0176 despite historical realized attrition of 0.1481 [stat]. Stability is supported by the counterfactual analysis, which confirms that no single-feature modification shifts the risk classification [stat]."
+      },
+      "R3b_std2.0": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a very low realized attrition rate of 0.05 and a predicted mean attrition of only 0.0088 across 200 members [stat]. High average household incomes of 204,808 CAD further support stability for this group [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 3.33% and a projected mean attrition of only 0.43% [stat]. Furthermore, the group maintains a high mean household income of $228,258, which significantly mitigates default risk [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 12.12% and a projected mean attrition rate of only 2.48% [stat]. Furthermore, the high mean household income of $232,110 provides a strong financial buffer against potential default [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 17.54% compared to the model's predicted mean attrition of 3.18% [stat]. Furthermore, the cohort's mean household income of $85,745 is substantially lower than the eligibility threshold, suggesting heightened financial vulnerability [stat].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher historical attrition rate of 27.47% compared to the predicted mean attrition of 3.41% [stat]. This discrepancy indicates a substantial variance between historical outcomes and model projections for these 572 members [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: This cohort exhibits a realized attrition rate of 20.69% despite the lower predicted mean, indicating a significant historical trend of default or churn [stat]. The combination of elevated mortgage rates exceeding 6.30% and a relatively modest mean household income of $92,913 places these borrowers under substantial financial pressure [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 5.5% and a projected mean attrition rate of only 1.06% [stat]. Furthermore, the lack of sensitivity to feature fluctuations confirms high stability within this group [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 12.5% and a very low model-predicted attrition probability of 0.97% [stat]. The small testing sample of 14 episodes further supports a stable risk profile for this group of 200 borrowers [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 12% and a projected mean attrition of only 1.66% [stat]. Furthermore, the group's sensitivity analysis confirms high stability, as no single feature modification alters the risk classification [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0176 despite an observed historical attrition of 0.1481 [stat]. Increasing the mortgage term length further reduces the projected risk, suggesting a stable borrower profile relative to the training period [stat]."
+      },
+      "R4_guidance": {
+        "g0": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 0.05% and a very low predicted mean attrition of 0.0088% [stat]. The group maintains a strong financial profile with a high mean household income of 204,808 CAD [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 3.33% and a predicted mean attrition probability of only 0.43% [stat]. With a high mean household income of 228,258 CAD, this group demonstrates strong financial resilience [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high mean household income of 232,110 CAD, which correlates with strong debt-servicing capacity [stat]. With a low predicted mean attrition rate of 0.0248, the group shows stability despite a training period attrition of 0.1212 [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 17.54% despite a lower predicted mean attrition of 3.18% [stat]. The substantial disparity between past performance and model forecasts, combined with the concentration of borrowers in the high-cost Ontario market, necessitates a cautious classification [stat].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 27.47% compared to the projected mean attrition of 3.41% [stat]. This discrepancy indicates that current economic pressures on this group of 572 members are not being adequately captured by the baseline model [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 20.69% despite the lower predicted mean attrition [stat]. Given the high mortgage balances relative to the moderate mean household income of $92,913, the group remains susceptible to ongoing interest rate pressures [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low train_realized_attrition rate of 5.5% and a predicted mean attrition of only 1.06% [stat]. This classification remains stable across counterfactual sensitivity testing, suggesting minimal risk impact from individual feature shifts [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a moderate historical attrition rate of 0.125 despite a low predicted mean attrition of 0.0097 [stat]. This discrepancy indicates that the current mortgage payment burden relative to borrower income may increase default risk for this group [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low predicted mean attrition rate of 0.0166 relative to the historical training attrition of 0.12 [stat]. Stability is supported by the fact that sensitivity analysis shows no single-feature change currently alters the risk classification [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0176 despite a historical realized attrition of 0.1481 [stat]. The small sample size of 21 test episodes relative to the 208 members suggests stable performance under current conditions [stat]."
+      },
+      "R5_shuffled": {
+        "g0": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low historical attrition rate of 0.05 and a predicted mean attrition rate of only 0.0088 [stat]. High average household income of 204,808 CAD provides strong financial stability for these 200 members [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low realized attrition rate of 3.33% and a high mean household income of $228,258, indicating strong financial resilience [stat]. The model\u2019s low predicted mean attrition of 0.43% across 23 test episodes confirms stable performance within this borrower group [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort maintains a high mean household income of $232,110 and has demonstrated a relatively low historical attrition rate of 12.12% [stat]. Furthermore, the model projects a very low mean attrition probability of 2.48% for this group [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: While the predicted mean attrition is low at 0.0318 [stat], the cohort\u2019s historical realized attrition of 0.1754 indicates a significantly higher volatility in past performance [stat].",
+        "g4": "RISK: HIGH\nJUSTIFICATION: The training period realized attrition of 27.47% is significantly higher than the predicted mean attrition of 3.41% for this cohort [stat]. This group faces elevated risk due to their lower-than-average household income relative to the high mortgage balance requirement [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a train realized attrition rate of 20.69% despite a lower predicted mean of 6.72% [stat]. The high mortgage balance and low income relative to the sample size of 201 members indicate significant sensitivity to elevated interest rates [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 5.5% and a projected mean attrition rate of only 1.06% [stat]. The stable profile of these 1,311 members across Ontario supports a high level of confidence in their continued retention [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0097 despite a historical realized attrition of 0.125 [stat]. The small sample size of 14 test episodes suggests limited exposure to volatility for these 200 members [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 12% and a projected mean attrition rate of only 1.66% [stat]. Furthermore, the cohort consists of 512 members with a solid mean household income of 82,510 CAD [stat].",
+        "g9": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a significant gap between historical realized attrition of 14.81% and the current low predicted attrition model, suggesting model underestimation [stat]. With a high monthly mortgage burden exceeding 2,533 CAD and a mean income below the cohort threshold, the group remains vulnerable to repayment stress [stat]."
+      }
+    },
+    "2024": {
+      "R1_prompt_cite": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a train realized attrition rate of 0.1288 against a very low predicted mean attrition of 0.0165 [stat]. The counterfactual sensitivity confirms this low-risk status, as increasing the term length further suppresses the predicted risk to 0.004 [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort displays a realized attrition rate of 45.1%, which significantly exceeds the predicted mean attrition of 7.51% [stat]. This high risk call is confirmed by the counterfactual sensitivity analysis, which indicates that no top-feature changes flip the risk classification [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 8.82% and a predicted attrition rate of only 1.62% [stat]. The lack of sensitivity to top-driver feature changes confirms this risk classification, as the cohort's stability is robust across potential variable fluctuations [url:none].",
+        "g3": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a realized attrition rate of 15.15%, which is significantly higher than the predicted mean attrition of 2.03% [stat]. The counterfactual sensitivity confirms this high-risk classification, as extending the loan term is required to meaningfully lower the risk profile from its current elevated state [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 12.96% compared to the current predicted mean attrition of 1.1% [stat]. The counterfactual sensitivity confirms this low-risk status, as increasing the term length only marginally reduces an already low risk profile [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort displays a realized attrition rate of 27.5%, which is significantly higher than the predicted mean of 3.52% [stat]. This high risk call is confirmed by the counterfactual sensitivity analysis, which indicates that the group\u2019s vulnerability is robust across top feature variations.",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted mean attrition of 0.0323 relative to the training period's realized rate of 0.1414 [stat]. The lack of sensitivity to feature fluctuations confirms this low-risk classification as the model remains stable across potential input changes [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low realized attrition rate of 0.06% and a predicted mean attrition of 0.0111% [stat], [stat]. The counterfactual sensitivity confirms this low-risk status, as increasing the term length further suppresses the already minimal predicted attrition rate [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The low realized attrition rate of 0.0556 and a projected attrition of 0.0081 indicate strong borrower stability [stat]. The counterfactual sensitivity confirms this low-risk status, as even negative volatility in rates or terms further reduces the already minimal predicted attrition probability [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0308 despite the realized training attrition of 0.15 [stat]. The lack of a risk class flip under counterfactual sensitivity testing confirms this low-risk classification [stat]."
+      },
+      "R2_skip_empty": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 12.88% and an extremely low predicted attrition of 1.65% [stat]. Furthermore, the cohort maintains a solid mean household income of 86,689 CAD with a limited number of dependents [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits an actual historical attrition rate of 45.1%, which significantly exceeds the projected mean attrition of 7.51% [stat]. Furthermore, the cohort consists of 287 members facing high interest rates and declining liquid deposit balances [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.0882 [stat] and a minimal predicted mean attrition of 0.0162 [stat]. With 242 members and stable income characteristics, the data suggests strong borrower retention [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays a realized attrition rate of 15.15% which significantly exceeds the model's predicted mean attrition of 2.03% [stat]. Furthermore, a negative trend in liquidity as evidenced by the deposit decline suggests heightened financial vulnerability for these 200 members [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.011 compared to the historical realized attrition of 0.1296 [stat]. Stability is supported by the relatively large sample size of 484 members and current financial indicators [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 27.5% compared to the much lower predicted mean of 3.52% [stat]. Furthermore, the cohort consists of low-income borrowers with significant recent liquidity depletion in a high-interest rate environment [stat].",
+        "g6": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays a realized attrition rate of 14.14%, which is significantly higher than the predicted mean attrition of 3.23% [stat]. This discrepancy suggests the group exhibits heightened sensitivity to the specified income and mortgage rate constraints [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.06 and a predicted mean attrition of 0.0111 [stat]. With a high mean household income of 213,695 CAD and a stable member count of 322, the group demonstrates strong repayment capacity [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates a very low historical attrition rate of 5.56% and a predicted mean attrition rate of only 0.81% [stat]. Furthermore, the average household income of $207,641 provides a significant buffer against default risk for these 200 members [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort displays a robust mean household income of 217,581 CAD and maintains a low predicted attrition rate of 0.0308 [stat]. While historical attrition reached 0.15, the current risk profile is mitigated by the strong financial standing of the 200 cohort members [stat]."
+      },
+      "R3a_std0.5": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The predicted mean attrition of 0.0165 is significantly lower than the training realized attrition rate of 0.1288 [stat]. The cohort demonstrates stability with a mean household income of 86689.0 CAD and is resistant to risk class shifts based on sensitivity analysis [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly high historical attrition rate of 45.1%, which substantially exceeds the predicted mean attrition of 7.51% [stat]. This discrepancy indicates a high likelihood of churn despite the model's lower forecast [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 8.82% and a minimal predicted mean attrition of 1.62% [stat]. Furthermore, the lack of sensitivity to feature fluctuations confirms that this stable group remains low-risk across the analyzed parameters [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 15.15% compared to the model's predicted mean attrition of 2.03% [stat]. The small sample size of 200 members combined with negative liquidity trends suggests elevated vulnerability despite the lack of external news events [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The predicted attrition rate of 0.011 is significantly lower than the historical realized attrition of 0.1296 [stat]. The cohort exhibits high stability, supported by consistent deposit growth and a lack of adverse news indicators [url:0].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort displays a high train_realized_attrition rate of 27.5%, significantly exceeding the predicted mean attrition of 3.52% [stat]. This group consists of 295 members with a low borrower income threshold and negative deposit volatility, suggesting vulnerability to economic tightening [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a significantly lower predicted attrition rate of 0.0323 compared to the historical realized attrition of 0.1414 [stat]. Furthermore, sensitivity analysis confirms that the risk classification for these 536 members remains stable across primary feature variations [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: This cohort demonstrates a high mean household income of 213,695.0 CAD and a low historical attrition rate of 0.06 [stat]. The predicted mean attrition is notably low at 0.0111, and the risk classification remains stable across sensitivity analyses [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a robust mean household income of 207,641 CAD and a historical attrition rate of only 5.56% [stat]. Furthermore, the predicted mean attrition is very low at 0.81%, and the risk class remains stable under sensitivity analysis [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort displays a robust mean household income of 217,581 CAD and a low predicted mean attrition rate of 0.0308 [stat]. Given that the training attrition rate remains stable at 0.15 and sensitivity analysis shows no feature changes will shift the risk class, this group remains a stable segment [stat]."
+      },
+      "R3b_std2.0": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 12.88% and a predicted mean attrition of only 1.65% [stat]. Furthermore, the cohort consists of 1,234 members with a stable mean household income of 86,689 CAD [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly high historical attrition rate of 45.1%, which substantially exceeds the predicted mean attrition of 7.51% [stat]. This discrepancy indicates a high likelihood of future churn despite the low predicted model output [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 8.82% and a minimal predicted mean attrition of 1.62% despite a high number of young dependents [stat]. With a stable average household income of 84,528 CAD and no external news indicating systemic instability, the segment remains resilient [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a realized attrition rate of 0.1515, which is significantly higher than the predicted mean attrition of 0.0203 [stat]. Although the predicted risk model suggests a low current probability, the historical data reflects a higher baseline volatility for these 200 members [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a significantly lower realized attrition rate of 12.96% compared to the predicted mean attrition of 1.1% [stat]. Furthermore, the cohort remains stable with a sample size of 484 members and 40 test episodes [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 27.5% despite a low model-predicted mean [stat]. The high risk profile is supported by the observed volatility in deposits and constrained borrower income [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 0.0323 despite a realized historical attrition of 0.1414 [stat]. Sensitivity analysis indicates that extending the term length further reduces the already low risk profile [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates high financial stability with an average household income of 213,695 CAD and a low historical attrition rate of 6 percent [stat]. Low predicted attrition of 1.11 percent suggests minimal risk for this group of 322 members [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits high household income levels and a low historical attrition rate of 5.56% [stat]. The predicted mean attrition for this group is notably low at 0.81% [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort displays high household income levels and a low predicted mean attrition rate of 3.08% [stat]. Historical performance indicates a realized attrition rate of 15% across the 200 members in the training period [stat]."
+      },
+      "R4_guidance": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted mean attrition rate of 0.0165 compared to the training period realized attrition of 0.1288 [stat]. Stable household income levels of 86,689 CAD and limited sensitivity to term length fluctuations support a favorable risk outlook [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort displays a high historical attrition rate of 45.1%, which significantly exceeds the model's predicted mean attrition of 7.51% [stat]. Furthermore, the segment is characterized by declining liquidity with negative deposit growth, indicating elevated financial stress for these 287 members [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 0.0882 and a strong predicted mean attrition of 0.0162 across the 242 members [stat]. Furthermore, sensitivity analysis confirms that the current risk classification is stable and not susceptible to minor shifts in primary variables [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: This cohort exhibits a realized attrition rate of 0.1515, which is significantly higher than the model's predicted mean attrition of 0.0203 [stat]. The declining liquidity indicated by a negative 3-month deposit change suggests potential vulnerability among the 200 members despite their moderate income levels [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.011 despite a realized historical attrition of 0.1296 [stat]. The cohort size of 484 members remains stable across 40 test episodes [stat].",
+        "g5": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 27.5% compared to the predicted mean attrition of 3.52% [stat]. Furthermore, the low borrower income threshold of $48,665.9 places the group at increased financial vulnerability [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a train realized attrition rate of 0.1414, which remains significantly lower than the broader portfolio threshold [stat]. Furthermore, the predicted mean attrition is notably low at 0.0323, suggesting stability within this borrower group [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort demonstrates a very low historical attrition rate of 6% and a projected attrition of only 1.11% [stat]. With a high mean household income of 213,695 CAD and a robust member count, the group maintains a strong financial profile [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low historical attrition rate of 5.56% and a projected mean attrition probability of only 0.81% [stat]. With a high mean household income of 207,641 CAD, members demonstrate strong financial stability [stat].",
+        "g9": "RISK: LOW\nJUSTIFICATION: The cohort exhibits high household income levels and a low predicted attrition rate of 0.0308, significantly below the training period realized attrition of 0.15 [stat]. Stability is supported by the fact that sensitivity analysis shows no single-feature shift would alter this risk classification [stat]."
+      },
+      "R5_shuffled": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.0165 compared to the training period realized attrition of 0.1288 [stat]. Stable household income levels averaging 86689.0 CAD further support a diminished risk profile for this group of 1234 members [stat].",
+        "g1": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant historical attrition rate of 45.1%, substantially exceeding the predicted mean attrition of 7.51% [stat]. This discrepancy indicates a high propensity for default risk despite the current model's lower forecast [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 8.82% and a projected mean attrition of only 1.62% [stat]. Furthermore, the cohort consists of 242 members with a mean household income of $84,528, indicating relative stability [stat].",
+        "g3": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays an attrition rate (0.1515) significantly higher than the predicted mean (0.0203), indicating localized risk despite the small sample size of 200 members [stat]. High sensitivity to financial constraints is reinforced by the negative 3-month deposit trend and income thresholds [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted mean attrition rate of 0.011 compared to a historical realized attrition of 0.1296 [stat]. With 484 members maintaining stable deposit levels, the statistical model indicates minimal churn potential [stat].",
+        "g5": "RISK: MEDIUM\nJUSTIFICATION: The observed training attrition rate of 27.5% significantly outweighs the predicted mean attrition of 3.52%, indicating historical volatility [stat]. While sensitivity analysis suggests stability in the risk classification, the disparity between realized and predicted performance necessitates a cautious assessment [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition of 3.23% compared to the historical realized attrition of 14.14% [stat]. Furthermore, the cohort demonstrates robust stability with no single-feature sensitivity shifts in risk classification [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a very low historical attrition rate of 0.06 and a predicted mean attrition of 0.0111 [stat]. With a high mean household income of 213,695.0 CAD and no negative news reports, the risk profile remains stable [stat].",
+        "g8": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a robust mean household income of 207,641 CAD and a low train-realized attrition rate of 0.0556 [stat]. The predicted mean attrition of 0.0081 remains exceptionally stable against counterfactual sensitivity testing [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 0.15 compared to the predicted mean attrition of 0.0308 [stat]. High interest rates and negative deposit trends indicate substantial financial stress despite a high mean household income [stat]."
+      }
+    },
+    "555": {
+      "R1_prompt_cite": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 0.1364 compared to a predicted mean attrition of 0.013 [stat]. The counterfactual sensitivity confirms this low-risk assessment, as increasing the term length further decreases the probability of attrition [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: With a realized attrition rate of 0.0734 and a predicted mean attrition of 0.0131, the cohort demonstrates strong stability [stat]. This risk classification is confirmed by the counterfactual sensitivity analysis, which indicates that no single-feature change is sufficient to flip the group's predicted risk class.",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low realized attrition rate of 4% and a conservative predicted mean attrition of 0.54% [stat]. The counterfactual sensitivity regarding increased term length confirms this low-risk status, as extending the term further reduces the already minimal predicted attrition probability [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: With a high mean household income of 201,446 CAD and a low historical attrition rate of 7.14%, this cohort demonstrates strong financial stability [stat]. The robustness of this risk classification is confirmed by the counterfactual sensitivity analysis, which shows that no single feature change flips the predicted risk class [url:N].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low predicted attrition rate of 0.0297 compared to historical realized levels [stat], and the lack of sensitivity to feature changes confirms the stability of this risk classification.",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 5.88% and a predicted attrition rate of only 0.88% [stat]. The stability of this classification is confirmed by the counterfactual sensitivity analysis, which indicates no single-feature change shifts the group's risk profile [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 10.61% and a very low predicted mean attrition of 1.55% [stat]. The lack of sensitivity to counterfactual feature changes confirms this low risk classification [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted mean attrition of 0.039 relative to the realized training attrition of 0.1818 [stat]. The stability of this risk classification is confirmed by the counterfactual sensitivity analysis, which shows that no single-feature change among the top drivers flips the risk class [url:N].",
+        "g8": "RISK: MEDIUM\nJUSTIFICATION: The group exhibits a significant historical attrition rate of 21.21% compared to a much lower model prediction of 3.3% [stat]. This risk call is confirmed by the counterfactual sensitivity analysis, which indicates that the group's classification is robust to small feature shifts [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort displays a realized attrition rate of 32.98%, which significantly exceeds the predicted mean attrition of 4.81% [stat]. The high risk status is confirmed by the counterfactual sensitivity analysis, which indicates that the group\u2019s risk classification remains stable regardless of individual feature adjustments [url:0]."
+      },
+      "R2_skip_empty": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low train realized attrition rate of 13.64% and a predicted mean attrition of only 1.3% [stat]. Furthermore, the cohort maintains a solid mean household income of 88,710 CAD, suggesting financial stability for these 784 members [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.34% and a significantly lower predicted attrition rate of 1.31% across the test episodes [stat]. With a mean household income of 87,765 CAD, the borrowers demonstrate relative financial stability within this mortgage interest bracket [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low historical attrition rate of 4% and a projected mean attrition of 0.54% [stat]. Furthermore, the group maintains a high mean household income of 228,414 CAD, indicating strong financial resilience [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits high household income levels and a low historical attrition rate of 7.14% during the training period [stat]. Furthermore, the predicted mean attrition for these members remains minimal at 1.08% [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort demonstrates a strong historical performance with a training attrition rate of 15.38% and a very conservative predicted mean attrition of 2.97% [stat]. Furthermore, the cohort consists of high-earners with a mean household income of 224,002 CAD, suggesting significant financial resilience [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 5.88% and a projected mean attrition rate of only 0.88% [stat]. Furthermore, the cohort consists of a stable group of 220 members with low average debt obligations [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 10.61% and a predicted mean attrition of only 1.55% [stat]. Furthermore, the average household income of 80,083 CAD provides a stable financial buffer relative to the inclusion criteria [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a training attrition rate of 18.18%, which is significantly higher than the predicted mean attrition of 3.9% [stat]. This discrepancy suggests the model may be underestimating the volatility risk for this demographic [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significant gap between the high realized historical attrition of 21.21% and the current low model forecast [stat]. Furthermore, members face elevated financial strain with mortgage balances exceeding $358,458 against a modest mean income of $108,291 [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 32.98% despite a low model-predicted attrition, indicating a significant discrepancy between model expectations and realized borrower behavior [stat]. The combination of elevated mortgage balances and high credit utilization within this group suggests substantial financial vulnerability [stat]."
+      },
+      "R3a_std0.5": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 13.64% and an even lower predicted mean attrition of 1.3% [stat]. Furthermore, the cohort demonstrates robust stability with no sensitivity to feature changes across the tested episodes [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.34% and a projected mean attrition rate of only 1.31% [stat]. Furthermore, the cohort's stability is supported by a solid mean household income of $87,765 and a lack of sensitivity to feature fluctuations [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a strong financial profile with a mean household income of 228,414 CAD and a low historical attrition rate of 0.04 [stat]. The model-predicted attrition remains negligible at 0.0054, supported by the stability of the group's net income and debt service criteria [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high mean household income of 201,446 CAD and a low historical attrition rate of 7.14% [stat]. The predicted mean attrition remains minimal at 1.08% with no sensitivity to feature shifts suggesting high stability [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a high mean household income of 224,002 CAD and a low predicted mean attrition rate of 0.0297 [stat]. Despite a historical attrition rate of 0.1538, the current model forecasts stable performance for this high-earner demographic [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 5.88% and a projected mean attrition rate of only 0.88% [stat]. The group's stability is further supported by low debt-to-income indicators and a lack of adverse news, with counterfactual analysis confirming robust risk classification [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted attrition rate of 1.55% compared to the training period realized attrition of 10.61% [stat]. Furthermore, sensitivity analysis confirms the stability of this classification across top feature drivers [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays a realized attrition rate of 18.18% despite a low model-predicted attrition of 3.9%, indicating significant underperformance relative to expectations [stat]. The high concentration in Ontario, a region sensitive to mortgage rate fluctuations, justifies a cautious risk classification [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort's historical realized attrition rate of 21.21% significantly exceeds the predicted mean attrition of 3.3%, indicating a pattern of higher-than-average loss [stat]. With a relatively small sample size of 202 members, the disparity between actual and forecasted outcomes suggests substantial volatility and elevated risk [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized historical attrition rate of 32.98% compared to the model's predicted mean attrition of 4.81% [stat]. Furthermore, the cohort consists of 595 members with a low mean household income of $77,927, suggesting elevated vulnerability to financial strain [stat]."
+      },
+      "R3b_std2.0": {
+        "g0": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 13.64% and a very low predicted mean attrition of 1.3% [stat]. The members maintain a solid mean household income of 88,710 CAD, suggesting financial stability despite low government benefit reliance [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.34% and a very low predicted mean attrition of 1.31% [stat]. Furthermore, the model indicates that increasing the term length would reduce risk, suggesting stability for this borrower profile [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 4% and a very low predicted mean attrition of 0.54% [stat]. High average household income of $228,414 further supports strong repayment capacity for this group [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits high household income and a low historical attrition rate of 7.14% during the training period [stat]. Furthermore, the model predicts a very low mean attrition rate of 1.08% for the test episodes [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: The cohort displays a low predicted mean attrition rate of 0.0297 compared to a historical training attrition of 0.1538 [stat]. The strong financial profile, characterized by an average household income of 224,002 CAD, further mitigates default risk [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort maintains a low realized attrition rate of 5.88% and a projected mean attrition rate of only 0.88% [stat]. Furthermore, sensitivity analysis confirms that increasing the loan term reduces attrition risk, reinforcing the stability of this borrower profile [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort displays a low historical attrition rate of 10.61% and a predicted mean attrition of only 1.55% [stat]. Furthermore, sensitivity analysis suggests the cohort's risk profile remains stable and low given the current structural parameters [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a moderate historical attrition rate of 18.18% despite a lower predicted mean attrition of 3.9% [stat]. Sensitivity analysis indicates that extending the loan term significantly reduces the risk profile, suggesting current short-term obligations are a primary driver of potential default [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 21.21% compared to the model's predicted mean attrition of 3.3% [stat]. This discrepancy indicates that historical performance for these 202 members has been markedly worse than current risk projections suggest [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a significantly higher realized attrition rate of 32.98% compared to the model's predicted mean attrition of 4.81% [stat]. This discrepancy, combined with high credit utilization and substantial mortgage balances relative to the low mean household income, suggests elevated vulnerability to default [stat]."
+      },
+      "R4_guidance": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 13.64% and a predicted mean attrition of only 1.3% [stat]. Furthermore, the group demonstrates stability with a mean household income of 88,710 CAD [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 7.34% and a projected mean attrition rate of only 1.31% [stat]. Furthermore, the risk classification remains stable across all counterfactual sensitivity analyses [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: The cohort displays a very low historical attrition rate of 0.04 and a predicted mean attrition of 0.0054 [stat]. With a high mean household income of 228,414 CAD, this group demonstrates strong financial resilience [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: This cohort exhibits high household income levels and a low historical attrition rate of 7.14% during the training period [stat]. The predicted mean attrition for these members is further stabilized at a minimal 1.08% [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a high mean household income of 224002.0 CAD, which correlates with strong debt-service capacity [stat]. The predicted mean attrition rate of 0.0297 remains significantly lower than the realized attrition observed during the training period [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 5.88% and a very low predicted mean attrition of 0.88% [stat]. Robust sensitivity analysis confirms that no single-feature change shifts the group into a higher risk classification [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 1.55%, significantly below the historical training period attrition of 10.61% [stat]. Furthermore, sensitivity analysis confirms that the group maintains a stable risk profile despite fluctuations in individual debt or income drivers [stat].",
+        "g7": "RISK: MEDIUM\nJUSTIFICATION: The cohort exhibits a training attrition rate of 18.18%, which is significantly higher than the model's predicted mean attrition of 3.9% [stat]. This discrepancy indicates that current risk factors for this segment are not fully captured by the existing prediction model [stat].",
+        "g8": "RISK: MEDIUM\nJUSTIFICATION: The cohort displays a historical attrition rate of 21.21% despite a lower predicted mean attrition of 3.3% [stat]. High mortgage balances paired with moderate household income levels maintain a moderate profile risk [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The observed attrition rate of 0.3298 significantly exceeds the predicted mean attrition of 0.0481 [stat]. This cohort faces elevated risk due to high mortgage balances relative to a mean household income of 77927.0 [stat]."
+      },
+      "R5_shuffled": {
+        "g0": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical attrition rate of 13.64% and a very conservative model-predicted attrition probability of 1.3% [stat]. Furthermore, the cohort demonstrates stable risk classification with high sensitivity to feature perturbations [stat].",
+        "g1": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low historical realized attrition rate of 7.34% and a predicted mean attrition rate of only 1.31% [stat]. Furthermore, the cohort's stability is supported by an average household income of $87,765 and a lack of sensitivity to feature fluctuations [stat].",
+        "g2": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a very low realized attrition rate of 4% and a high mean household income of 228,414 CAD [stat]. Stability is further supported by the low predicted mean attrition of 0.54% and the fact that no single-feature sensitivity changes the group's risk classification [stat].",
+        "g3": "RISK: LOW\nJUSTIFICATION: The cohort exhibits high household income levels and a low realized attrition rate of 7.14% during the training period [stat]. Furthermore, the predicted mean attrition for this group is notably low at 1.08% [stat].",
+        "g4": "RISK: LOW\nJUSTIFICATION: This cohort demonstrates strong financial health with an average household income of 224,002 CAD and a very low predicted attrition rate of 0.0297 [stat]. The small sample size of 15 test episodes combined with the high income profile suggests minimal exposure to payment distress [stat].",
+        "g5": "RISK: LOW\nJUSTIFICATION: This cohort exhibits a low historical attrition rate of 5.88% and a projected mean attrition rate of only 0.88% [stat]. The group remains stable against counterfactual sensitivity testing, suggesting minimal volatility in their risk profile [stat].",
+        "g6": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a significantly low predicted attrition rate of 1.55%, which is well below the historical realized attrition of 10.61% [stat]. Furthermore, the lack of sensitivity to feature changes suggests the cohort's low-risk classification is robust [stat].",
+        "g7": "RISK: LOW\nJUSTIFICATION: The cohort exhibits a low predicted mean attrition rate of 0.039, which is significantly lower than the historical training attrition rate of 0.1818 [stat]. Low sensitivity to term length further suggests stability, as increasing duration would only serve to marginally reduce the already low risk [stat].",
+        "g8": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 21.21% despite a low model-predicted mean attrition of 3.3% [stat]. This discrepancy indicates that current financial conditions for these high-balance, moderate-income borrowers in Ontario pose a significant risk of churn [stat].",
+        "g9": "RISK: HIGH\nJUSTIFICATION: The cohort exhibits a high historical attrition rate of 32.98%, which significantly exceeds the model's predicted mean attrition of 4.81% [stat]. This disparity, combined with a relatively low average household income for the group, indicates elevated vulnerability to mortgage default [stat]."
+      }
+    }
+  },
+  "elapsed_s": 1559.1
+}
