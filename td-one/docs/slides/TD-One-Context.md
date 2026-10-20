@@ -697,6 +697,21 @@ running: it is marked in flight in Section 5, the glossary, and
 Appendix D, and a later pass folds it in. Em dash count in the
 HTML remains 0; the file parses with balanced tags.
 
+**Citation-completion pass (2026-10-20):** the three model
+citations the paper extension had to mark "not recorded in the
+repo" (Chronos / Chronos-2, TimesFM, and the original FFORMA
+paper) were completed from external sources, verified against
+the papers themselves: Ansari et al., "Chronos: Learning the
+Language of Time Series," Transactions on Machine Learning
+Research, 2024 (arXiv:2403.07815); Ansari et al., "Chronos-2:
+From Univariate to Universal Forecasting," arXiv:2510.15821
+(2025); Das et al., "A decoder-only foundation model for
+time-series forecasting," arXiv:2310.10688 (2023); Montero-Manso
+et al., "FFORMA: Feature-based forecast model averaging,"
+International Journal of Forecasting 36(1), 86-92, 2020. These
+citations come from the papers, not from the repo; the HTML
+flags each one with that provenance and date.
+
 ## 7. Repo pointers (relative to `td-one/`)
 
 - `docs/slides/TD-One-Slides.html`: the deck of record (this
