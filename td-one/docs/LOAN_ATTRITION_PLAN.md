@@ -140,6 +140,28 @@ cohorts.
   designed for. It ships as an available option, not the default,
   with regression tests proving fit() runs and failures raise (the
   exp78 silent-fallback bug class cannot be reintroduced silently).
+- **exp80 (2026-10-20):** finished the two follow-ups exp78/exp79 left
+  open. (1) **Conformal range calibration:** a CQR layer on the shipped
+  forecaster (per-group backtest bank, asymmetric exceedances,
+  volatility-conditional offsets; exp74's bank rule + prefix-invariance
+  test). The conditional variant at level 0.90 cleared the
+  pre-registered bar on protocol seeds (control cov80 0.804, S1@4σ
+  0.776, CRPS-neutral) but **failed the fresh-seed replication under
+  S1@4σ** (0.652 vs 0.77 floor); an aggressive-tuning round showed
+  the gap is structural (offsets saturate at the bank's worst
+  pre-shock miss — the same bank-blindness exp74 found). ❌ **Does
+  not ship as the default**; available behind `conformal=True`.
+  Partial positive: nominal control coverage on both seed sets,
+  S1 coverage +0.045/+0.086 everywhere, CRPS never worse. (2)
+  **Thin/dead fallback split:** below `min_group_n`, groups whose
+  recent `n_at_risk` is 0 are "dead" → own trailing mean; thin-but-
+  alive groups keep the portfolio fallback. ✅ **Ships** (default
+  `dead_zero_months=2`): pooled CRPS improves in every world
+  (control −1.6% p=0.0075, S7mix@0.25 −3.5% p=0.0042, S1@4σ −1.4%
+  p=0.0078); dead-group cells 0.1317 → 0.0961 (−27%), pure-death
+  cells → 0.0000; honest cost — the rule also fires on
+  intermittent-zero groups, losing on rare "resurrection" cells
+  (e.g. seed-42 g7), outweighed ~3:1.
 
 ## Direction
 
@@ -190,8 +212,13 @@ Two tracks, eventually combined:
 2. **`group_forecaster.py`** — designed as per-group
    `ProposedForecasterV2`; as built, the v2 call was never fitted, so
    every forecast was the point-mass naive fallback (exp78). Since
-   exp78: naive center + Gaussian spread. Groups under `min_group_n`
-   fall back to global (shrinkage).
+   exp78: naive center + Gaussian spread; since exp79: trailing-6-mean
+   center. Groups under `min_group_n` fall back to global (shrinkage),
+   except **dead** groups (recent `n_at_risk` = 0 → own trailing mean;
+   exp80), which fixed the empty-group pathology the fallback
+   mishandled (0.0751 → 0.0000). A CQR conformal range layer is
+   available behind a flag (exp80: nominal control coverage, but the
+   S1 replication failed its bar — not the default).
 3. **`risk_reporter.py`** — deterministic risk bins (LOW/MEDIUM/HIGH from
    training tertiles, widened by conformal intervals); LLM explanations
    with **citation enforcement** — every factual sentence cites a `[stat]`

@@ -9,7 +9,9 @@ as the decision policy's James-Stein.
 The ``forecaster_fn`` contract: ``(series: np.ndarray) -> np.ndarray``
 mapping a 1D history of attrition rates to a quantile forecast vector.
 In production this is :func:`v2_forecaster_fn` (trailing-mean center +
-Gaussian spread, exp78/exp79); the real fitted v2 router is available
+Gaussian spread, exp78/exp79; an exp80 conformal layer is available
+behind a flag, not the default — exp80's S1 replication failed its
+pre-registered bar); the real fitted v2 router is available
 as :func:`router_forecaster_fn` (exp79: evaluated, not the default).
 In tests a stub.
 """
@@ -48,6 +50,23 @@ CENTER_WINDOW = 6
 #: fits (ETS/ARIMA) and features are computed on prefixes >= this long.
 BACKTEST_START = 8
 
+#: exp80 conformal layer: first backtest origin for the per-series bank
+#: (same minimum-history floor as the router protocol).
+CONFORMAL_START = 8
+
+#: exp80 conformal layer: minimum bank size before any offset applies.
+CONFORMAL_MIN_BANK = 8
+
+#: exp80 conformal layer: calibration level of the [q10, q90] interval.
+CONFORMAL_LEVEL = 0.8
+
+#: exp80 conditional conformal: trailing window for volatility scaling.
+COND_VOL_WINDOW = 12
+
+#: exp80 conditional conformal: clamp on the volatility scale factor.
+COND_SCALE_MIN = 0.5
+COND_SCALE_MAX = 2.0
+
 
 @dataclass
 class GroupForecast:
@@ -58,17 +77,33 @@ class GroupForecast:
 
 
 class GroupForecaster:
-    """Forecast each group's attrition series, with global fallback."""
+    """Forecast each group's attrition series, with global fallback.
+
+    Fallback split (exp80b, from exp72's Q2 finding): a group below
+    ``min_group_n`` whose recent ``n_at_risk`` has collapsed to 0 is
+    **dead** — the portfolio forecast is the wrong answer for it (its
+    realized rate is 0; exp72 measured fallback CRPS 0.0751 vs 0.0000
+    for its own trailing mean) — so it forecasts from its own series.
+    A group below ``min_group_n`` with recent observations is **thin
+    but alive** and keeps the portfolio fallback (exp72: fallback helps
+    there, donor CRPS 0.121/0.086 with vs 0.143/0.120 without).
+    ``dead_zero_months=0`` disables the dead branch and reproduces the
+    pre-exp80 size-only fallback exactly.
+    """
 
     def __init__(
         self,
         forecaster_fn: Callable[[np.ndarray], np.ndarray],
         min_group_n: int = DEFAULT_MIN_GROUP_N,
+        dead_zero_months: int = 2,
     ) -> None:
         if min_group_n < 1:
             raise ValueError(f"min_group_n must be >= 1, got {min_group_n}")
+        if dead_zero_months < 0:
+            raise ValueError(f"dead_zero_months must be >= 0, got {dead_zero_months}")
         self.forecaster_fn = forecaster_fn
         self.min_group_n = min_group_n
+        self.dead_zero_months = dead_zero_months
 
     def forecast(
         self,
@@ -100,7 +135,7 @@ class GroupForecaster:
             if train_months is not None:
                 n_risk = n_risk[-train_months:]
             total_risk = int(sum(n_risk))
-            if total_risk < self.min_group_n:
+            if total_risk < self.min_group_n and not self._is_dead(n_risk):
                 out[gid] = GroupForecast(
                     group_id=gid,
                     quantiles=global_q.copy(),
@@ -116,6 +151,18 @@ class GroupForecaster:
                     n_at_risk_train=total_risk,
                 )
         return out
+
+    def _is_dead(self, n_risk_window: list[int]) -> bool:
+        """Detect whether the group's recent at-risk count collapsed to 0.
+
+        ``n_risk_window`` is the (possibly window-truncated) training
+        window. A group is dead when its last ``dead_zero_months``
+        months are all 0; chronic thinness (small but positive recent
+        counts) is *not* death. Disabled when ``dead_zero_months == 0``.
+        """
+        if self.dead_zero_months == 0 or len(n_risk_window) < self.dead_zero_months:
+            return False
+        return int(sum(n_risk_window[-self.dead_zero_months :])) == 0
 
 
 def _spread_offsets(series: np.ndarray, method: str) -> np.ndarray:
@@ -146,6 +193,75 @@ def _center_value(series: np.ndarray, center: str, window: int) -> float:
     return float(np.mean(series[-window:]))
 
 
+def _base_quantiles(
+    series: np.ndarray, center: str, center_window: int, spread_method: str
+) -> np.ndarray:
+    """Compute the shipped exp78/79 forecast: center + spread."""
+    q = _center_value(series, center, center_window) + _spread_offsets(series, spread_method)
+    return np.clip(np.maximum.accumulate(q), 0.0, 1.0)
+
+
+def _trailing_vol(series: np.ndarray) -> float:
+    """Sd of the trailing one-step differences (volatility proxy)."""
+    tail = series[-COND_VOL_WINDOW:]
+    diffs = np.diff(tail)
+    return float(np.std(diffs)) if len(diffs) > 1 else 0.0
+
+
+def _conformal_offsets(
+    series: np.ndarray,
+    *,
+    center: str,
+    center_window: int,
+    spread_method: str,
+    min_bank: int,
+    conditional: bool,
+    level: float = CONFORMAL_LEVEL,
+) -> tuple[float, float]:
+    """CQR-style conformal offsets (lo, hi) for the [q10, q90] interval.
+
+    Bank = rolling backtest origins ``t`` of this same series, from
+    ``CONFORMAL_START`` to ``len(series) - 1``: the base forecaster's
+    forecast from ``series[:t]`` vs the realized ``series[t]``. A bank
+    case enters only when its realized value was observable before
+    the forecast origin (``t + h - 1 < origin`` with ``h = 1`` — exp74's
+    bank rule); since this function only ever sees ``series[:origin]``,
+    every bank case satisfies that by construction (pinned by the
+    prefix-invariance regression test).
+
+    Scores are exp74 ``arm_cqr``'s asymmetric exceedances
+    ``s_lo = max(q10 - y, 0)``, ``s_hi = max(y - q90, 0)``; offsets are
+    their finite-sample conformal quantiles at ``CONFORMAL_LEVEL``, so
+    they are widen-only. Fewer than ``min_bank`` cases -> ``(0, 0)``.
+
+    ``conditional`` scales both offsets by the trailing-volatility
+    ratio ``clamp(vol_now / median(vol_bank), 0.5, 2.0)``.
+    """
+    from td_one.uq.methods import finite_quantile
+
+    s_lo: list[float] = []
+    s_hi: list[float] = []
+    vols: list[float] = []
+    for t in range(CONFORMAL_START, len(series)):
+        qb = _base_quantiles(series[:t], center, center_window, spread_method)
+        y = float(series[t])
+        s_lo.append(max(float(qb[0]) - y, 0.0))
+        s_hi.append(max(y - float(qb[-1]), 0.0))
+        vols.append(_trailing_vol(series[:t]))
+    if len(s_lo) < min_bank:
+        return 0.0, 0.0
+    off_lo = finite_quantile(np.array(s_lo), level)
+    off_hi = finite_quantile(np.array(s_hi), level)
+    if conditional:
+        vol_bank = float(np.median(vols)) if vols else 0.0
+        vol_now = _trailing_vol(series)
+        if vol_bank > 0.0:
+            scale = min(max(vol_now / vol_bank, COND_SCALE_MIN), COND_SCALE_MAX)
+            off_lo *= scale
+            off_hi *= scale
+    return off_lo, off_hi
+
+
 def v2_forecaster_fn(
     h: int = 1,
     *,
@@ -153,6 +269,10 @@ def v2_forecaster_fn(
     spread_method: str = "gaussian",
     center: str = "trailing_mean",
     center_window: int = CENTER_WINDOW,
+    conformal: bool = False,
+    conformal_conditional: bool = False,
+    conformal_min_bank: int = CONFORMAL_MIN_BANK,
+    conformal_level: float = CONFORMAL_LEVEL,
 ) -> Callable[[np.ndarray], np.ndarray]:
     """Build a group-series forecaster_fn: center + PIT-safe spread.
 
@@ -203,6 +323,26 @@ def v2_forecaster_fn(
         value, exp78 behavior). Other values raise ``ValueError``.
     center_window:
         Trailing window for the ``"trailing_mean"`` center.
+    conformal:
+        exp80: add the CQR-style conformal layer
+        (:func:`_conformal_offsets`) — per-series backtest-bank
+        exceedance offsets widening [q10, q90]. **Default ``False`` —
+        exp80's verdict:** the conditional variant (level 0.90)
+        reached nominal control coverage on protocol *and* fresh
+        seeds (cov80 0.804 / 0.824, CRPS-neutral) and improved S1@4σ
+        coverage materially (+0.045 / +0.086), but failed the
+        pre-registered S1 bar on fresh seeds (0.652 vs 0.77 floor) and
+        an aggressive-tuning round showed the gap is structural (bank
+        offsets are bounded by the worst pre-shock miss). Available
+        and tested; not the default.
+    conformal_conditional:
+        exp80 arm C: scale the conformal offsets by the
+        trailing-volatility ratio (clamped to [0.5, 2.0]).
+    conformal_min_bank:
+        Minimum bank size before any conformal offset applies.
+    conformal_level:
+        Calibration level for the offset quantile (default
+        ``CONFORMAL_LEVEL`` = the [q10, q90] interval's own 0.8).
 
     """
     if spread_method not in ("empirical", "gaussian"):
@@ -211,6 +351,12 @@ def v2_forecaster_fn(
         raise ValueError(f"center must be 'naive' or 'trailing_mean', got {center!r}")
     if center_window < 1:
         raise ValueError(f"center_window must be >= 1, got {center_window}")
+    if conformal_min_bank < 1:
+        raise ValueError(f"conformal_min_bank must be >= 1, got {conformal_min_bank}")
+    if not 0.0 < conformal_level < 1.0:
+        raise ValueError(f"conformal_level must be in (0, 1), got {conformal_level}")
+    if conformal and not quantile_spread:
+        raise ValueError("conformal=True requires quantile_spread=True (no point-mass bank)")
 
     def _forecast(series: np.ndarray) -> np.ndarray:
         s = np.asarray(series, dtype=float)
@@ -218,10 +364,22 @@ def v2_forecaster_fn(
             # Exact pre-exp78 behavior: tiled last value (point mass).
             last = float(s[-1]) if len(s) else 0.0
             return np.full(len(QUANTILE_LEVELS), last)
-        q = _center_value(s, center, center_window) + _spread_offsets(s, spread_method)
-        # Attrition rates live in [0, 1]; clipping is monotone so the
-        # vector stays a valid quantile function.
-        return np.clip(np.maximum.accumulate(q), 0.0, 1.0)
+        q = _base_quantiles(s, center, center_window, spread_method)
+        if conformal:
+            off_lo, off_hi = _conformal_offsets(
+                s,
+                center=center,
+                center_window=center_window,
+                spread_method=spread_method,
+                min_bank=conformal_min_bank,
+                conditional=conformal_conditional,
+                level=conformal_level,
+            )
+            q = q.copy()
+            q[0] -= off_lo
+            q[-1] += off_hi
+            q = np.clip(np.maximum.accumulate(q), 0.0, 1.0)
+        return q
 
     return _forecast
 
