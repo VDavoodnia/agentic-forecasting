@@ -1,5 +1,7 @@
 # TD-One Presentation: Full Context for Continuing the Work
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-20. deck-of-record context; kept with slides/TD-One-Slides.html**
+
 **Purpose of this file.** Everything a person (or an agent working for
 them) needs to continue the TD-One final presentation work without
 re-deriving it: the verified facts about the codebase, the experiment

@@ -1,5 +1,7 @@
 # Vector Methodology Audit
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. comparison record (exp52/53 evidence base)**
+
 How Vector's `aieng-forecasting` evaluation stack differs from TD-One's, and what
 it means for the exp52/exp53 comparisons. Written 2026-10-18 after running
 Vector's actual predictor classes head-to-head against our proposed method.

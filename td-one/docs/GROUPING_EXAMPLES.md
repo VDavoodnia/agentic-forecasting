@@ -1,5 +1,7 @@
 # Grouping + Explainability: Worked Examples
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-19. showcase worked examples (exp66d); forecaster of record stays global**
+
 **Source:** exp66d (seed 42), deterministic grouping (kmeans + tree-surrogate
 rules) + LLM explanations with citation enforcement.
 **Status:** showcase examples for reporting — a risk manager should read one

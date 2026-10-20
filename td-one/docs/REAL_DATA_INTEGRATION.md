@@ -1,5 +1,7 @@
 # Real-Data Integration Plan
 
+> **Status: CURRENT — last updated 2026-10-20**
+
 **Date:** 2026-10-20. **Purpose:** our synthetic machinery (SimulatorV2,
 red-team shifts, macro signals) is strong but our real data is thin
 (SMM = 63 aggregate rows). Three real sources now ground it.

@@ -1,5 +1,7 @@
 # Tool Usage Data — Real Tracker Numbers
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. runtime tracker data record**
+
 **Date:** 2026-10-18
 **Method:** `@tracked()` decorator wired into all 10 tools; driver exercised each tool on real data (SMM 63mo, M4 monthly ×4, synthetic trending+seasonal). 46 calls/run × 3 runs = 138 total calls. Timing stable across runs (±10%).
 

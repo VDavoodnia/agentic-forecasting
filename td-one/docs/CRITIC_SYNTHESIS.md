@@ -1,5 +1,7 @@
 # Critic Synthesis — TD-One Audit 2026-10-15
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-15. critic panel record**
+
 Six critics audited the project. This is the consolidated, prioritized
 improvement list. All items are being implemented; the pilot data size
 stays fixed per user direction.
@@ -103,7 +105,7 @@ fabricated. All P0s and justified P1s below are fixed in this round.
    `"mode": "real"`. The seg-1 edge (0.82 vs 1.33) cannot be separated
    from the mock sharpness artifact that finding #2 debunks. Fix:
    `experiments/README.md` finding #4, `exp3_report.md`,
-   `docs/METHODOLOGY.md` §6.2, and `docs/RESULTS.md` now state that
+   `docs/METHODOLOGY.md` §6.2, and `docs/archive/RESULTS.md` now state that
    real-mode M2 used the mock backend — the run demonstrates
    orchestration (driving the loop to finalization), not numerical
    superiority.
@@ -195,7 +197,7 @@ fabricated. All P0s and justified P1s below are fixed in this round.
 ## Deferred to a later pass (P2/P3)
 
 *Status 2026-10-16: "Multi-seed scale-up; calibration study; real-data
-validation" below are now DONE — see `RESULTS.md` §2e (multi-seed),
+validation" below are now DONE — see `archive/RESULTS.md` §2e (multi-seed),
 §2d/§2g (calibration → conformal default), §2k (M4 real-data). The
 remaining items are still open.*
 - Crossing-frequency instrumentation for the monotone rearrangement.

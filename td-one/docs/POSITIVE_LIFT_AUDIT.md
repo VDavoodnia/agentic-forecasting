@@ -1,5 +1,7 @@
 # Positive Lift Audit: exp1–exp46 + Benchmarks
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. audit record (exp1-exp46); design base for exp47**
+
 **Date:** 2026-10-18
 **Purpose:** Complete inventory of every positive result across the TD-One program, to select components for the proposed method (exp47).
 

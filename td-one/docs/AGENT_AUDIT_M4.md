@@ -1,5 +1,7 @@
 # M4 Regime Reader — Agent Audit (2026-10-16)
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. audit record of the dead M4 regime-reader**
+
 Audit + hardening of the regime-reader agent (M4), our best agentic
 result: real Groq 3.59 CRPS vs M0 4.82 (`experiments/exp11_results.json`).
 

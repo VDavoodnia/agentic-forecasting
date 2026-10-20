@@ -4,7 +4,7 @@ Solo implementation for the Vector Agentic Forecasting Bootcamp by Vandad Davood
 
 We forecast borrower attrition at Canadian mortgage renewal: for each portfolio segment and month, how many renewing borrowers switch lenders vs stay? We compare a 4-rung modeling ladder — Bayesian baseline (M0), zero-shot TSFMs (M1), ReAct LLM agent (M2), hybrid (M3) — plus agentic extensions (M4 regime reader, M5 router) under strict point-in-time evaluation.
 
-**Start here:** [docs/README.md](docs/README.md) (doc index) → [docs/METHODOLOGY.md](docs/METHODOLOGY.md) → [docs/RESULTS.md](docs/RESULTS.md)
+**Start here:** [docs/README.md](docs/README.md) (doc index) → [docs/METHODOLOGY.md](docs/METHODOLOGY.md) → [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md)
 
 **Original plan:** [PLAN_SOLO.md](PLAN_SOLO.md) (the solo-build plan this implementation follows).
 
@@ -56,7 +56,7 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 |---|---|
 | [docs/](docs/) | All documentation. Start with [docs/README.md](docs/README.md). |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Methodology reference (problem, ladder, PIT, metrics). |
-| [docs/RESULTS.md](docs/RESULTS.md) | Current experiment results (R2 series). |
+| [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md) | Final results: all tracks, exp1–exp78 era. |
 | [docs/REDESIGN.md](docs/REDESIGN.md) | Design decisions: what we keep/kill/try next. |
 | [docs/DIAGRAMS.md](docs/DIAGRAMS.md) | Architecture diagrams. |
 | [docs/plots/](docs/plots/) | Result plots — regenerate via `docs/plots/make_plots.py`. |

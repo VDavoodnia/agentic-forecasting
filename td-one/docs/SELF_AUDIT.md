@@ -1,5 +1,7 @@
 # Self-Audit: Threats to Our Evaluation Integrity
 
+> **Status: CURRENT — last updated 2026-10-18**
+
 Written 2026-10-18. Deliberately adversarial. Each item is a way our results
 could be wrong or overstated, with the evidence for/against and what would
 resolve it. Nothing here is hidden from the final report.

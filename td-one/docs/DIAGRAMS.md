@@ -1,5 +1,7 @@
 # TD-One Diagrams
 
+> **Status: CURRENT — last updated 2026-10-18**
+
 Mermaid diagrams for the project. They render on GitHub.
 
 ## Pipeline DAG (data → forecast)

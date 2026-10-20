@@ -1,5 +1,7 @@
 # Real-Data Survey: Escaping the Synthetic Bubble
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. survey record; acquisition history in REAL_DATA_INTEGRATION.md**
+
 **Date:** 2026-10-16. **Status:** M4 done (exp14, `RESULTS.md` §2k);
 Freddie Mac pending registration. Original survey text preserved below.
 **Motivation:** all TD-One model comparisons so far run on synthetic DGPs we

@@ -1,5 +1,7 @@
 # AGENTS.md — working in `td-one/`
 
+> **Status: CURRENT — living working conventions**
+
 Conventions for agents doing work here. General when possible, specific when
 needed. The repo root `AGENTS.md` covers the bootcamp half; this file covers
 TD-One, where the active research happens.

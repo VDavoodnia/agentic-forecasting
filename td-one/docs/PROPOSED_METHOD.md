@@ -1,5 +1,7 @@
 # TD-One Proposed Method: Architecture (v2)
 
+> **Status: CURRENT — last updated 2026-10-19**
+
 **Date:** 2026-10-19 (final)
 **Status:** Implemented (`src/td_one/agent/proposed_method_v2.py`), validated
 on M4, Tourism, M3, Food CPI, SMM, BoC (exp47/49/60/61/64/65)

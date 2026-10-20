@@ -1,5 +1,7 @@
 # News RAG Design (TD-One)
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. design record (offline-first news KB)**
+
 Offline-first KB. The agent never calls a live API in the hot path.
 
 ## Why offline-first

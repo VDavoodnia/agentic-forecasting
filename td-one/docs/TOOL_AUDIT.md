@@ -1,5 +1,7 @@
 # Tool Call Audit: Frequency, Patterns, Failures
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. tool-call audit record**
+
 **Date:** 2026-10-18
 **Scope:** exp21–exp47, benchmarks (boc_rates, smm, food_cpi, m4)
 **Method:** Static analysis (grep) — the `tool_tracker.py` singleton was built but never wired into any tool, so no runtime logs exist.

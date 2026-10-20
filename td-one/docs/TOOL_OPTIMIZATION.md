@@ -1,5 +1,7 @@
 # Tool Optimization: Recommendations
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. recommendations record**
+
 **Date:** 2026-10-18
 **Source:** `docs/TOOL_AUDIT.md`
 **Status:** Proposed — implement before final report

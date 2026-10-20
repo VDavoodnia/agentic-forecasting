@@ -1,5 +1,7 @@
 # TD-One Methodological Redesign
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. design record; current direction in PHASE2_UPDATE.md**
+
 **Date:** 2026-10-16. **Status:** Active design — governs all future work.
 **Basis:** overnight research findings (exp5–exp11, multi-seed) +
 `docs/LITERATURE_SURVEY.md` (§6).

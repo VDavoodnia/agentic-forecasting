@@ -1,5 +1,7 @@
 # LLM Integration Ladder
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-19. ladder complete; results live in FINAL_RESULTS.md**
+
 **Goal:** Overtake Vector's `QuantileGridLLMPredictor` (0.5688 CRPS on Food CPI, exp53) while keeping our wins on M4/SMM/BoC/Synthetic.
 
 **Status:** design approved 2026-10-18; rungs 1–5 evaluated 2026-10-19

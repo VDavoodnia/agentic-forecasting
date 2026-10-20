@@ -1,5 +1,7 @@
 # Contributing to TD-One
 
+> **Status: CURRENT — living contribution guide (2026-10-18 vintage)**
+
 ## Branches and commits
 
 - Work on `main`. Commit early and often — one logical change per commit.
@@ -26,7 +28,7 @@ are the norm here. If you open a PR:
    **verdict line**.
 3. Register it: add a row to `experiments/README.md` (verdict key:
    ✅ ⚖️ ❌ 🔨 ▶️).
-4. If it changes the story, update `docs/RESULTS.md` and the status table in
+4. If it changes the story, update `docs/FINAL_RESULTS.md` and the status table in
    `td-one/README.md`.
 
 Numbering: continue from the highest `expNN` (exp26–exp39 were never

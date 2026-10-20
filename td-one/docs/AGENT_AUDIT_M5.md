@@ -1,5 +1,7 @@
 # M5 Ensemble Router: Post-Mortem and V2 Redesign
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. post-mortem of the dead M5 router**
+
 ## The failure (exp12)
 
 Real Groq: **2.60** mean CRPS vs inverse-CRPS: **2.32**. The LLM router lost

@@ -1,5 +1,7 @@
 # Red-Teaming TSFMs on Loan-Attrition Shifts — Protocol (exp67)
 
+> **Status: CURRENT — last updated 2026-10-20 (protocol complete)**
+
 **Status:** complete (2026-10-20). Real-TSFM grid finished; results in
 `experiments/exp67_report.md`.
 

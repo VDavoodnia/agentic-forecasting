@@ -1,5 +1,7 @@
 # Nonsignificant Positives Audit: exp1–exp50
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. audit record (exp1-exp50)**
+
 **Date:** 2026-10-18
 **Purpose:** Complete inventory of every *positive-direction but nonsignificant*
 (or otherwise excluded) effect across the TD-One program, with a verdict on

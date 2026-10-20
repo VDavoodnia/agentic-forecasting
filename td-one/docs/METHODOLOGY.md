@@ -1,5 +1,7 @@
 # Agentic Solutions for Loan Attrition Prediction — Methodology
 
+> **Status: CURRENT — last updated 2026-10-19 (reference spine; Phase-2 frontier in PHASE2_UPDATE.md)**
+
 **TD-One — Canadian mortgage renewal/switching forecasting**
 *Complete research methodology, exp1–exp65 + LLM ladder. Written 2026-10-19.*
 *Supersedes all earlier methodology drafts.*

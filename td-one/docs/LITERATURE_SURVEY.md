@@ -1,5 +1,7 @@
 # Literature Survey for TD-One Methodological Redesign
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. citation base for the redesign**
+
 **Date:** 2026-10-16. **Purpose:** inform a redesign after the overnight
 findings — tuned classical models (M0 w3, conformalized) beat real TSFMs
 (Chronos-2, TimesFM-2.5) and the ReAct agent's interventions are

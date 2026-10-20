@@ -1,5 +1,7 @@
 # Prompt Leakage Audit — LLM integration ladder (exp55–exp57)
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-18. leakage audit of the LLM prompt variants (exp53-58)**
+
 **Auditor:** Muse (subagent of the TD-One orchestrator)  
 **Date:** 2026-10-18  
 **Scope:** every template field of `td_one/llm_rungs/prompts.py`, used by

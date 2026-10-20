@@ -1,5 +1,7 @@
 # TD-One Guidelines
 
+> **Status: CURRENT — living contribution agreement (2026-10-18 vintage)**
+
 How we build here. These aren't suggestions — they're the working agreement
 for anyone (human or agent) contributing to TD-One.
 

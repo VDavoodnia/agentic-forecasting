@@ -27,9 +27,9 @@ in `make_plots.py::setup()`. Keep it that way — consistency is the point.
 
 ## Where they're embedded
 
-- `trilogy_m4.png` → `docs/RESULTS.md` (agentic track section)
+- `trilogy_m4.png` → `docs/archive/RESULTS.md` (agentic track section)
 - `rag_recall_precision.png` → `docs/RAG_DESIGN.md`
-- `agent_m4_m5.png` → `docs/RESULTS.md` (M4/M5 section)
-- `smm_2021_2026.png` → `docs/RESULTS.md` (real-data section)
+- `agent_m4_m5.png` → `docs/archive/RESULTS.md` (M4/M5 section)
+- `smm_2021_2026.png` → `docs/archive/RESULTS.md` (real-data section)
 - `reasoning_sweep.png` → `experiments/exp48_report.md`
 - `tool_usage.png` → `docs/TOOL_AUDIT.md`

@@ -2,15 +2,17 @@
 
 Start here. This page maps every document in `td-one/docs/` — what it is, who it's for, and where to go next. Everything under `td-one/` is self-contained: no document here depends on anything outside `td-one/`.
 
+**Cleanup 2026-10-20:** every doc now carries a status stamp — `CURRENT` (living, trust it), `HISTORICAL` (dated point-in-time record, kept in place for provenance), or `ARCHIVED` (superseded, frozen in [archive/](archive/)). If a doc has no stamp, it predates the cleanup — treat its claims accordingly.
+
 ## Start with these (5 min)
 
 | Doc | What you get |
 |---|---|
-| [FINAL_RESULTS.md](FINAL_RESULTS.md) | **Start here.** Final numbers only — no experiment codes, human-readable names, benchmarks in tables. |
-| [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference. |
-| [REDESIGN.md](REDESIGN.md) | What we keep, what we kill, what we try next — with evidence. Governs future work. |
+| [FINAL_RESULTS.md](FINAL_RESULTS.md) | **Start here.** Final numbers only — no experiment codes, human-readable names, benchmarks in tables. Includes Layer-2 (exp73) and the CQR uncertainty layer (exp74). |
+| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark, Macro Signal Service — mortgage-framed, final + in-flight split. The current frontier. |
+| [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference spine. |
+| [PROPOSED_METHOD.md](PROPOSED_METHOD.md) | The exp47 method: architecture, implementation (`src/td_one/agent/proposed_method.py`), verdict. |
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
-| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark — mortgage-framed, final + in-flight split. |
 
 ## Presentations
 
@@ -19,88 +21,80 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [slides/TD-One-Slides.html](slides/TD-One-Slides.html) | The Final Deck (HTML, deck of record): 8 exec-report slides covering the solution, results, honest negatives, manager mock, future work. Updated 2026-10-20. |
 | [slides/TD-One-Context.md](slides/TD-One-Context.md) | Full context for continuing the deck work: ground truth, verdicts, messaging rules, what changed, open work. |
 
-## The story (for new readers)
+## Current program docs
 
 | Doc | What you get |
 |---|---|
-| [reports/MANAGER_REPORT.md](reports/MANAGER_REPORT.md) | **Start here.** Plain-language project summary with glossary, diagrams, and tables (final, 2026-10-19). |
-| [reports/FINAL_SYNTHESIS.md](reports/FINAL_SYNTHESIS.md) | Technical synthesis across all datasets and tracks (final, 2026-10-19). |
-
-## Results & evidence
-
-| Doc | What you get |
-|---|---|
-| [RESULTS.md](RESULTS.md) | Current results: all tracks (exp1–exp63 + LLM ladder). Primary metric CRPS. |
-| [RESULTS_ARCHIVE.md](RESULTS_ARCHIVE.md) | exp1–exp15 (superseded by R2, preserved for provenance). |
-| [POSITIVE_LIFT_AUDIT.md](POSITIVE_LIFT_AUDIT.md) | Inventory of every positive result (exp1–exp46 + benchmarks) used to design the proposed method. |
-| [NONSIGNIFICANT_POSITIVES.md](NONSIGNIFICANT_POSITIVES.md) | Audit of every positive-but-nonsignificant effect (exp1–exp50) with combinability verdicts; evidence base for exp51. |
-| [EVALUATION_INTEGRITY.md](EVALUATION_INTEGRITY.md) | Leakage audit, Monash protocol adherence, and Chronos-2/TimesFM-2.5 pretraining-contamination matrix (exp60/exp61). |
-| [SELF_AUDIT.md](SELF_AUDIT.md) | Adversarial self-review: multiple comparisons, M4 development bias, BoC-discrete downgrade, PIT re-verification, CRPS verification. Headlines survive; margins disclosed. |
-| [VECTOR_METHODOLOGY_AUDIT.md](VECTOR_METHODOLOGY_AUDIT.md) | Every methodological difference vs Vector's stack (CRPS scorer, quantile grids, LLM config, baselines); evidence base for exp52/exp53. |
-| [DIAGRAMS.md](DIAGRAMS.md) | Architecture and experiment diagrams (mermaid — renders on GitHub). |
-| [../experiments/README.md](../experiments/README.md) | Full experiment index, exp1–exp63 + LLM ladder, with verdicts and report links. |
-
-## The agentic track
-
-| Doc | What you get |
-|---|---|
-| [AGENTIC_ROADMAP.md](AGENTIC_ROADMAP.md) | The approved roadmap: from output-layer wrappers to true agents. Governs agentic work order. |
-| [PROPOSED_METHOD.md](PROPOSED_METHOD.md) | The exp47 method: architecture, implementation (`src/td_one/agent/proposed_method.py`), verdict. |
-| [AGENT_AUDIT_M4.md](AGENT_AUDIT_M4.md) | Regime reader hardening: v2 prompt, ABSTAIN, counterargument. |
-| [AGENT_AUDIT_M5.md](AGENT_AUDIT_M5.md) | Router post-mortem: why v1 failed, v2 design, kill decision. |
-
-## Tool infrastructure (audits & optimization)
-
-| Doc | What you get |
-|---|---|
-| [TOOL_AUDIT.md](TOOL_AUDIT.md) | Tool call frequency, patterns, failures across exp21–exp47 and benchmarks. |
-| [TOOL_OPTIMIZATION.md](TOOL_OPTIMIZATION.md) | Recommendations: which tools to add, drop, fix — implement before the final report. |
-| [TOOL_USAGE_DATA.md](TOOL_USAGE_DATA.md) | Runtime tool-call data from `@tracked()` instrumentation. |
-
-## Audits (how we keep ourselves honest)
-
-| Doc | What you get |
-|---|---|
-| [DATA_AUDIT.md](DATA_AUDIT.md) | 2026-10-16 data engineering audit: 2 P0, 5 P1, 5 P2 + fixes. |
-| [CRITIC_SYNTHESIS.md](CRITIC_SYNTHESIS.md) | 6-angle critic panel findings, rounds 1–2. |
-| [CITATION_AUDIT.md](CITATION_AUDIT.md) | Literature claims checked against primary sources. |
-| [reports/ARGON_REVIEW_2.md](reports/ARGON_REVIEW_2.md) | Second-pass review of the external auditor's 6 findings: what's addressed, where it's mistaken, what we missed. |
-
-## Design docs
-
-| Doc | What you get |
-|---|---|
-| [RAG_DESIGN.md](RAG_DESIGN.md) | News RAG: offline-first KB, BM25 → Groq rerank → abstain. Includes recall@k/precision@k eval. |
-| [LITERATURE_SURVEY.md](LITERATURE_SURVEY.md) | TSFM + agentic forecasting literature with verified citations. |
-| [LITERATURE_AGENTIC_SURVEY.md](LITERATURE_AGENTIC_SURVEY.md) | Agentic forecasting, model selection, news augmentation — informing the post-exp23/exp37 methodology. |
-| [LITERATURE_SURVEY_AGENTIC.md](LITERATURE_SURVEY_AGENTIC.md) | Methodology-improvement survey: selection under instability, regime detection, leakage-safe feature discovery. |
-| [UQ_SURVEY.md](UQ_SURVEY.md) | Uncertainty quantification for TSFMs (2024+): conformal-for-time-series families, TSFM calibration, error-prediction meta-models; shortlist behind exp74. |
-| [REAL_DATA_SURVEY.md](REAL_DATA_SURVEY.md) | Real dataset candidates for validation. |
+| [LOAN_ATTRITION_PLAN.md](LOAN_ATTRITION_PLAN.md) | Active — loan attrition program: Track 1 (grouping), Track 2 (TSFM red-team exp67 ✅ + guard exp68 ❌ + anticipatory exp69/69b/69c ❌), integration (exp72), with verdicts appended per track. |
 | [REAL_DATA_INTEGRATION.md](REAL_DATA_INTEGRATION.md) | Real-data integration: OSFI M4 runoff benchmark (exp70 ❌), competitor spread (exp71 ❌, exp71b ❌ settled at full coverage: BoC 622m + Wayback 54m), FRED adds, Layer-2 meta-router (exp73: gating partial positive, lock-in ❌). |
-| [SCALE_UP_RUNBOOK.md](SCALE_UP_RUNBOOK.md) | End-to-end pipeline: simulate → PIT → segments → backtest. |
-| [SYNTHETIC_CALIBRATION.md](SYNTHETIC_CALIBRATION.md) | Phase-4 event DGP calibration: 9.1pp → 2–3pp effects, decay, interactions. |
-| [REDTEAM_TSF.md](REDTEAM_TSF.md) | TSFM red-team protocol (exp67): 7-shift loan taxonomy, breaking-point design, results summary. |
-| [GROUPING_EXAMPLES.md](GROUPING_EXAMPLES.md) | Worked examples for the grouping track (exp66d): 4 cohorts end-to-end — rule → members → forecast → risk → citation-grounded explanation, incl. the failure case. |
+| [REDTEAM_TSF.md](REDTEAM_TSF.md) | TSFM red-team protocol (exp67): 7-shift loan taxonomy, breaking-point design, results summary. Status: complete (2026-10-20). |
+| [UQ_SURVEY.md](UQ_SURVEY.md) | Uncertainty quantification for TSFMs (2024+): conformal-for-time-series families, TSFM calibration, error-prediction meta-models; shortlist behind exp74. |
+| [SELF_AUDIT.md](SELF_AUDIT.md) | Adversarial self-review: multiple comparisons, M4 development bias, BoC-discrete downgrade, PIT re-verification, CRPS verification. Headlines survive; margins disclosed. |
+| [DIAGRAMS.md](DIAGRAMS.md) | Architecture and experiment diagrams (mermaid — renders on GitHub). |
+| [../experiments/README.md](../experiments/README.md) | Full experiment index (exp1–exp78) with verdicts and report links. |
+| [../experiments/REPRODUCIBILITY.md](../experiments/REPRODUCIBILITY.md) | Reproduce any experiment: environment, weights, commands. |
+
+## The story (dated finals — 2026-10-19 close-outs)
+
+| Doc | What you get |
+|---|---|
+| [reports/MANAGER_REPORT.md](reports/MANAGER_REPORT.md) | Plain-language project summary with glossary, diagrams, and tables. **Final, 2026-10-19.** Phase-2 continuation: [PHASE2_UPDATE.md](PHASE2_UPDATE.md). |
+| [reports/FINAL_SYNTHESIS.md](reports/FINAL_SYNTHESIS.md) | Technical synthesis across all datasets and tracks (exp1–exp63). **Final, 2026-10-19.** Phase-2 continuation: [PHASE2_UPDATE.md](PHASE2_UPDATE.md). |
+
+## Historical records (dated, kept in place for provenance)
+
+Point-in-time audits, surveys, and design records. Each is stamped `HISTORICAL` with its date; none is the current reference for anything — they are the evidence trail behind the current docs.
+
+| Doc | Dated | What it is |
+|---|---|---|
+| [LITERATURE_SURVEY.md](LITERATURE_SURVEY.md) | 2026-10-16 | TSFM + agentic forecasting literature with verified citations; base for the redesign. |
+| [CITATION_AUDIT.md](CITATION_AUDIT.md) | 2026-10-16 | Literature claims in the survey checked against primary sources. |
+| [CRITIC_SYNTHESIS.md](CRITIC_SYNTHESIS.md) | 2026-10-15 | 6-angle critic panel findings, rounds 1–2. |
+| [DATA_AUDIT.md](DATA_AUDIT.md) | 2026-10-16 | Data engineering audit: 2 P0, 5 P1, 5 P2 + fixes. |
+| [REDESIGN.md](REDESIGN.md) | 2026-10-16 | Methodological redesign: what we keep, what we kill, what we try next (era: exp5–exp11). Current direction: PHASE2_UPDATE.md. |
+| [REAL_DATA_SURVEY.md](REAL_DATA_SURVEY.md) | 2026-10-16 | Real dataset candidates for validation. Acquisition record: REAL_DATA_INTEGRATION.md. |
+| [RAG_DESIGN.md](RAG_DESIGN.md) | 2026-10-16 | News RAG design: offline-first KB, BM25 → Groq rerank → abstain; recall@k/precision@k eval. |
+| [SCALE_UP_RUNBOOK.md](SCALE_UP_RUNBOOK.md) | 2026-10-16 | Early pipeline runbook (simulate → PIT → segments → backtest). Reproduction now: experiments/REPRODUCIBILITY.md. |
+| [AGENTIC_ROADMAP.md](AGENTIC_ROADMAP.md) | 2026-10-17 | The approved roadmap from output-layer wrappers to true agents. Trilogy complete (exp42–44), proposed method shipped (exp47). |
+| [AGENT_AUDIT_M4.md](AGENT_AUDIT_M4.md) | 2026-10-16 | Regime reader (M4) hardening audit: v2 prompt, ABSTAIN, counterargument. |
+| [AGENT_AUDIT_M5.md](AGENT_AUDIT_M5.md) | 2026-10-16 | Router (M5) post-mortem: why v1 failed, v2 design, kill decision. |
+| [ARGON_REVIEW_2.md](ARGON_REVIEW_2.md) | 2026-10-17 | Second-pass review of the external auditor's 6 findings: what's addressed, where it's mistaken, what we missed. |
+| [POSITIVE_LIFT_AUDIT.md](POSITIVE_LIFT_AUDIT.md) | 2026-10-18 | Inventory of every positive result (exp1–exp46 + benchmarks) used to design the proposed method. |
+| [NONSIGNIFICANT_POSITIVES.md](NONSIGNIFICANT_POSITIVES.md) | 2026-10-18 | Audit of every positive-but-nonsignificant effect (exp1–exp50) with combinability verdicts; evidence base for exp51. |
+| [VECTOR_METHODOLOGY_AUDIT.md](VECTOR_METHODOLOGY_AUDIT.md) | 2026-10-18 | Every methodological difference vs Vector's stack (CRPS scorer, quantile grids, LLM config, baselines); evidence base for exp52/exp53. |
+| [TOOL_AUDIT.md](TOOL_AUDIT.md) | 2026-10-18 | Tool call frequency, patterns, failures across exp21–exp47 and benchmarks. |
+| [TOOL_OPTIMIZATION.md](TOOL_OPTIMIZATION.md) | 2026-10-18 | Tool recommendations from the audit: which tools to add, drop, fix. |
+| [TOOL_USAGE_DATA.md](TOOL_USAGE_DATA.md) | 2026-10-18 | Runtime tool-call data from `@tracked()` instrumentation. |
+| [PROMPT_LEAKAGE_AUDIT.md](PROMPT_LEAKAGE_AUDIT.md) | 2026-10-18 | Point-in-time proofs for the LLM prompt variants (generic / V1 words / V2 macro context). |
+| [LLM_INTEGRATION_LADDER.md](LLM_INTEGRATION_LADDER.md) | 2026-10-19 | The 6-rung LLM integration ladder (exp54–59 + exp64): design and verdicts. Results: FINAL_RESULTS.md. |
+| [GROUPING_EXAMPLES.md](GROUPING_EXAMPLES.md) | 2026-10-19 | Worked examples for the grouping track (exp66d): 4 cohorts end-to-end — rule → members → forecast → risk → citation-grounded explanation, incl. the failure case. |
 
 ## Plans
 
-Active and historical plans live in [plans/](plans/). The agentic roadmap stays top-level because it governs current work.
-
 | Doc | Status |
 |---|---|
-| [AGENTIC_ROADMAP.md](AGENTIC_ROADMAP.md) | Approved — trilogy complete (exp42–44), proposed method shipped (exp47) |
-| [LOAN_ATTRITION_PLAN.md](LOAN_ATTRITION_PLAN.md) | Active — loan attrition program: Track 1 (grouping), Track 2 (TSFM red-team exp67 ✅ + guard exp68 ❌ + anticipatory exp69 ❌ + synthesis exp69b ❌ + real-data exp69c ❌), integration |
-| [plans/NEXT_PHASE_PLAN.md](plans/NEXT_PHASE_PLAN.md) | Complete — regime router shipped; live-news track closed |
-| [plans/MULTI_DATASET_PLAN.md](plans/MULTI_DATASET_PLAN.md) | Complete — validated on M4, Tourism, M3 |
-| [plans/OPTION1_JOINT_TRAINING_PLAN.md](plans/OPTION1_JOINT_TRAINING_PLAN.md) | Assessed — naive joint training likely fails; FFORMA-style meta-learning is the path |
-| [plans/OPTION3_METALEARNING_PLAN.md](plans/OPTION3_METALEARNING_PLAN.md) | Designed — learn the selection policy from data (led to exp42) |
+| [LOAN_ATTRITION_PLAN.md](LOAN_ATTRITION_PLAN.md) | Active (see Current program docs) |
+| [plans/](plans/) | Folder of dated plans; see its [index](plans/README.md). Includes [plans/MULTI_DATASET_PLAN.md](plans/MULTI_DATASET_PLAN.md) (2026-10-17: real-data benchmarking plan). |
+
+## Archive (superseded — frozen, do not revive)
+
+[archive/](archive/) holds docs whose content is fully covered by newer docs. Kept for provenance only:
+
+| Doc | Why archived |
+|---|---|
+| [archive/RESULTS.md](archive/RESULTS.md) | R2-era results registry (status 2026-10-16). Superseded by FINAL_RESULTS.md + PHASE2_UPDATE.md. |
+| [archive/RESULTS_ARCHIVE.md](archive/RESULTS_ARCHIVE.md) | exp1–exp15 results (already self-marked superseded). Current results: FINAL_RESULTS.md. |
+| [archive/FULL_STORY.md](archive/FULL_STORY.md) | 2026-10-17 narrative capstone. Superseded by reports/FINAL_SYNTHESIS.md + PHASE2_UPDATE.md. |
+| [archive/MANAGER_REPORT.md](archive/MANAGER_REPORT.md) | Stale 2026-10-17 draft. The final is reports/MANAGER_REPORT.md (2026-10-19). |
+| [archive/FINAL_SYNTHESIS.md](archive/FINAL_SYNTHESIS.md) | Stale 2026-10-17 living-draft. The final is reports/FINAL_SYNTHESIS.md (2026-10-19). |
 
 ## Operations
 
 | Doc | What you get |
 |---|---|
-| [LIVE_NEWS_SETUP.md](LIVE_NEWS_SETUP.md) | Live news: BoC backfill + cache enrichment runbook. |
-| [../experiments/REPRODUCIBILITY.md](../experiments/REPRODUCIBILITY.md) | Reproduce any experiment: environment, weights, commands. |
+| [AGENTS.md](AGENTS.md) | Working conventions for agents in `td-one/`: TDD, PIT-safety gate, metrics, honesty policy. |
+| [GUIDELINES.md](GUIDELINES.md) | Contribution guidelines for this project. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute: branches, commits, PRs. |
 
 ## Data
 
@@ -111,11 +105,3 @@ Active and historical plans live in [plans/](plans/). The agentic roadmap stays 
 | FRED cache | `../data/fred/` (gitignored) | 19 series. Rebuild via `../scripts/fetch_fred.py`. |
 | M4 data | `../data/m4/` | M4 competition series used by the agentic track. |
 | Plots | [plots/](plots/) | Regenerated, embedded figures — see its README for sources. |
-
-## Agent instructions
-
-| Doc | What you get |
-|---|---|
-| [AGENTS.md](AGENTS.md) | Working conventions for agents in `td-one/`: TDD, PIT-safety gate, metrics, honesty policy. |
-| [GUIDELINES.md](GUIDELINES.md) | Contribution guidelines for this project. |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute: branches, commits, PRs. |

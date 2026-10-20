@@ -1,5 +1,7 @@
 # Citation Audit — LITERATURE_SURVEY.md
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. citation check of LITERATURE_SURVEY.md**
+
 **Date:** 2026-10-16. **Auditor:** Muse (subagent, web verification).
 **Scope:** the ~22 strongest empirical/technical claims in
 `docs/LITERATURE_SURVEY.md`, checked against primary sources

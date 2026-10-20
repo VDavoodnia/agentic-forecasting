@@ -1,5 +1,7 @@
 # TD-One Manager Report: Agentic Forecasting for Mortgage Attrition
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-19. final close-out; Phase-2 continuation in PHASE2_UPDATE.md**
+
 **Date:** 2026-10-19 (final)
 **Author:** TD-One research program
 **Audience:** Colleagues new to TD-One — no forecasting background assumed.

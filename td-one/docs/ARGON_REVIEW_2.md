@@ -1,5 +1,7 @@
 # Argon Feedback Review — Second Pass (2026-10-17)
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-17. external-auditor review record**
+
 Re-reading the 6 findings to check: (1) what's already addressed, (2) where Argon is mistaken, (3) what we missed.
 
 ## Finding 1 (P0): R2 macro bug — ✅ FULLY ADDRESSED, Argon correct

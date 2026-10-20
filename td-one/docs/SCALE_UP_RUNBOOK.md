@@ -1,5 +1,7 @@
 # TD-One Scale-Up Runbook
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. runbook record; reproduction now via experiments/REPRODUCIBILITY.md**
+
 End-to-end pipeline: synthetic population → point-in-time store → segments →
 backtest → experiments. Run at the **current pilot sample size first** (cheap,
 fast), then scale to the full 10k×66 population.

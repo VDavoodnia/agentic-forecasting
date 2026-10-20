@@ -1,5 +1,7 @@
 # TD-One Data Engineering Audit
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-16. data-engineering audit record**
+
 **Date:** 2026-10-16
 **Scope:** Full data pipeline — Freddie Mac ingest, FRED, news KB, PIT store, simulator
 **Method:** Code review + live DB inspection + manifest/parquet verification

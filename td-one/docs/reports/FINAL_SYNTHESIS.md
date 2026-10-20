@@ -1,5 +1,7 @@
 # TD-One Final Report: Multi-Dataset Benchmarking Synthesis
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-19. final close-out of exp1-63; Phase-2 continuation in PHASE2_UPDATE.md**
+
 **Date:** 2026-10-19 (final)
 **Status:** Complete — all tracks closed with evidence.
 

@@ -1,5 +1,7 @@
 # TD-One Agentic Roadmap: From Output Wrappers to True Agents
 
+> **Status: HISTORICAL — point-in-time record, dated 2026-10-17. roadmap; trilogy (exp42-44) complete, method shipped (exp47)**
+
 **Date:** 2026-10-17
 **Status:** Planning — approved by Vandad
 **Context:** Our M2/M3/M4/M5 agents failed because they were output-layer wrappers on a closed mathematical system. This roadmap redesigns the agentic track from first principles.

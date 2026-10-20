@@ -1,5 +1,7 @@
 # Uncertainty Quantification for Time-Series Foundation Models — Literature Survey (exp74, Phase 1)
 
+> **Status: CURRENT — last updated 2026-10-20**
+
 **Date:** 2026-10-20. Papers from 2024 onward (classics EnbPI 2021 / ACI 2021 cited where built upon).
 
 ## Why this survey exists

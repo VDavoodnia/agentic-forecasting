@@ -1,5 +1,7 @@
 # TD-One: Final Results
 
+> **Status: CURRENT — last updated 2026-10-20**
+
 **What we built:** A unified forecasting method (v2) that combines a regime-routed classical engine with a gated LLM expert. It beats equal weighting and best-single-model selection across all benchmarks, with honest negatives documented throughout.
 
 **Bottom line:** Our method wins everywhere — classical statistics where they apply, LLM where it helps, and the gate knows the difference. Every claim below has a significance test.
@@ -137,7 +139,38 @@ honest about this: LLM as specialist forecaster + deterministic gating.
 | M3 Monthly | 0.1472 | 0.1476 | No help |
 | M4 (100 series) | 0.1450 | 0.1451 | No help |
 
-The news gate fires on 90–100% of origins but changes nothing. Real markets price in public news faster than monthly forecasting can exploit. **News track closed.**
+The news gate fires on 90–100% of origins but changes nothing. Real markets price in public news faster than monthly forecasting can exploit. **News as a point-forecast input is closed.**
+
+News is not dead, though — it moved layers. Calibrated macro signals
+(Macro Signal Service: 7 of 9 anchored categories live, exp70-MS) and
+news-story features now feed the **uncertainty layer** below: they help
+predict how wrong a forecast may be, not where it should move. Raw-news
+routing into the forecaster stays dead (exp71-MS, exp77 — mechanism-blocked
+on calm-regime data; see [PHASE2_UPDATE.md](PHASE2_UPDATE.md)).
+
+---
+
+## Layer-2 Decision Stage (exp73)
+
+v2 now ships with a validation-gated decision stage on single-series
+targets (analyst toolbox + per-origin decision traces). On OSFI M4 runoff
+(pooled, h=1, n=300): gating CRPS 0.00374 vs naive 0.00369 (+1.2%,
+p=0.081) — the do-no-harm gate holds. At h=3 the gated system beats v2
+significantly (−6.8%, p=0.015). Its clearest win is harm repair: exp70's
+uninsured-segment damage (+10.7%, p=0.030) is mechanically blocked to
++0.8% (n.s.). Layer-2 gating also protects the group forecaster under
+planted shifts (exp72, p<1e-8).
+
+---
+
+## Uncertainty Layer — CQR (exp74)
+
+Conformalized quantile regression is the default uncertainty layer,
+replacing fixed conformal widening. On Food CPI (n=666): CRPS **1.2824
+vs 1.3035** native (p=1.7e-04), coverage 0.824 at 80% and 0.904 at 90%
+(native 0.799 / 0.884), at only 1.078× the interval width. Never harmful
+on any tested scope; adaptive conformal (ACI) is a regime-gated option
+for volatile subsets.
 
 ---
 
@@ -168,6 +201,7 @@ The full experiment-by-experiment story — 63 experiments plus the 6-rung LLM i
 - [Manager Report](reports/MANAGER_REPORT.md) — the story for a general audience
 - [Proposed Method](PROPOSED_METHOD.md) — technical specification
 - [Experiment Registry](../experiments/README.md) — every experiment with verdicts
+- [Phase 2 Update](PHASE2_UPDATE.md) — everything since exp63 (Layer-2 gating, CQR uncertainty, red-team, Macro Signal Service, honest negatives), mortgage-framed
 
 ---
 
