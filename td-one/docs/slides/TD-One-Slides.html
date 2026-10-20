@@ -48,6 +48,32 @@ th{background:var(--mutbg)}
 .card p{font-size:14px;line-height:1.55;margin:0 0 8px}
 .foot{font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.5}
 @media (max-width:760px){.grid2,.grid3,.grid4,.panels{grid-template-columns:1fr}.brow{grid-template-columns:1fr}}
+
+.arch{border:1.5px solid var(--bd);border-radius:12px;padding:14px 16px;margin:6px 0 14px;background:var(--surf)}
+.arch .lane{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;margin:4px 0}
+.arch .ltag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--mut);width:100%;margin:8px 0 2px}
+.abox{border:1.5px solid var(--bd);border-radius:10px;padding:8px 11px;font-size:13px;line-height:1.35;background:var(--surf)}
+.abox b{display:block;font-size:13.5px}
+.abox small{color:var(--mut);font-size:11.5px}
+.abox.acc{border-color:var(--acc);border-width:2px}
+.abox.green{border-color:#1d7a3a;border-width:2px}
+.abox.side{background:var(--mutbg)}
+table.score td.bar-cell{width:34%}
+.mbar{display:flex;align-items:center;gap:7px;margin:1.5px 0}
+.mbar i{display:block;height:11px;border-radius:3px}
+.mbar em{font-style:normal;font-size:12px;font-weight:600;white-space:nowrap}
+.tl{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr;align-items:stretch;margin:6px 0 4px}
+.tstep{border:1.5px solid var(--bd);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.45}
+.tstep b{display:block;font-size:13.5px}
+.tstep .when{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--acc);text-transform:uppercase}
+.tarr{display:flex;align-items:center;justify-content:center;font-size:19px;color:var(--acc);font-weight:700}
+.covrow{display:grid;grid-template-columns:170px 1fr 52px;gap:10px;align-items:center;padding:5px 0}
+.covrow .clab{font-size:13px}.covrow .clab span{display:block;font-size:11.5px;color:var(--mut)}
+.covbar{position:relative;height:15px;background:var(--mutbg);border-radius:3px}
+.covbar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.covbar .tgt{position:absolute;top:-3px;bottom:-3px;width:2px;background:#191919}
+.covval{font-size:13px;font-weight:700;text-align:right}
+@media (max-width:760px){.tl{grid-template-columns:1fr}.tarr{transform:rotate(90deg)}.covrow{grid-template-columns:1fr}}
 </style>
 <div class="deck">
 <div class="slide"><div class="k">Slide 1</div><h2>Executive Summary</h2>
@@ -57,6 +83,13 @@ th{background:var(--mutbg)}
 <div class="blk"><h3>Business impact</h3><p>The method was tested on three kinds of data: a synthetic mortgage book built by the team, real mortgage data from Canada and the United States, and standard public forecasting datasets. On the public data it beat the equal-weight mix and every classical model we tried, on all four datasets. On real Canadian bank runoff the committee alone did not beat a simple average, and in one segment it did harm. The validation gate repaired that harm. On United States mortgage leaving rates, a large language model used with strict gating matched the best models but was not significantly better.</p></div>
 <div class="blk"><h3>Next steps</h3><p>The segment forecaster's center is settled: the trailing six-month average is the default, beating the last value on control data and under a rate shock (exp79). The real fitted router was tested and rejected. The range layer tests are finished (exp76): the plain range layer stays the default, and a fusion that reads story features from news is used where those features exist. Connect the pieces into one monthly manager report. Then test whether an agent reading policy and news can propose at-risk segments a human would miss.</p></div>
 </div>
+<div class="grid4" style="margin-top:14px">
+<div class="blk" style="text-align:center"><div class="num">0.1451</div><p style="margin-top:4px">M4 competition CRPS<br/>best single model: 0.1505</p></div>
+<div class="blk" style="text-align:center"><div class="num">0.1282</div><p style="margin-top:4px">Tourism CRPS<br/>best single model: 0.1387</p></div>
+<div class="blk" style="text-align:center"><div class="num">0.1476</div><p style="margin-top:4px">M3 competition CRPS<br/>best single model: 0.1630</p></div>
+<div class="blk" style="text-align:center"><div class="num">0.5322</div><p style="margin-top:4px">Food prices CRPS<br/>classical version: 0.9661</p></div>
+</div>
+<p class="foot" style="margin-top:6px">Headline scores, public datasets (World B). Lower is better. Full scoreboard on the results slide.</p>
 <div class="strip"><span class="chip">75+ experiments run</span><span class="chip good">Won on 4 public datasets</span><span class="chip">3 agent roles kept, each measured on its own</span><span class="chip">Every comparison checked with a statistical test</span></div>
 </div>
 <div class="slide"><div class="k">Slide 2</div><h2>Business Problem and Opportunity</h2>
@@ -72,21 +105,51 @@ th{background:var(--mutbg)}
 <div class="blk acc"><h3>Drop what does not beat the simple option</h3><p>What fails the comparison is removed, and the negative result is written down with the same care as the wins.</p></div>
 </div>
 </div>
+<div class="blk" style="margin-top:14px"><h3 style="margin-bottom:8px">What is known, and what is not</h3>
+<div class="covrow"><div class="clab">Renewals due<span>contract dates, known years ahead</span></div><div class="covbar"><i style="width:100%;background:#1d7a3a"></i></div><div class="covval">exact</div></div>
+<div class="covrow"><div class="clab">Share who switch<span>small segments swing on chance alone</span></div><div class="covbar"><i style="width:60%;background:#a86a12"></i><i style="width:25%;background:#9aa5b1;opacity:0.5"></i></div><div class="covval">25 to 60%</div></div>
+<p class="foot">The forecast problem in one picture: the denominator is known, the numerator is not. That gap is what the system forecasts, with a range.</p>
+</div>
 <p class="foot">Proof of concept. The mortgage data is synthetic, built by the team, with known switching drivers planted in it. The method is also tested on public datasets that anyone can download, and on real mortgage data: Canadian bank balances (OSFI M4, 121 months) and United States mortgage leaving rates (Freddie Mac, 63 months). OSFI is the Office of the Superintendent of Financial Institutions, the Canadian banking regulator. Results on all of them are on the results slide.</p>
 </div>
 <div class="slide"><div class="k">Slide 3</div><h2>Our Solution</h2>
-<div class="flow">
-<div class="fbox"><b>Customers</b><small>one row per customer, per month</small></div><div class="arrow">&#8594;</div>
-<div class="fbox"><b>Grouped by features</b><small>income, province, rate type, and more</small></div><div class="arrow">&#8594;</div>
-<div class="fbox"><b>Monthly history</b><small>per segment: renewals, switchers</small></div><div class="arrow">&#8594;</div>
-<div class="fbox acc"><b>Committee of models</b><small>each series routed to the expert with the best record for its kind</small></div><div class="arrow">&#8594;</div>
-<div class="fbox acc"><b>Validation gate</b><small>each decision checked against the past record; weak decisions fall back to the simple average</small></div><div class="arrow">&#8594;</div>
-<div class="fbox"><b>Forecast</b><small>best guess plus an honest range, sized by a separate range layer</small></div><div class="arrow">&#8594;</div>
-<div class="fbox acc"><b>Manager report</b><small>flagged segments, with cited evidence</small></div>
+<div class="arch">
+<div class="ltag" style="margin-top:0">Main path: the committee (public benchmarks, World B)</div>
+<div class="lane">
+<div class="abox"><b>Input series</b><small>one monthly series at a time</small></div><div class="arrow">&#8594;</div>
+<div class="abox"><b>Regime detection</b><small>hand-written rules read the shape of the data</small></div><div class="arrow">&#8594;</div>
+<div class="abox acc"><b>Series-type gate</b><small>macro-like and weakly seasonal, or seasonal and multi-series</small></div><div class="arrow">&#8594;</div>
+<div class="abox"><b>Classical experts</b><small>seasonal naive, ARIMA, ETS</small></div>
+<div class="abox"><b>LLM expert</b><small>Gemini Flash, V1 prompts; joins only where it has proven to help (food prices)</small></div><div class="arrow">&#8594;</div>
+<div class="abox acc"><b>Regime router</b><small>logistic combination of the experts</small></div><div class="arrow">&#8594;</div>
+<div class="abox"><b>Do-nothing gate</b><small>uncertain plus weak evidence: fall back to the global best single model</small></div><div class="arrow">&#8594;</div>
+<div class="abox green"><b>Conformal calibration</b><small>CQR range layer sizes the range from past errors</small></div><div class="arrow">&#8594;</div>
+<div class="abox green"><b>Output</b><small>quantiles plus a trust flag</small></div>
+</div>
+<div class="ltag">Safety lane: Layer-2 validation gate (watches the main path)</div>
+<div class="lane">
+<div class="abox side"><b>Analyst tools</b><small>backtests, break scans, coverage checks on past data only</small></div><div class="arrow">&#8594;</div>
+<div class="abox side"><b>Gate decision per forecast</b><small>accept the committee, or veto it and use the simple average instead. This is the veto that repaired the OSFI harm (results slide)</small></div>
+</div>
+<div class="ltag">Segment path: the mortgage book (synthetic, World A)</div>
+<div class="lane">
+<div class="abox"><b>Customers</b><small>one row per customer, per month</small></div><div class="arrow">&#8594;</div>
+<div class="abox"><b>Segment borders</b><small>rules on customer features X: income, province, rate type</small></div><div class="arrow">&#8594;</div>
+<div class="abox"><b>Monthly history per segment</b><small>renewals due N, switchers A</small></div><div class="arrow">&#8594;</div>
+<div class="abox acc"><b>Group forecaster</b><small>center: trailing 6-month average (exp79). Range: spread from the segment's own past errors</small></div><div class="arrow">&#8594;</div>
+<div class="abox acc"><b>Manager report</b><small>flagged segments, every fact cited to a computed number or a dated article</small></div>
+</div>
+<div class="ltag">News path: context H (never an input to the best guess)</div>
+<div class="lane">
+<div class="abox side"><b>Dated news</b><small>17,906 articles, point-in-time store</small></div><div class="arrow">&#8594;</div>
+<div class="abox side"><b>Macro signal service</b><small>monthly signals in 22 categories; 7 of 9 checked categories predict realized data</small></div><div class="arrow">&#8594;</div>
+<div class="abox side"><b>Range layer only</b><small>tested in exp76: added nothing beyond story features from the same news. Story features do feed the range layer where they exist</small></div>
+</div>
+<p class="legend" style="margin-top:10px">Figure: the built system, as shipped. Green: calibration and output. Accent outline: the two decision points (series-type gate, router). The committee runs on the public benchmarks; on the synthetic book the segment path runs today, and running the committee per segment is a stated gap, not a claim.</p>
 </div>
 <div class="formula">Design goal: P( A = a &nbsp;|&nbsp; N , past A , past N , customer features X , external context H )</div>
 <div class="formula">What the built system uses today: P( A = a &nbsp;|&nbsp; N , segment history ) &nbsp;&middot;&nbsp; A = customers who switch &middot; N = renewals due, known exactly</div>
-<p class="foot" style="margin:0 0 14px">The two formulas differ on purpose. Customer features X are used before forecasting, to draw the segment borders. External context H is used in report text, with dates and citations. A service also turns dated news into monthly calibrated signals. Those signals did not move forecasts on the two real datasets tried (see the negatives slide). Their use inside the range layer was tested in exp76: they added nothing beyond story features from the same news, so they are not part of the built system. H is not an input to the forecast itself. Evidence for that choice is on the approach slide.</p>
+<p class="foot" style="margin:0 0 14px">The two formulas differ on purpose. X draws the segment borders before forecasting. H appears in report text with dates and citations, and its calibrated signals were tested in the range layer only (exp76: no gain beyond story features). H never moves the best guess. Evidence: approach and negatives slides.</p>
 <div class="grid3">
 <div class="blk"><h3>Forecast engine</h3><p>The committee. Classical models are routed by the shape of the data. A large language model joins as one expert only where it has proven to help. A validation gate can veto the mix and use the simple average instead.</p></div>
 <div class="blk"><h3>Honest ranges</h3><p>A separate layer sets the range width from past errors, so the range means what it says. Where news text about a series has been turned into story features, a tested fusion uses them to size the range better (food prices, exp76). Calibrated macro news signals were tested here too and added nothing beyond the story features. Nothing from news moves the best guess.</p></div>
@@ -101,7 +164,7 @@ th{background:var(--mutbg)}
 <tr><th style="width:34%">Input</th><th>Role</th></tr>
 <tr><td><b>Past renewals and switches</b></td><td><span class="stamp g">USED</span> The only input of every method that won. Turned into one series per segment.</td></tr>
 <tr><td><b>Customer features</b></td><td><span class="stamp a">SEGMENTS ONLY</span> They draw the segment borders, before forecasting. They are not fed to the forecaster.</td></tr>
-<tr><td><b>News, rates, offers</b></td><td><span class="stamp r">DID NOT HELP THE FORECAST</span> Tried repeatedly as forecast inputs: macro covariates, news features, news-driven router shifts, competitor rates, news overlays, and calibrated news signals. No improvement on the best guess, on any dataset. News appears in report text with dates and citations. Calibrated news signals were tested as an input to the range layer (exp76) and added nothing beyond story features from the same news, so they are not in the built system. Story features do feed the range layer where they exist.</td></tr>
+<tr><td><b>News, rates, offers</b></td><td><span class="stamp r">DID NOT HELP THE FORECAST</span> Tried repeatedly as forecast inputs: macro covariates, news features, router shifts, competitor rates, news overlays, calibrated news signals. No improvement on the best guess, on any dataset. News appears in report text with dates and citations. In the range layer (exp76), calibrated signals added nothing beyond story features; story features do feed the range layer where they exist.</td></tr>
 </table>
 </div>
 <div>
@@ -158,22 +221,57 @@ th{background:var(--mutbg)}
       <div class="bchip">45% lower error</div>
     </div>
 <p class="legend"><i style="background:#1d7a3a"></i>Our committee<i style="background:#9aa5b1"></i>Best single model. All four wins checked with a paired statistical test. The language model expert fired only on food prices. On seasonal data the gate kept it off, and the committee equals the classical version.</p></div>
-<div class="blk" style="margin-top:14px"><h3>Real mortgage data, and what happened there</h3>
-<table>
-<tr><th style="width:34%">Data</th><th>Result</th></tr>
-<tr><td><b>Canadian bank runoff</b><br/>OSFI M4, 121 months, 4 mortgage segments</td><td>The committee tied the simple average overall (difference -0.2%, not significant) and was significantly worse on uninsured mortgages (+10.7%, p=0.030). The validation gate repaired this: the harm fell to +0.8% (not significant), and at a 3-month horizon the gated system beats the committee by 6.8% (p=0.015).</td></tr>
-<tr><td><b>United States mortgage leaving rates</b><br/>Freddie Mac, 63 months</td><td>Committee plus language model expert ties its own classical version (p=0.69, neutral). This monthly leaving-rate series is the project's honest real-data attrition benchmark (exp65). Pretrained TimesFM was competitive (-12.2% against ETS, p=0.076, not significant).</td></tr>
-<tr><td><b>Honest ranges (CQR)</b><br/>Food prices, 59 forecasts</td><td>The range layer beat the model's own ranges on error (1.2824 vs 1.3035, p=1.7e-04), put reality inside the 80% range 82.4% of the time, and cost 7.8% wider ranges. It is now the default range method. A fusion that also reads story features from news did better still on food prices (error 1.2587, -1.8% vs the plain layer, p=2.0e-05; reality inside 85.4% of the time) and is used where story features and a long history exist (exp76). Across the other benchmarks the plain layer mainly repairs coverage rather than cutting error; its one clear error win was Canadian bank runoff (-1.28%, p=0.0012), and on the M4 competition it changed nothing, because each series had too little past data to learn from.</td></tr>
+<div class="blk" style="margin-top:14px"><h3>The rest of the scoreboard</h3>
+<table class="score">
+<tr><th style="width:22%">Benchmark</th><th style="width:13%">World</th><th>Ours vs baseline (bars)</th><th style="width:31%">Verdict</th></tr>
+<tr><td><b>Bank of Canada decisions</b><br/>119 meetings, accuracy</td><td>Public data</td><td class="bar-cell"><div class="mbar"><i style="width:144px;background:#1d7a3a"></i><em>72.2% ours</em></div><div class="mbar"><i style="width:139px;background:#9aa5b1"></i><em>69.4% climatology</em></div></td><td><span class="stamp g">WIN</span> The agent found the rule itself: inflation gap times rate momentum.</td></tr>
+<tr><td><b>Canadian bank runoff</b><br/>OSFI M4, 121 months, CRPS</td><td>Real mortgage</td><td class="bar-cell"><div class="mbar"><i style="width:190px;background:#9aa5b1"></i><em>0.00369 naive</em></div><div class="mbar"><i style="width:196px;background:#b3372f"></i><em>0.00381 committee</em></div></td><td><span class="stamp a">TIE, ONE HARM</span> Tied overall (not significant); uninsured segment harmed (+10.7%, p=0.030). The Layer-2 gate repaired it: harm fell to +0.8% (not significant), and at 3 months the gated system beats the committee by 6.8% (p=0.015).</td></tr>
+<tr><td><b>US mortgage leaving rates</b><br/>Freddie Mac SMM, 63 months, CRPS</td><td>Real mortgage</td><td class="bar-cell"><div class="mbar"><i style="width:190px;background:#1d7a3a"></i><em>0.000508 ours (v2)</em></div><div class="mbar"><i style="width:192px;background:#9aa5b1"></i><em>0.000512 classical (v1)</em></div></td><td><span class="stamp gr">TIE</span> p=0.69, neutral (exp65). The honest real-data attrition benchmark. Pretrained TimesFM beat ETS here by 12.2% (p=0.076, not significant).</td></tr>
 </table>
-<p class="foot">These are not the same test world as the bars above. The bars are public forecasting competitions. This block is real mortgage data. Three naming notes: OSFI M4 is the Canadian regulator's mortgage balance report; it is unrelated to the M4 forecasting competition. SMM (single monthly mortality) is the standard name for the monthly rate at which mortgage loans leave a portfolio. FRED is the United States Federal Reserve's public data library; CPIUFDSL is its monthly food price index series.</p>
+<p class="foot">WTI crude oil (public data) is the fourth test bed: near a random walk, the agent abstained 92% of the time. Method sound, task impossible. Naming: OSFI M4 is the Canadian regulator's mortgage balance report, unrelated to the M4 forecasting competition above. SMM (single monthly mortality) is the standard name for the monthly rate at which loans leave a portfolio.</p>
 </div>
-<div class="blk" style="margin-top:14px"><h3>Two more test beds</h3>
-<table>
-<tr><th style="width:34%">Data</th><th>Result</th></tr>
-<tr><td><b>Bank of Canada rate decisions</b><br/>119 meetings, public data</td><td>A discrete variant (it predicts the rate decision itself) scored 72.2% accuracy, against 69.4% for the climatology baseline. The agent autonomously discovered the rule behind it: the interaction of the inflation gap and rate momentum.</td></tr>
-<tr><td><b>WTI crude oil</b><br/>Public benchmark, near a random walk</td><td>The agent correctly identified the series as unforecastable and abstained 92% of the time. An honest negative: the method was sound, the task is impossible.</td></tr>
-<tr><td><b>Planted shocks on synthetic loan series</b><br/>7 shift types (exp67)</td><td>One type breaks every model: a fast rate shock. At the highest severity, forecast error roughly triples for all models, and the best pretrained model's 80% range coverage falls from 0.89 to 0.53.</td></tr>
-</table>
+<div class="blk" style="margin-top:14px"><h3>Honest ranges: what the range layer buys</h3>
+<div class="grid2">
+<div>
+<p style="margin:0 0 6px;font-size:13.5px"><b>World B, food prices:</b> forecast error steps down as the range method improves</p>
+<div class="mbar"><i style="width:230px;background:#9aa5b1"></i><em>1.3035 model ranges</em></div>
+<div class="mbar"><i style="width:226px;background:#22577a"></i><em>1.2824 plain CQR (p=1.7e-04)</em></div>
+<div class="mbar"><i style="width:222px;background:#1d7a3a"></i><em>1.2587 CQR plus story fusion (p=2.0e-05)</em></div>
+<p class="foot">Reality inside the 80% range: 82.4% with plain CQR, 85.4% with the fusion. The cost is width: plain CQR ranges run 7.8% wider. Source: exp74, exp76.</p>
+</div>
+<div>
+<p style="margin:0 0 6px;font-size:13.5px"><b>World A, synthetic segments:</b> share of months reality lands inside the 80% range</p>
+<div class="covrow"><div class="clab">Point-mass forecaster<span>the defect, before the fix</span></div><div class="covbar"><i style="width:7.5%;background:#b3372f"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.075</div></div>
+<div class="covrow"><div class="clab">Gaussian spread fix<span>shipped default, exp78</span></div><div class="covbar"><i style="width:71.4%;background:#1d7a3a"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.714</div></div>
+<p class="foot">Black tick: the 0.80 target. Still short of target; a conformal layer for the group forecaster is the next step (exp80, in flight). Source: exp78, SimulatorV2 control.</p>
+</div>
+</div>
+</div>
+<div class="blk" style="margin-top:14px"><h3>Stress test: planted shocks on synthetic loan series (World A)</h3>
+<div class="grid2">
+<div>
+<p style="margin:0 0 6px;font-size:13.5px"><b>Rate shock (S1): error increase vs no shock</b></p>
+<div class="mbar"><i style="width:26px;background:#a86a12"></i><em>1 sigma: +7 to 13%, not significant</em></div>
+<div class="mbar"><i style="width:230px;background:#b3372f"></i><em>4 sigma: +185 to 228%, every model</em></div>
+<p class="foot">The break happens between 1 and 4 sigma. No model, classical or pretrained, is spared.</p>
+</div>
+<div>
+<p style="margin:0 0 6px;font-size:13.5px"><b>80% range coverage at 4 sigma, before and after the shock</b></p>
+<div class="covrow"><div class="clab">Chronos-2<span>best pretrained model</span></div><div class="covbar"><i style="width:53%;background:#b3372f"></i><i style="width:89%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.89 to 0.53</div></div>
+<div class="covrow"><div class="clab">Classical baseline (M0)<span>coverage collapse</span></div><div class="covbar"><i style="width:8%;background:#b3372f"></i><i style="width:61%;background:#9aa5b1;opacity:0.45"></i><span class="tgt" style="left:80%"></span></div><div class="covval">0.61 to 0.08</div></div>
+<p class="foot">Grey: coverage before the shock. Red: after. Source: exp67, S1 at 4 sigma.</p>
+</div>
+</div>
+</div>
+<div class="blk" style="margin-top:14px"><h3>One defect, found by testing, fixed in two steps</h3>
+<div class="tl">
+<div class="tstep"><span class="when">exp72: flagged</span><b>Group ranges were flat</b>Integration testing found the group forecaster emitting one value at every quantile level: error 0.165 against 0.130 for a proper forecaster on the same histories.</div>
+<div class="tarr">&#8594;</div>
+<div class="tstep"><span class="when">exp78: fixed</span><b>The router had never run</b>Root cause: a skipped fit step, hidden by a swallowed error. Spread rebuilt from past errors and shipped: control error 0.1320 to 0.1042 (p=4.2e-45), coverage 0.075 to 0.714.</div>
+<div class="tarr">&#8594;</div>
+<div class="tstep"><span class="when">exp79: settled</span><b>Trailing average is the center</b>Center set to the trailing 6-month average: error 0.0899 vs 0.1042 (p=0.034). The real fitted router was tested head to head and rejected: too little history per segment to learn from.</div>
+</div>
+<p class="foot">Source: exp72, exp78, exp79, all on the synthetic book (World A). The full story is on the negatives slide.</p>
 </div>
 <div class="strip">
 <span class="chip good">Committee won on all four public datasets</span>
@@ -210,9 +308,9 @@ th{background:var(--mutbg)}
 <div class="slide"><div class="k">Slide 8</div><h2>Future Work and Opportunities</h2>
 <div class="grid2" style="margin-top:12px">
 <div class="blk acc"><h3>Segment scout</h3><p>An agent reads policy and news, and proposes at-risk segments nobody defined in advance. The synthetic data has planted segments, so we can score how often it finds the real ones. This exact role has not been tested yet.</p></div>
-<div class="blk acc"><h3>Range layer with news: tested (exp76)</h3><p>Story features from news text, fused into the range layer and switched on only at horizons of 3 months or more, are the best range method on food prices: error 1.2587 vs 1.2824 for the plain layer (-1.8%, p=2.0e-05), reality inside the 80% range 85.4% of the time. Calibrated macro signals added nothing beyond the story features (+0.1%, p=0.885) in the quiet window tested; the strength of the inflation signal alone did track forecast error, so macro stays a flagged feature, to be retested in a stormier window. The fusion did not transfer to the other datasets: too little past data per series. Next design step: pool past errors across series into bigger banks.</p></div>
+<div class="blk acc"><h3>Range layer with news: tested (exp76)</h3><p>Story features fused into the range layer (horizons of 3 months or more) are the best range method on food prices: error 1.2587 vs 1.2824 (-1.8%, p=2.0e-05), reality inside 85.4% of the time. Macro signals added nothing (+0.1%, p=0.885) in the quiet window tested; they stay a flagged feature for a stormier window. The fusion did not transfer: too little past data per series. Next step (exp81, in flight): pool past errors across series into bigger banks.</p></div>
 <div class="blk"><h3>One monthly report</h3><p>Forecast, segment notes, and cited evidence in a single run. The pieces exist. The wiring is the remaining work. The mock on the previous slide is the specification.</p></div>
-<div class="blk"><h3>Group forecaster center: settled</h3><p>exp79 tested three centers head to head. The trailing six-month average won and is now the default: control error 0.0899 vs 0.1042 for the last value (p=0.034), and under a 4-sigma rate shock 0.1193 vs 0.1456 (p=4.7e-07), with range coverage 71% under the shock (a fresh-seed check confirmed the win, p=1.6e-05). The real fitted router lost: fitted per segment, it has at most 13 past forecasts to learn from, too few for its regimes to separate. It remains available as an option, not the default. Grouping cost with the new center: +0.0018 error points against a global forecast.</p></div>
+<div class="blk"><h3>Group forecaster center: settled</h3><p>exp79: the trailing six-month average is the default (control 0.0899 vs 0.1042, p=0.034; under a 4-sigma shock 0.1193 vs 0.1456, p=4.7e-07; fresh-seed check p=1.6e-05). The fitted router lost and stays an option, not the default. Grouping cost with the new center: +0.0018. Timeline on the results slide.</p></div>
 <div class="blk"><h3>Real data: loan level</h3><p>Aggregate Canadian runoff is now the real-data null benchmark every claim must beat. The remaining open question is at loan level: the Freddie Mac loan-level data, which is where the competitor-rate question may still have an answer.</p></div>
 <div class="blk"><h3>Real data: a pilot</h3><p>The pipeline consumes segment counts only, no customer level records. A pilot on aggregated renewal data remains the natural next step.</p></div>
 </div>
