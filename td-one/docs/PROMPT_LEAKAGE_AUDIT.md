@@ -34,8 +34,8 @@ Timeless instructions (JSON shape, monotone quantiles, same units). No data fiel
 
 | Field | Data source | ≤ origin proof |
 |---|---|---|
-| `task_line` | Hardcoded: "Canada Food CPI 1-month-ahead forecast." | Timeless task description, no numbers |
-| `series_desc` / `units` / `frequency` | Hardcoded: "Canada Food CPI (headline), monthly index (source: StatCan)" / "index" / "MS" | Series metadata; identifies the series, contains no observations |
+| `task_line` | Hardcoded: "US CPI-U Food (FRED CPIUFDSL) 1-month-ahead forecast." | Timeless task description, no numbers |
+| `series_desc` / `units` / `frequency` | Hardcoded: "US CPI-U Food (FRED CPIUFDSL) (headline), monthly index (source: StatCan)" / "index" / "MS" | Series metadata; identifies the series, contains no observations |
 | `history_str` | `serialize_history` of `train` | ≤ origin (above) |
 | `forecast_start` / `forecast_end` | `date[orig]` formatted | This is the *forecast target* date, not an observation; knowing the target month is inherent to the forecasting task (Vector's prompt does the same) |
 
@@ -93,7 +93,7 @@ date; the block states "nothing here is newer than {as_of}".
 | Fact | Value source | Fact as-of | ≤ origin proof |
 |---|---|---|---|
 | Bank of Canada policy rate | `data/fred/IRSTCB01CAM156N.parquet` — last row with `date <= as_of` (strict inequality on timestamps; never after) | That row's own date | By construction of the lookup; the fact's as-of date is printed in the prompt |
-| Canada Food CPI 12-month inflation | Computed `train[-1]/train[-13] − 1` from the pre-origin history | `as_of` | Same as the V1 12m change |
+| US CPI-U Food (FRED CPIUFDSL) 12-month inflation | Computed `train[-1]/train[-13] − 1` from the pre-origin history | `as_of` | Same as the V1 12m change |
 
 **Known limitation (documented, not a leak):** `IRSTCB01CAM156N` ends
 2023-12-01, so origins after 2023-12 reuse the 2023-12-01 value with its true

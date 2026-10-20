@@ -504,7 +504,7 @@ single dataset — but a clean win.
 Vector's `QuantileGridLLMPredictor` beats our proposed method on Food CPI:
 **0.5688 vs 1.0339 CRPS (45% better, p=5.4e-05, LLM wins 43/58 origins)**.
 The LLM is a better probabilist on smooth macro series (tighter,
-better-centered intervals) and has semantic context ("Canada Food CPI")
+better-centered intervals) and has semantic context ("US CPI-U Food (FRED CPIUFDSL)")
 our method lacks. Honest framing: ours beats classical baselines; a
 well-designed LLM elicitation beats ours. This motivated the LLM ladder.
 
@@ -538,7 +538,7 @@ flowchart TB
 ### 11.1 Rung 2 (exp55): LLM as expert — works on Food CPI
 
 Gemini Flash as a direct forecaster on Food CPI: competitive with the
-best classical methods. The semantic context ("Canada Food CPI") and
+best classical methods. The semantic context ("US CPI-U Food (FRED CPIUFDSL)") and
 calibration skill matter on smooth macro series.
 
 ### 11.2 Rung 3 (exp56): LLM as calibrator — fails

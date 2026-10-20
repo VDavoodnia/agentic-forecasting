@@ -17,7 +17,7 @@ not the router's. Guardrails reproduce exp49 bit-exact on M4/SMM/BoC/Synthetic.
 ## Why the LLM wins (exp53 diagnosis)
 
 1. **Calibration, not memorization.** Our classical experts emit √h·σ intervals that are overdispersed on smooth macro series (monthly Food CPI moves ~0.5; our σ ≈ 1.5–2). The LLM's intervals are tighter and better centered (90% width ~1.1).
-2. **Semantic context.** The LLM knows it is forecasting "Canada Food CPI" — inflation dynamics from pre-training are legitimate forecasting context. Our method sees only numbers.
+2. **Semantic context.** The LLM knows it is forecasting "US CPI-U Food (FRED CPIUFDSL)" — inflation dynamics from pre-training are legitimate forecasting context. Our method sees only numbers.
 3. **Direct quantile elicitation.** Structured JSON schema asks for q05–q95 directly; no distributional assumption, no sigma estimation step where error compounds.
 
 ## Pointers taken from Vector's design

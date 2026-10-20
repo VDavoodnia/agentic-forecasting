@@ -102,7 +102,7 @@ router, p=6.7e-10).
 
 ### 2. LLMs are powerful specialists (Food CPI)
 
-On Canada Food CPI, a well-designed LLM forecast (Gemini Flash + careful
+On US CPI-U Food (FRED CPIUFDSL), a well-designed LLM forecast (Gemini Flash + careful
 prompt) scores **0.4262** — dramatically better than any classical method
 (best: 0.9661) and **20% better than Vector's own LLM baseline** (0.5688,
 exp53). The LLM wins because it understands *what* the series is ("Canada

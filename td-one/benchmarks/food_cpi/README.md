@@ -8,7 +8,7 @@ Food CPI forecasting benchmark — the dataset where LLMs proved their worth.
 **LLM track (the headline result):**
 - exp53: Vector's `QuantileGridLLMPredictor` beats our proposed method
   decisively — 0.5688 vs 1.0339, p=5.4e-05. The LLM is a better probabilist
-  on smooth macro series and knows the series identity ("Canada Food CPI").
+  on smooth macro series and knows the series identity ("US CPI-U Food (FRED CPIUFDSL)").
 - LLM ladder (exp55–59, Gemini Flash via Vector proxy): rung 5 hybrid 0.4526
   beats Vector by 20%, but best single LLM prompt (V1, 0.4262) beats the
   hybrid — the router adds nothing when one expert dominates. Rung 6 (exp59):

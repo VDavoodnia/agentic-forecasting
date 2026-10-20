@@ -33,13 +33,19 @@ CRPS (lower is better), except BoC (accuracy, higher is better). Bold = winner.
 | Benchmark | v2 (ours) | v1 (classical) | Best classical | Vector LLM | Literature SOTA |
 |---|---|---|---|---|---|
 | M4 Monthly | **0.1451** | 0.1451 | 0.1505 | — | — |
-| Tourism Monthly | **0.1288** | 0.1288 | 0.1387 | — | 1.409 MASE (DeepAR) |
+| Tourism Monthly | **0.1282** | 0.1282 | 0.1387 | — | 1.409 MASE (DeepAR) |
 | M3 Monthly | **0.1476** | 0.1476 | 0.1630 | — | — |
 | Food CPI | **0.5322** | 0.9661 | 0.9661 | 0.5688 | — |
 | BoC decisions | **72.2%** | 72.2% | 69.4% | — | — |
 
 v2 wins or ties on every benchmark. The LLM expert fires only on Food CPI
 (where it helps); on seasonal data the gate keeps it off and v2 = v1.
+
+> **Data provenance note (2026-10-20):** "Food CPI" is **FRED CPIUFDSL** —
+> US CPI-U for Food, monthly seasonally adjusted, 2010-01→2026-09 (earlier
+> docs mislabeled it "Canada Food CPI"; results are unaffected, the series
+> is unchanged). `benchmarks/food_cpi/data.csv` was rebuilt 1:1 from FRED's
+> CSV after a working-tree deletion.
 
 ---
 
