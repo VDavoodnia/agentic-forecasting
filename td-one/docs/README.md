@@ -8,8 +8,9 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 
 | Doc | What you get |
 |---|---|
-| [FINAL_RESULTS.md](FINAL_RESULTS.md) | **Start here.** Final numbers only — no experiment codes, human-readable names, benchmarks in tables. Includes Layer-2 (exp73) and the CQR uncertainty layer (exp74). |
-| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark, Macro Signal Service — mortgage-framed, final + in-flight split. The current frontier. |
+| [FINAL_DELIVERY.md](FINAL_DELIVERY.md) | **The final delivery note (2026-10-20).** What the finished package is, the final architecture in one paragraph, the headline results, what shipped vs what was killed, and pointers to everything below. |
+| [FINAL_RESULTS.md](FINAL_RESULTS.md) | Final numbers only — no experiment codes, human-readable names, benchmarks in tables. Includes Layer-2 (exp73), the uncertainty layer through pooled banks (exp74–exp81), and the settled group forecaster (exp78–exp80). |
+| [PHASE2_UPDATE.md](PHASE2_UPDATE.md) | Since exp63: Layer-2 gating, CQR uncertainty, red-team, OSFI benchmark, Macro Signal Service — mortgage-framed. All experiments landed (through exp81). |
 | [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference spine. |
 | [PROPOSED_METHOD.md](PROPOSED_METHOD.md) | The exp47 method: architecture, implementation (`src/td_one/agent/proposed_method.py`), verdict. |
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
@@ -18,7 +19,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 
 | Doc | What you get |
 |---|---|
-| [slides/TD-One-Slides.html](slides/TD-One-Slides.html) | The Final Deck (HTML, deck of record): 8 exec-report slides covering the solution, results, honest negatives, manager mock, future work. Updated 2026-10-20. |
+| [slides/TD-One-Slides.html](slides/TD-One-Slides.html) | The Final Report (HTML, deck of record): 8 exec slides + the full paper (general architecture, datasets, models, per-dataset final results, visualizations) + Appendices A–D (ablations, prompts and parameters, glossary, failed experiments). Final 2026-10-20 — all experiments landed. |
 | [slides/TD-One-Context.md](slides/TD-One-Context.md) | Full context for continuing the deck work: ground truth, verdicts, messaging rules, what changed, open work. |
 
 ## Current program docs
@@ -31,7 +32,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [UQ_SURVEY.md](UQ_SURVEY.md) | Uncertainty quantification for TSFMs (2024+): conformal-for-time-series families, TSFM calibration, error-prediction meta-models; shortlist behind exp74. |
 | [SELF_AUDIT.md](SELF_AUDIT.md) | Adversarial self-review: multiple comparisons, M4 development bias, BoC-discrete downgrade, PIT re-verification, CRPS verification. Headlines survive; margins disclosed. |
 | [DIAGRAMS.md](DIAGRAMS.md) | Architecture and experiment diagrams (mermaid — renders on GitHub). |
-| [../experiments/README.md](../experiments/README.md) | Full experiment index (exp1–exp78) with verdicts and report links. |
+| [../experiments/README.md](../experiments/README.md) | Full experiment index (exp1–exp81) with verdicts and report links. |
 | [../experiments/REPRODUCIBILITY.md](../experiments/REPRODUCIBILITY.md) | Reproduce any experiment: environment, weights, commands. |
 
 ## The story (dated finals — 2026-10-19 close-outs)

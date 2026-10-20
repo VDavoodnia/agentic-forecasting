@@ -56,11 +56,11 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 |---|---|
 | [docs/](docs/) | All documentation. Start with [docs/README.md](docs/README.md). |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Methodology reference (problem, ladder, PIT, metrics). |
-| [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md) | Final results: all tracks, exp1–exp78 era. |
+| [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md) | Final results: all tracks, exp1–exp81 era. |
 | [docs/REDESIGN.md](docs/REDESIGN.md) | Design decisions: what we keep/kill/try next. |
 | [docs/DIAGRAMS.md](docs/DIAGRAMS.md) | Architecture diagrams. |
 | [docs/plots/](docs/plots/) | Result plots — regenerate via `docs/plots/make_plots.py`. |
-| [experiments/](experiments/) | All experiments (exp1–exp48). See [experiments/README.md](experiments/README.md). |
+| [experiments/](experiments/) | All experiments (exp1–exp81). See [experiments/README.md](experiments/README.md). |
 | [src/td_one/](src/td_one/) | Main package (see structure below; each subpackage has a README). |
 | [scripts/](scripts/) | Data fetchers, model bootstrap, pipelines. |
 | [configs/](configs/) | Run configs (reserved). |
@@ -100,7 +100,8 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 | LLM integration ladder (exp54–58) | ⚠️ Partial — rung 5 hybrid 0.4289 beats Vector's LLM 0.5688 by 24.6% (paired p=0.009) on Food CPI, but loses to its own best LLM expert (llm-promptV1 0.4262, p=0.058); rung 3 calibrator ❌ killed; guardrails reproduce exp49 bit-exact |
 | exp43 regime router | ✅ Partial positive — first to beat equal weights (M4 0.1282 vs 0.1295, p=0.018) |
 | Conformal M0 | ✅ Strong baseline — nothing beats it cleanly on synthetic |
-| Uncertainty layer (exp74) | ✅ CQR on the TSFM quantile grid is the default UQ layer (coverage→nominal, no CRPS cost); ACI regime-conditional; story-feature uncertainty meta-model real (paired p=2e-11 vs numeric-only) |
+| Uncertainty layer (exp74–76) | ✅ CQR on the TSFM quantile grid is the default UQ layer (coverage→nominal, no CRPS cost); ACI regime-conditional; story-feature uncertainty meta-model real (exp76 PIT-corrected re-measurement: −2.8% vs numeric-only, p=1.9e-06 — exp74's p=2e-11 was leak-inflated and is retired) |
+| Pooled conformal banks (exp81) | ✅ Ships, family-gated — signed-score shrinkage banks (n0=24) activate on families with ≥8 series: M4 conformal no-op → cov80 0.805; Tourism CRPS −1.0% and cov80 0.806. Pooling contraindicated on OSFI (4 heterogeneous segments) — per-series CQR kept there |
 | Integration (exp72) | ⚠️ Mixed — Track-2 shifts stress-test Track-1 groups: Q1 regional-isolation not supported (p=0.22, 5 seeds; oracle geography identical — the limit is the forecaster); Q2 fallback a working but blunt safety valve; Q3 Layer-2 protects in the thin-group regime (p<1e-8). Flagged: v2_forecaster_fn emits flat point-mass quantiles |
 | Group forecaster (exp78–80) | ⚠️ Fixed + settled — point-mass defect root-caused and fixed (exp78: Gaussian spread, cov80 0.075→0.714); trailing-mean center ships, the real fitted v2 router loses inside the group forecaster (exp79); thin/dead fallback split ships (exp80b: dead groups use their own mean, pooled CRPS improves in every world, p≤0.008); CQR conformal range layer available but NOT the default (exp80a: nominal control coverage, S1 fresh-seed replication failed its pre-registered bar — structural bank-blindness) |
 | TSFMs | ✅ Beat m0 30% on 63-mo real SMM (exp18, p=0.0012); beat classical ~20% on M4 |

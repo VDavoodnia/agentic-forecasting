@@ -4,8 +4,8 @@
 
 *What was added after the classical/LLM benchmark program closed, framed
 around the mortgage-attrition problem. Results marked ✅ are final and
-verified on `main`. Items marked ⏳ are experiments in flight — nothing
-below closes or kills any track.*
+verified on `main`. All experiments in this phase have landed (through
+exp81) — nothing below is in flight.*
 
 ## The system now has four layers around Proposed Method v2
 
@@ -15,7 +15,7 @@ flowchart TD
     N[News DB<br/>17,906 articles + bodies] --> A
     O --> L2[Layer-2 decision stage<br/>analyst tools + validation gating]
     V2[Proposed Method v2<br/>regime router + gated LLM expert] --> L2
-    L2 --> UQ[CQR uncertainty layer<br/>story-informed intervals]
+    L2 --> UQ[CQR uncertainty layer<br/>story-informed intervals; pooled banks<br/>on many-series families, exp81]
     G[Deterministic groups<br/>+ cited LLM narratives] --> R[Risk reports]
     UQ --> R
 ```
@@ -30,7 +30,7 @@ flowchart TD
 | Red-team breaking points | S1 rate shock: ~3× CRPS at 4σ for all models; Chronos-2 coverage 0.89→0.53 | exp67 |
 | Layer-2 gating | uninsured harm +10.7% (p=0.030) → +0.8% (n.s.); h=3 beats v2 −6.8% (p=0.015); ships as v2's deployment wrapper on single-series targets | exp73 |
 | CQR uncertainty layer | Food CPI CRPS 1.2824 vs 1.3035 (p=1.7e-04); coverage at nominal at ~1.03–1.08× width; new default UQ layer | exp74 |
-| Story features predict uncertainty | story+numeric beats numeric-only, paired t=−6.92, p=2.0e-11 | exp74 |
+| Story features predict uncertainty | story+numeric beats numeric-only (exp74 as measured: paired t=−6.92, p=2.0e-11; **exp76's PIT-corrected re-measurement: −2.8% CRPS, p=1.9e-06** — the original figure was inflated by a one-month keying offset and is retired) | exp74, corrected in exp76 |
 | ACI (adaptive conformal) | conditional win on volatile subsets (p=3.6e-05) — regime-gated option | exp74 |
 | Grouping for explainability | deterministic groups + citation-enforced narratives (10/10 pass); grouping cost +0.0033 CRPS on exp66c's own scoring with the exp78 fix (the published +0.009–0.016 was largely the point-mass artifact — see exp78 row below); risk reports, not forecasts | exp66c/d |
 | SHAP clustering | 2× cohort recovery vs raw features (ARI 0.091 vs 0.046) | exp66e |
@@ -79,14 +79,11 @@ flowchart TD
   integration results are final; see `docs/MACRO_SIGNAL.md`.
 - **exp66g** — counterfactual killed; LLM+stats is classifier of record.
 
-## ⏳ In flight (do not cite as results yet)
+## In flight
 
-- **exp75** — mini-agent orchestrator (~22 factor agents + diagnostics →
-  decision engine), five test beds.
-- **exp76** — CQR × story fusion + UQ sweep across Tourism/M3/M4/OSFI/SMM.
-  Includes the S8 ablation: macro signals as **uncertainty** features
-  (story-only vs story+macro) — the program's official use of the signal
-  store after exp77.
+Nothing. Every experiment in this phase has landed and is in the final
+results table above (latest: exp81, pooled conformal banks). The combined
+final delivery is [FINAL_DELIVERY.md](FINAL_DELIVERY.md).
 
 ## Framing note (for slides/reports)
 

@@ -98,7 +98,7 @@ with a gate: LLM on for macro-like series, off for seasonal data.
 | Setup | Result |
 |---|---|
 | Food CPI, v2 generic (gated LLM) | **0.5322** vs v1 0.9661 (p=4.3e-06); matches/edges Vector's 0.5688 by 6.4% directionally (likely n.s. — see caveat) |
-| Food CPI, prompt-V1 hybrid (exp58) | 0.4526 — beats Vector's 0.5688 by 20% (p=0.009) |
+| Food CPI, prompt-V1 hybrid (exp58) | 0.4526 — beats Vector's 0.5688 by 20% (directional); the 4-expert hybrid (0.4289) beats Vector by 24.6% (paired p=0.009) but loses to V1 alone |
 | Food CPI, prompt-V1 alone | **0.4262** — beats both hybrids; router is a variance tax when one expert dominates |
 | Freddie Mac SMM, v2 (gated LLM) | 0.000508 vs v1 0.000512 (p=0.69, neutral); LLM alone 0.000492 ties TimesFM |
 | Tourism Monthly | LLM **64% worse** than classical → gate off |
@@ -155,13 +155,14 @@ on calm-regime data; see [PHASE2_UPDATE.md](PHASE2_UPDATE.md)).
 v2 now ships with a validation-gated decision stage on single-series
 targets (analyst toolbox + per-origin decision traces). On OSFI M4 runoff
 (pooled, h=1, n=300): gating CRPS 0.00374 vs naive 0.00369 (+1.2%,
-p=0.081) — the do-no-harm gate holds. At h=3 the gated system beats v2
+p=0.081) — the do-no-harm gate holds. (Ungated v2 scores 0.00381 on
+the same cases.) At h=3 the gated system beats v2
 significantly (−6.8%, p=0.015). Its clearest win is harm repair: exp70's
 uninsured-segment damage (+10.7%, p=0.030) is mechanically blocked to
 +0.8% (n.s.). Layer-2 gating also protects the group forecaster under
 planted shifts (exp72, p<1e-8).
 
-### Group forecaster: center settled, router rejected (exp78, exp79)
+### Group forecaster: center settled, router rejected (exp78, exp79, exp80)
 
 The loan-attrition group forecaster carried a silent defect: exp78
 found its router had never actually run — a skipped `fit()` call and a
@@ -180,6 +181,19 @@ scored significantly worse than the naive center on control
 instead of silently degrading. Grouping cost, re-measured with the
 settled center: **+0.0018 CRPS**.
 
+exp80 finished the forecaster. (a) A CQR conformal range layer on top
+of it is **not the default**: the conditional variant hit nominal
+control coverage on protocol and fresh seeds (0.804 / 0.824) but failed
+the pre-registered fresh-seed rate-shock bar (coverage 0.652 vs the
+0.77 floor) — the gap is structural (bank offsets are bounded by the
+worst pre-shock miss). It stays available behind a flag. (b) The
+**thin/dead fallback split ships**: groups whose recent membership has
+collapsed to zero now use their own trailing mean instead of the
+portfolio fallback — pooled CRPS improves in every world (control
+−1.6%, p=0.0075; heavy drift −3.5%, p=0.0042; rate shock −1.4%,
+p=0.0078), dead-group cells improve 0.1317 → 0.0961 (−27%), and
+pure-death cells score exactly 0.0000.
+
 ---
 
 ## Uncertainty Layer — CQR, fused with the uncertainty signal (exp74, exp76)
@@ -193,7 +207,10 @@ exp76 fused CQR with the narrative/meta uncertainty signal: modulating
 the conformal level by predicted-error percentile (horizon-gated)
 improves Food CPI further to **1.2587 (−1.8% vs CQR, p=2.0e-05)** with
 coverage 0.854 — the best uncertainty arm tested, where a long
-forecast history and the story pipeline exist. A five-benchmark sweep
+forecast history and the story pipeline exist. The story effect
+itself, re-measured by exp76 after a one-month keying offset in exp74
+was fixed: story+numerical features beat numerical-only by **−2.8%
+(p=1.9e-06)**; exp74's p=2.0e-11 was leak-inflated and is retired. A five-benchmark sweep
 (Tourism, M3, M4, OSFI runoff, SMM) corrects the earlier "never
 harmful" claim: pooled, CQR is CRPS-neutral (+0.2%, p=0.057) — it is a
 **coverage-repair** layer (it wins outright on OSFI runoff, −1.3%),
