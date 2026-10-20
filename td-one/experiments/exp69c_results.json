@@ -1,0 +1,5224 @@
+{
+ "config": {
+  "mode": "real",
+  "horizon": 6
+ },
+ "cal_signals": {
+  "C1a": {
+   "shift_type": "none",
+   "direction": "none",
+   "magnitude_bucket": "none",
+   "months_from_now": null,
+   "timing_confidence": "low",
+   "driving_trends": []
+  },
+  "C1b": {
+   "shift_type": "policy",
+   "direction": "up",
+   "magnitude_bucket": "medium",
+   "months_from_now": 2,
+   "timing_confidence": "medium",
+   "driving_trends": [
+    "persistent inflationary pressure",
+    "monetary policy tightening expectations"
+   ]
+  },
+  "C2": {
+   "shift_type": "rate",
+   "direction": "down",
+   "magnitude_bucket": "medium",
+   "months_from_now": 1,
+   "timing_confidence": "high",
+   "driving_trends": [
+    "rate hike expected",
+    "mortgage lock-in effect"
+   ]
+  }
+ },
+ "summary": {
+  "primary_B_vs_A": {
+   "n": 12,
+   "name": "primary_B_vs_A",
+   "mean_diff": 0.001855661125140633,
+   "rel_pct": 23.686745054088448,
+   "win_rate": 0.0,
+   "paired_p": 0.23134213210471688,
+   "verdict": "FAIL"
+  },
+  "scaffolding_B_vs_C": {
+   "n": 12,
+   "name": "scaffolding_B_vs_C",
+   "mean_diff": -0.0011380303175637053,
+   "rel_pct": -10.510198794834343,
+   "win_rate": 0.08333333333333333,
+   "paired_p": 0.7208334273386288,
+   "verdict": "FAIL"
+  },
+  "timeline_B_vs_Bnotl": {
+   "n": 12,
+   "name": "timeline_B_vs_Bnotl",
+   "mean_diff": 0.0,
+   "rel_pct": 0.0,
+   "win_rate": 0.0,
+   "paired_p": 1.0,
+   "verdict": "FAIL"
+  },
+  "episode_T1_B_vs_A": {
+   "n": 4,
+   "name": "episode_T1",
+   "mean_diff": 0.0,
+   "rel_pct": 0.0,
+   "win_rate": 0.0,
+   "paired_p": 1.0,
+   "verdict": "FAIL"
+  },
+  "episode_T2_B_vs_A": {
+   "n": 4,
+   "name": "episode_T2",
+   "mean_diff": 0.0054967637779401515,
+   "rel_pct": 75.46367343748068,
+   "win_rate": 0.0,
+   "paired_p": 0.2742583215396428,
+   "verdict": "FAIL"
+  },
+  "episode_T3_B_vs_A": {
+   "n": 4,
+   "name": "episode_T3",
+   "mean_diff": 7.021959748174797e-05,
+   "rel_pct": 8.852663675345685,
+   "win_rate": 0.0,
+   "paired_p": 0.3910022189557705,
+   "verdict": "FAIL"
+  },
+  "do_no_harm_placebo_B": {
+   "n": 4,
+   "name": "dnh_placebo_B",
+   "mean_diff": -0.00011011076706015418,
+   "rel_pct": -4.5825461263629546,
+   "win_rate": 0.5,
+   "paired_p": 0.20262741640875467,
+   "verdict": "PASS"
+  },
+  "do_no_harm_placebo_C": {
+   "n": 4,
+   "name": "dnh_placebo_C",
+   "mean_diff": 0.0,
+   "rel_pct": 0.0,
+   "win_rate": 0.0,
+   "paired_p": 1.0,
+   "verdict": "PASS"
+  },
+  "do_no_harm_post_B": {
+   "n": 3,
+   "name": "dnh_post_B",
+   "mean_diff": 0.003528731371885653,
+   "rel_pct": 53.356554725202216,
+   "win_rate": 0.3333333333333333,
+   "paired_p": 0.19858866122410035,
+   "verdict": "PASS"
+  },
+  "do_no_harm_post_C": {
+   "n": 3,
+   "name": "dnh_post_C",
+   "mean_diff": 0.011974765770817353,
+   "rel_pct": 181.06570827766558,
+   "win_rate": 0.0,
+   "paired_p": 0.42264973081037416,
+   "verdict": "PASS"
+  }
+ },
+ "diagnosis": {
+  "n_straddle": 12,
+  "firing_rate": 0.25,
+  "direction_accuracy": 0.6666666666666666,
+  "n_fired": 3,
+  "fired_origins": [
+   [
+    "T2",
+    "2022-04",
+    "up",
+    1,
+    0.01451
+   ],
+   [
+    "T2",
+    "2022-06",
+    "up",
+    2,
+    0.00476
+   ],
+   [
+    "T3",
+    "2024-02",
+    "down",
+    2,
+    0.00146
+   ]
+  ]
+ },
+ "variants": {
+  "firing_rate": 0.25,
+  "V_abstain": {
+   "name": "V_abstain_vs_A",
+   "n": 12,
+   "mean_diff": 0.001855661125140633,
+   "rel_pct": 23.686745054088448,
+   "win_rate": 0.0,
+   "paired_p": 0.23134213210471688
+  },
+  "direction_accuracy_fired": 0.6666666666666666,
+  "cal_timing_bias": 1.5,
+  "V_timing": {
+   "name": "V_timing_vs_A",
+   "n": 12,
+   "mean_diff": 0.0012134938107176473,
+   "rel_pct": 15.48974547656421,
+   "win_rate": 0.0,
+   "paired_p": 0.2896336574362492
+  },
+  "size_ratio_realized_over_calibrated": 0.3918203929410211,
+  "V_size": {
+   "name": "V_size_vs_A",
+   "n": 12,
+   "mean_diff": -0.0002918746627320567,
+   "rel_pct": -3.7256590819395035,
+   "win_rate": 0.08333333333333333,
+   "paired_p": 0.6042441310728712
+  }
+ },
+ "rows": [
+  {
+   "episode": "T1",
+   "series": "food_cpi",
+   "origin": "2021-11",
+   "origin_class": "straddle",
+   "crps_A": 0.010521706556255042,
+   "q_A": [
+    [
+     0.052124522626399994,
+     0.048383548855781555,
+     0.046498458832502365,
+     0.04380594938993454,
+     0.04116472601890564,
+     0.03851139917969704
+    ],
+    [
+     0.0568438395857811,
+     0.05442410707473755,
+     0.05326691269874573,
+     0.051429569721221924,
+     0.048683714121580124,
+     0.047245949506759644
+    ],
+    [
+     0.05901213735342026,
+     0.0577266663312912,
+     0.0571654811501503,
+     0.0559239462018013,
+     0.05341128259897232,
+     0.052742257714271545
+    ],
+    [
+     0.06030029058456421,
+     0.05987348407506943,
+     0.059796616435050964,
+     0.05916325002908707,
+     0.056648172438144684,
+     0.05675828456878662
+    ],
+    [
+     0.06129215657711029,
+     0.06150597333908081,
+     0.061900198459625244,
+     0.06167351454496384,
+     0.05927790701389313,
+     0.05983291566371918
+    ],
+    [
+     0.0622367188334465,
+     0.06302379071712494,
+     0.06354954093694687,
+     0.06361649185419083,
+     0.06175120174884796,
+     0.06208949536085129
+    ],
+    [
+     0.06299489736557007,
+     0.0641481950879097,
+     0.0649648904800415,
+     0.0654408261179924,
+     0.06387623399496078,
+     0.06420998275279999
+    ],
+    [
+     0.0632273480296135,
+     0.06486436724662781,
+     0.06638599187135696,
+     0.06692807376384735,
+     0.06584731489419937,
+     0.065932996571064
+    ],
+    [
+     0.06416817754507065,
+     0.06598788499832153,
+     0.0680142268538475,
+     0.06832677125930786,
+     0.06752083450555801,
+     0.06767289340496063
+    ],
+    [
+     0.06471378356218338,
+     0.06688164919614792,
+     0.06911945343017578,
+     0.06977497786283493,
+     0.06949859112501144,
+     0.06938965618610382
+    ],
+    [
+     0.06552502512931824,
+     0.06790374219417572,
+     0.0704064816236496,
+     0.07118954509496689,
+     0.07125003635883331,
+     0.07125275582075119
+    ],
+    [
+     0.06621850281953812,
+     0.06874454021453857,
+     0.07154190540313721,
+     0.073221854865551,
+     0.07326056808233261,
+     0.0737503245472908
+    ],
+    [
+     0.06708811223506927,
+     0.06979953497648239,
+     0.07288946956396103,
+     0.07431937754154205,
+     0.07504130899906158,
+     0.07533416897058487
+    ],
+    [
+     0.06807231903076172,
+     0.07110052555799484,
+     0.07451574504375458,
+     0.07632621377706528,
+     0.07741659134626389,
+     0.07806149125099182
+    ],
+    [
+     0.06921391934156418,
+     0.07273057103157043,
+     0.0764828771352768,
+     0.07838989794254303,
+     0.08008670806884766,
+     0.08076781034469604
+    ],
+    [
+     0.07091835886240005,
+     0.07448601722717285,
+     0.07886062562465668,
+     0.08102696388959885,
+     0.08320672810077667,
+     0.08417857438325882
+    ],
+    [
+     0.07268095016479492,
+     0.07665648311376572,
+     0.0815918818116188,
+     0.08427644520998001,
+     0.08683028072118759,
+     0.08841534703969955
+    ],
+    [
+     0.07523384690284729,
+     0.07949464023113251,
+     0.08496200293302536,
+     0.08858425915241241,
+     0.09128555655479431,
+     0.0945432186126709
+    ],
+    [
+     0.08022449165582657,
+     0.08636947721242905,
+     0.093574158847332,
+     0.09839656949043274,
+     0.10205919295549393,
+     0.107697494328022
+    ]
+   ],
+   "realized_change": 0.02128191104184529,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2021-10-20",
+      "title": "Canada's inflation rate hits 18-year high, puts focus on central bank rate policy",
+      "score": 0.85,
+      "reason": "Highlights 18-year high inflation directly prompting central bank policy shift focus."
+     },
+     {
+      "date": "2021-09-15",
+      "title": "Canada\u2019s inflation rate reached 4.1% in August, highest since 2003",
+      "score": 0.85,
+      "reason": "High inflation print (4.1%) is a primary signal for potential future monetary tightening."
+     },
+     {
+      "date": "2021-09-15",
+      "title": "Canada inflation hits 18-year high as Trudeau faces tight race",
+      "score": 0.8,
+      "reason": "Connects 18-year high inflation to current economic and political landscape."
+     },
+     {
+      "date": "2021-10-27",
+      "title": "Bank of Canada signals rate hikes could come sooner than previously expected",
+      "score": 0.8,
+      "reason": "Direct signal of earlier-than-expected rate hikes, a major driver of inflation expectations."
+     },
+     {
+      "date": "2021-02-17",
+      "title": "Canada\u2019s inflation accelerates in January, could test 3% in spring",
+      "score": 0.75,
+      "reason": "Projects inflation testing 3% in spring, highly relevant for a 6-month outlook."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2020-11-18",
+      "event": "Rising food prices emerge as a significant driver of Canada's annual inflation rate."
+     },
+     {
+      "date": "2021-02-17",
+      "event": "Inflation begins to accelerate, with projections suggesting it could test the 3% threshold by spring."
+     },
+     {
+      "date": "2021-04-21",
+      "event": "Annual inflation rate doubles as the central bank begins to anticipate faster economic growth."
+     },
+     {
+      "date": "2021-05-19",
+      "event": "Consumer prices reach their fastest growth pace in a decade, confirming upward momentum."
+     },
+     {
+      "date": "2021-07-08",
+      "event": "The C.D. Howe Institute proposes a policy roadmap involving rate hikes and bond tapering by July 2022."
+     },
+     {
+      "date": "2021-08-18",
+      "event": "Markets experience volatility as inflation data prints higher than anticipated, causing a rally in the Canadian dollar."
+     },
+     {
+      "date": "2021-09-15",
+      "event": "August inflation hits 4.1%, marking the highest level seen since 2003."
+     },
+     {
+      "date": "2021-10-27",
+      "event": "The Bank of Canada signals that interest rate hikes may arrive sooner than originally projected."
+     }
+    ],
+    "story_building": "The sustained climb in consumer prices has created a momentum that is increasingly forcing the hand of central bank policymakers. Moving into the next six months, the economy is poised for a shift toward higher interest rates and reduced bond support to anchor inflation expectations. This transition will likely keep food and broader consumer prices under intense focus as the market anticipates the specific timing of the first rate hike."
+   },
+   "crps_B": 0.010521706556255042,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada signaled on 2021-10-27 that interest rate hikes may arrive sooner than projected to combat sustained inflation, which is expected to begin tempering price growth within the next 6 months.",
+    "driving_trends": [
+     "rate hike expected",
+     "monetary tightening",
+     "inflationary pressure"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.010521706556255042,
+   "signal_B_notl": {
+    "shift_type": "policy",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada's October 27, 2021 signal of an earlier-than-projected interest rate hike to combat sustained inflationary pressure indicates a shift toward monetary tightening within the next six months.",
+    "driving_trends": [
+     "interest rate hike expected",
+     "monetary policy tightening",
+     "inflationary momentum"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.010521706556255042,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada signaled on October 27, 2021, that interest rate hikes could come sooner than previously expected due to rising inflation.",
+    "driving_trends": [
+     "rate hike expected",
+     "inflation rising"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T1",
+   "series": "food_cpi",
+   "origin": "2021-12",
+   "origin_class": "straddle",
+   "crps_A": 0.02274007975997908,
+   "q_A": [
+    [
+     0.051512181758880615,
+     0.045232947915792465,
+     0.0411740317940712,
+     0.03550346940755844,
+     0.030169839039444923,
+     0.0257693063467741
+    ],
+    [
+     0.05565837025642395,
+     0.05108088254928589,
+     0.0473921000957489,
+     0.042739056050777435,
+     0.03720825910568237,
+     0.03308762609958649
+    ],
+    [
+     0.05793049931526184,
+     0.05467672646045685,
+     0.051548153162002563,
+     0.04804398864507675,
+     0.042939357459545135,
+     0.039338186383247375
+    ],
+    [
+     0.05910048633813858,
+     0.05677320063114166,
+     0.05411100387573242,
+     0.051623664796352386,
+     0.047103241086006165,
+     0.04418099671602249
+    ],
+    [
+     0.06011899560689926,
+     0.05841592699289322,
+     0.05619950592517853,
+     0.05427468568086624,
+     0.050297096371650696,
+     0.0480143278837204
+    ],
+    [
+     0.06119479238986969,
+     0.05997578799724579,
+     0.057947754859924316,
+     0.056358061730861664,
+     0.05302811414003372,
+     0.05093403533101082
+    ],
+    [
+     0.0620511919260025,
+     0.06105887144804001,
+     0.05941971391439438,
+     0.058213286101818085,
+     0.0553036704659462,
+     0.05346033722162247
+    ],
+    [
+     0.06227854639291763,
+     0.06174164265394211,
+     0.060830943286418915,
+     0.059758223593235016,
+     0.057336002588272095,
+     0.05561711639165878
+    ],
+    [
+     0.06312841922044754,
+     0.06275030225515366,
+     0.06239619851112366,
+     0.06110253930091858,
+     0.05910348892211914,
+     0.05754590034484863
+    ],
+    [
+     0.06351973116397858,
+     0.06352709233760834,
+     0.06348344683647156,
+     0.06253772228956223,
+     0.06089356541633606,
+     0.059463754296302795
+    ],
+    [
+     0.06404005736112595,
+     0.06431286782026291,
+     0.06454247236251831,
+     0.06380381435155869,
+     0.06254919618368149,
+     0.06132674962282181
+    ],
+    [
+     0.06442616879940033,
+     0.0649321898818016,
+     0.06550982594490051,
+     0.0655289813876152,
+     0.0642346441745758,
+     0.06349824368953705
+    ],
+    [
+     0.06493650376796722,
+     0.06567596644163132,
+     0.0665932148694992,
+     0.0664122924208641,
+     0.06568334996700287,
+     0.06485184282064438
+    ],
+    [
+     0.06551220268011093,
+     0.06657421588897705,
+     0.06783450394868851,
+     0.06796882301568985,
+     0.06749118864536285,
+     0.06696373969316483
+    ],
+    [
+     0.06615015119314194,
+     0.06771250814199448,
+     0.06938829272985458,
+     0.06954951584339142,
+     0.0695902407169342,
+     0.0691005140542984
+    ],
+    [
+     0.06720026582479477,
+     0.06881333142518997,
+     0.07106400281190872,
+     0.0714235007762909,
+     0.07192151993513107,
+     0.07163481414318085
+    ],
+    [
+     0.06824585050344467,
+     0.07015030831098557,
+     0.0729043260216713,
+     0.07374370843172073,
+     0.07469476014375687,
+     0.07478585839271545
+    ],
+    [
+     0.06982497125864029,
+     0.07184609770774841,
+     0.07511813193559647,
+     0.0768350288271904,
+     0.07804683595895767,
+     0.07916619628667831
+    ],
+    [
+     0.07265427708625793,
+     0.07586029171943665,
+     0.08030316978693008,
+     0.08297596126794815,
+     0.08501878380775452,
+     0.08700354397296906
+    ]
+   ],
+   "realized_change": 0.026566500707705498,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2021-10-27",
+      "title": "Bank of Canada signals rate hikes could come sooner than previously expected",
+      "score": 0.85,
+      "reason": "Signals a shift in monetary policy timing, a major driver of future inflation trends."
+     },
+     {
+      "date": "2021-02-17",
+      "title": "Canada\u2019s inflation accelerates in January, could test 3% in spring",
+      "score": 0.8,
+      "reason": "Provides a forward-looking forecast of inflation reaching 3%, directly impacting food price expectations."
+     },
+     {
+      "date": "2021-10-20",
+      "title": "Canada's inflation rate hits 18-year high, puts focus on central bank rate policy",
+      "score": 0.75,
+      "reason": "High inflation print puts direct pressure on central bank policy, signaling potential shifts."
+     },
+     {
+      "date": "2021-04-22",
+      "title": "Bank of Canada offers fresh hints that interest rates will rise next year",
+      "score": 0.75,
+      "reason": "Indicates a shift in interest rate trajectory, which is a key tool in controlling inflation."
+     },
+     {
+      "date": "2021-09-15",
+      "title": "Canada\u2019s inflation rate reached 4.1% in August, highest since 2003",
+      "score": 0.7,
+      "reason": "Highlights 18-year high inflation, creating momentum for policy shifts within the 6-month window."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-02-17",
+      "event": "Canada's inflation rate accelerates, signaling a potential test of the 3% threshold by spring."
+     },
+     {
+      "date": "2021-04-21",
+      "event": "Annual inflation rate doubles in March, prompting the Bank of Canada to signal faster economic growth."
+     },
+     {
+      "date": "2021-04-22",
+      "event": "Bank of Canada hints at interest rate hikes beginning in 2022 to manage emerging inflationary pressures."
+     },
+     {
+      "date": "2021-07-08",
+      "event": "C.D. Howe Institute proposes a concrete timeline for rate hikes and tapering to begin in the fall and into 2022."
+     },
+     {
+      "date": "2021-09-15",
+      "event": "Inflation reaches an 18-year high of 4.1%, creating significant political and economic pressure."
+     },
+     {
+      "date": "2021-10-27",
+      "event": "Bank of Canada accelerates its timeline for potential interest rate hikes as inflation proves persistent."
+     },
+     {
+      "date": "2021-12-08",
+      "event": "Bank of Canada maintains current rates but issues an explicit warning regarding elevated inflation levels."
+     },
+     {
+      "date": "2021-12-15",
+      "event": "Inflation holds at an 18-year high of 4.7% for November, cementing a baseline of elevated price growth."
+     }
+    ],
+    "story_building": "The Canadian economy is entering 2022 with a high-inflation baseline that has moved from transient warnings to entrenched reality. The Bank of Canada has signaled an impending shift toward tighter monetary policy, creating a race between upcoming interest rate hikes and the momentum of consumer prices. This tension suggests that food-price inflation will remain a primary battleground, likely staying elevated until the effects of monetary tightening can meaningfully cool broader economic demand."
+   },
+   "crps_B": 0.02274007975997908,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's explicit warnings regarding persistent, 18-year high inflation (4.7% as of 2021-12-15) and its accelerated timeline for rate hikes indicate aggressive monetary policy intervention beginning early in the 2022 forecast window.",
+    "driving_trends": [
+     "monetary tightening",
+     "persistent inflation",
+     "hawkish central bank pivot"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.02274007975997908,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada has signaled an impending shift toward tighter monetary policy in early 2022 to combat the 18-year high inflation rate of 4.7% recorded in November 2021.",
+    "driving_trends": [
+     "monetary tightening",
+     "persistent inflation",
+     "elevated food price momentum"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.02274007975997908,
+   "signal_C": {
+    "shift_type": "policy",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada signaled on October 27, 2021, that interest rate hikes could occur sooner than previously expected, with market expectations shifting toward early 2022 to combat elevated inflation.",
+    "driving_trends": [
+     "inflationary pressure",
+     "monetary tightening expectation"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T1",
+   "series": "food_cpi",
+   "origin": "2022-01",
+   "origin_class": "straddle",
+   "crps_A": 0.017232120556719625,
+   "q_A": [
+    [
+     0.057969219982624054,
+     0.051615796983242035,
+     0.048284150660037994,
+     0.04254574328660965,
+     0.03668089583516121,
+     0.0317339189350605
+    ],
+    [
+     0.06323595345020294,
+     0.058903973549604416,
+     0.056231800466775894,
+     0.05159088969230652,
+     0.04541287571191788,
+     0.04088100790977478
+    ],
+    [
+     0.06586094200611115,
+     0.06314464658498764,
+     0.061090148985385895,
+     0.05766051635146141,
+     0.051975905895233154,
+     0.048347800970077515
+    ],
+    [
+     0.06734499335289001,
+     0.06572297215461731,
+     0.06410545110702515,
+     0.06184550002217293,
+     0.05659819766879082,
+     0.05387743562459946
+    ],
+    [
+     0.06862559169530869,
+     0.06772500276565552,
+     0.06649066507816315,
+     0.0649508386850357,
+     0.06016957014799118,
+     0.058162860572338104
+    ],
+    [
+     0.06985600292682648,
+     0.06954358518123627,
+     0.06836536526679993,
+     0.06733778119087219,
+     0.06324683129787445,
+     0.06137041002511978
+    ],
+    [
+     0.0708206444978714,
+     0.07081161439418793,
+     0.06992886960506439,
+     0.06943075358867645,
+     0.06582635641098022,
+     0.06414636969566345
+    ],
+    [
+     0.07108152657747269,
+     0.07158581167459488,
+     0.07143303751945496,
+     0.07109776139259338,
+     0.06812494993209839,
+     0.06638993322849274
+    ],
+    [
+     0.07208218425512314,
+     0.07275427877902985,
+     0.07316623628139496,
+     0.07266122847795486,
+     0.07012341916561127,
+     0.06855858117341995
+    ],
+    [
+     0.07258465886116028,
+     0.0736771821975708,
+     0.07439546287059784,
+     0.0742998719215393,
+     0.07234629988670349,
+     0.07069049775600433
+    ],
+    [
+     0.07336820662021637,
+     0.07473860681056976,
+     0.07578380405902863,
+     0.07582192867994308,
+     0.0743321031332016,
+     0.0728558748960495
+    ],
+    [
+     0.07393835484981537,
+     0.07551899552345276,
+     0.07700461894273758,
+     0.07792377471923828,
+     0.0764618068933487,
+     0.07547729462385178
+    ],
+    [
+     0.07469181716442108,
+     0.0765126645565033,
+     0.07844467461109161,
+     0.07906627655029297,
+     0.07833237200975418,
+     0.07720450311899185
+    ],
+    [
+     0.07545691728591919,
+     0.07770679891109467,
+     0.08012238889932632,
+     0.08107908070087433,
+     0.08073185384273529,
+     0.0799424946308136
+    ],
+    [
+     0.07643455266952515,
+     0.07911386340856552,
+     0.08206463605165482,
+     0.08300481736660004,
+     0.08337399363517761,
+     0.08257387578487396
+    ],
+    [
+     0.07796356081962585,
+     0.0806497111916542,
+     0.08435967564582825,
+     0.08552400767803192,
+     0.08647626638412476,
+     0.08591493964195251
+    ],
+    [
+     0.07945910096168518,
+     0.08247260749340057,
+     0.08684147894382477,
+     0.08854781091213226,
+     0.09008552134037018,
+     0.08997656404972076
+    ],
+    [
+     0.08164733648300171,
+     0.08474695682525635,
+     0.0897378921508789,
+     0.09249874949455261,
+     0.09441903233528137,
+     0.09555239975452423
+    ],
+    [
+     0.0854208767414093,
+     0.09011374413967133,
+     0.09660676121711731,
+     0.10054533183574677,
+     0.10350517928600311,
+     0.1057894229888916
+    ]
+   ],
+   "realized_change": 0.026458661712792028,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-01-19",
+      "title": "Inflation hits highest level in 30 years as Bank of Canada decision looms",
+      "score": 0.95,
+      "reason": "Reports on 30-year high inflation immediately preceding a critical policy pivot decision."
+     },
+     {
+      "date": "2022-01-19",
+      "title": "Canada\u2019s annual inflation rate rises 4.8%, highest since 1991",
+      "score": 0.95,
+      "reason": "Identifies the 4.8% inflation surge, a primary driver for shifting food price inflation expectations."
+     },
+     {
+      "date": "2022-01-20",
+      "title": "\u2018Pressing need\u2019 for Bank of Canada to raise interest rates amid inflation, housing prices: economists",
+      "score": 0.9,
+      "reason": "Highlights expert consensus on the 'pressing need' for policy rate hikes due to inflationary pressure."
+     },
+     {
+      "date": "2022-01-26",
+      "title": "Bank of Canada holds interest rates for now, but signals hikes to come",
+      "score": 0.85,
+      "reason": "Signals a clear, imminent shift in monetary policy (hikes) that will influence inflation."
+     },
+     {
+      "date": "2022-01-26",
+      "title": "Bank of Canada holds off hiking interest rates, sets stage for March increase",
+      "score": 0.85,
+      "reason": "Explicitly details the timeline for a major policy shift (March increase)."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-02-17",
+      "event": "Inflation shows early signs of acceleration, with economists warning it could test 3%."
+     },
+     {
+      "date": "2021-10-20",
+      "event": "Inflation reaches an 18-year high, intensifying focus on the Bank of Canada's policy response."
+     },
+     {
+      "date": "2021-10-27",
+      "event": "The Bank of Canada signals that interest rate hikes may arrive sooner than anticipated."
+     },
+     {
+      "date": "2021-12-15",
+      "event": "Annual inflation remains persistent at 4.7%, maintaining pressure on the central bank."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Canada's annual inflation rate climbs to 4.8%, the highest level since 1991."
+     },
+     {
+      "date": "2022-01-26",
+      "event": "The Bank of Canada holds rates at 0.25% but officially signals an interest rate hike cycle will begin in March."
+     }
+    ],
+    "story_building": "The Canadian economy is currently transitioning from a period of loose monetary policy to a regime of active rate increases designed to curb inflation. Over the next six months, the material shift in food-price inflation will likely depend on whether these upcoming rate hikes successfully dampen consumer demand and stabilize the supply-side cost pressures that have driven the recent surge. We are entering a period of policy tightening where the primary objective is to cool the pricing momentum established during the latter half of 2021."
+   },
+   "crps_B": 0.017232120556719625,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada explicitly signaled on 2022-01-26 that a rate-hike cycle will begin in March 2022 to address persistent inflationary pressures.",
+    "driving_trends": [
+     "rate hike expected",
+     "monetary policy tightening"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.017232120556719625,
+   "signal_B_notl": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada officially announced the commencement of an interest rate hike cycle starting in March 2022 to address 30-year high inflation, which is expected to dampen consumer demand and cooling pricing momentum.",
+    "driving_trends": [
+     "monetary policy tightening",
+     "interest rate hike cycle"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.017232120556719625,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "small",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada signaled on January 26, 2022, that it holds the current interest rate but has set the stage for an increase in March.",
+    "driving_trends": [
+     "rate hike expected"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T1",
+   "series": "food_cpi",
+   "origin": "2022-02",
+   "origin_class": "straddle",
+   "crps_A": 0.011207438337107238,
+   "q_A": [
+    [
+     0.06654182076454163,
+     0.05981426686048508,
+     0.05644051358103752,
+     0.05088111385703087,
+     0.04568617790937424,
+     0.04066484421491623
+    ],
+    [
+     0.07259438186883926,
+     0.06814500689506531,
+     0.06563524156808853,
+     0.061185337603092194,
+     0.055899493396282196,
+     0.05185173079371452
+    ],
+    [
+     0.0752367228269577,
+     0.07258399575948715,
+     0.07071022689342499,
+     0.06727530062198639,
+     0.06256498396396637,
+     0.059657976031303406
+    ],
+    [
+     0.07698950171470642,
+     0.07554823160171509,
+     0.07412513345479965,
+     0.07180742174386978,
+     0.0672454982995987,
+     0.06533132493495941
+    ],
+    [
+     0.07851428538560867,
+     0.07782536000013351,
+     0.0768456980586052,
+     0.07528312504291534,
+     0.07103818655014038,
+     0.06978820264339447
+    ],
+    [
+     0.07973390817642212,
+     0.07975852489471436,
+     0.0789451152086258,
+     0.07802727073431015,
+     0.07431383430957794,
+     0.0732903853058815
+    ],
+    [
+     0.08075001090765,
+     0.0812072902917862,
+     0.08078956604003906,
+     0.08044561743736267,
+     0.07718835771083832,
+     0.07635536789894104
+    ],
+    [
+     0.08113795518875122,
+     0.08218787610530853,
+     0.0825713574886322,
+     0.08232398331165314,
+     0.0797933042049408,
+     0.0787147805094719
+    ],
+    [
+     0.08223167061805725,
+     0.08353285491466522,
+     0.08458540588617325,
+     0.08437944948673248,
+     0.08214104175567627,
+     0.08131566643714905
+    ],
+    [
+     0.08289660513401031,
+     0.08469991385936737,
+     0.08612988889217377,
+     0.08643299341201782,
+     0.08496389538049698,
+     0.08378913253545761
+    ],
+    [
+     0.08403512835502625,
+     0.08619166910648346,
+     0.08803218603134155,
+     0.08840762078762054,
+     0.08741937577724457,
+     0.0863717794418335
+    ],
+    [
+     0.0848078727722168,
+     0.08723809570074081,
+     0.08960440754890442,
+     0.09094871580600739,
+     0.09005982428789139,
+     0.08942534029483795
+    ],
+    [
+     0.08578600734472275,
+     0.0885205939412117,
+     0.09142669290304184,
+     0.09256573021411896,
+     0.09240781515836716,
+     0.09166374057531357
+    ],
+    [
+     0.08660602569580078,
+     0.0900120884180069,
+     0.09345827996730804,
+     0.09508398175239563,
+     0.09540322422981262,
+     0.0949881300330162
+    ],
+    [
+     0.08784907311201096,
+     0.09147414565086365,
+     0.09557900577783585,
+     0.09725672006607056,
+     0.09841175377368927,
+     0.09801504015922546
+    ],
+    [
+     0.08969520032405853,
+     0.09335259348154068,
+     0.09838377684354782,
+     0.10045026242733002,
+     0.10225676745176315,
+     0.10213962197303772
+    ],
+    [
+     0.09128480404615402,
+     0.09533480554819107,
+     0.10123345255851746,
+     0.1039779782295227,
+     0.10650680959224701,
+     0.10692888498306274
+    ],
+    [
+     0.09345107525587082,
+     0.09756486862897873,
+     0.1042989045381546,
+     0.10829383134841919,
+     0.11140456050634384,
+     0.11312241852283478
+    ],
+    [
+     0.09686687588691711,
+     0.1028212234377861,
+     0.11144769191741943,
+     0.11678867787122726,
+     0.12109768390655518,
+     0.1243777647614479
+    ]
+   ],
+   "realized_change": 0.022768275673169636,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-01-19",
+      "title": "Inflation hits highest level in 30 years as Bank of Canada decision looms",
+      "score": 0.9,
+      "reason": "Links current record inflation levels to imminent BoC policy decisions."
+     },
+     {
+      "date": "2022-01-19",
+      "title": "Canada\u2019s annual inflation rate rises 4.8%, highest since 1991",
+      "score": 0.85,
+      "reason": "Highlights 30-year high inflation, which is the primary driver of policy shifts."
+     },
+     {
+      "date": "2022-01-20",
+      "title": "\u2018Pressing need\u2019 for Bank of Canada to raise interest rates amid inflation, housing prices: economists",
+      "score": 0.85,
+      "reason": "Directly addresses the pressure on the BoC to act on rising food and general inflation."
+     },
+     {
+      "date": "2022-01-26",
+      "title": "Bank of Canada holds interest rates for now, but signals hikes to come",
+      "score": 0.8,
+      "reason": "Signals a clear pivot from holding rates to upcoming hikes, a major economic shift."
+     },
+     {
+      "date": "2022-01-26",
+      "title": "Bank of Canada holds off hiking interest rates, sets stage for March increase",
+      "score": 0.8,
+      "reason": "Confirms the policy pivot to a March increase, crucial for future inflation paths."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-02-17",
+      "event": "Canadian inflation begins to accelerate, signaling potential upward pressure for the spring."
+     },
+     {
+      "date": "2021-04-21",
+      "event": "Annual inflation rate doubles, forcing a re-evaluation of growth and price stability."
+     },
+     {
+      "date": "2021-10-20",
+      "event": "Inflation reaches an 18-year high, intensifying focus on the Bank of Canada's monetary policy."
+     },
+     {
+      "date": "2021-10-27",
+      "event": "Bank of Canada accelerates its timeline for potential interest rate hikes."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Inflation climbs to 4.8%, a 30-year high, creating urgent pressure for central bank intervention."
+     },
+     {
+      "date": "2022-01-26",
+      "event": "Bank of Canada maintains current rates but formally signals a pivot toward rate hikes beginning in March."
+     }
+    ],
+    "story_building": "The Canadian economy is transitioning from a period of loose monetary policy to a cycle of aggressive rate hikes aimed at cooling rampant inflation. As borrowing costs increase over the next six months, the economy will face a direct test of whether policy shifts can dampen price growth or if structural inflationary pressures in food and housing will persist. This policy pivot sets the stage for a period of cooling consumer demand intended to stabilize the rising cost of living."
+   },
+   "crps_B": 0.011207438337107238,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada formally signaled a pivot toward interest rate hikes beginning in March 2022, which is intended to cool inflation over the coming months.",
+    "driving_trends": [
+     "monetary tightening",
+     "rate hike cycle",
+     "cooling consumer demand"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.011207438337107238,
+   "signal_B_notl": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada formally signaled a shift toward aggressive interest rate hikes beginning in March 2022 to cool rampant inflation and dampen consumer demand.",
+    "driving_trends": [
+     "rate hike cycle",
+     "monetary policy tightening",
+     "cooling consumer demand"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.011207438337107238,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada signaled on January 26, 2022, that it intends to raise interest rates in March 2022 to combat elevated inflation, which is expected to exert downward pressure on consumer spending and food price growth.",
+    "driving_trends": [
+     "rate hike expected"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T1",
+   "series": "food_cpi",
+   "origin": "2022-04",
+   "origin_class": "post",
+   "crps_A": 0.01056437958534785,
+   "q_A": [
+    [
+     0.07625120133161545,
+     0.06673355400562286,
+     0.06212016940116882,
+     0.05582679063081741,
+     0.04925468564033508,
+     0.04292071610689163
+    ],
+    [
+     0.08289094269275665,
+     0.07601956278085709,
+     0.0722436010837555,
+     0.06706857681274414,
+     0.06038537621498108,
+     0.05484245344996452
+    ],
+    [
+     0.085831418633461,
+     0.08103496581315994,
+     0.07789000868797302,
+     0.07374289631843567,
+     0.06770400702953339,
+     0.06333555281162262
+    ],
+    [
+     0.08768060803413391,
+     0.08424589037895203,
+     0.08155539631843567,
+     0.07855915278196335,
+     0.07278269529342651,
+     0.0695355087518692
+    ],
+    [
+     0.08935821056365967,
+     0.08667002618312836,
+     0.08442142605781555,
+     0.08221018314361572,
+     0.07682137936353683,
+     0.07439306378364563
+    ],
+    [
+     0.09077402949333191,
+     0.08873289823532104,
+     0.0866105854511261,
+     0.0849919319152832,
+     0.08025923371315002,
+     0.0781736820936203
+    ],
+    [
+     0.09194043278694153,
+     0.09022743999958038,
+     0.08848823606967926,
+     0.08747060596942902,
+     0.0832657739520073,
+     0.0814858078956604
+    ],
+    [
+     0.09222100675106049,
+     0.09111018478870392,
+     0.09026774764060974,
+     0.08931227028369904,
+     0.08593311905860901,
+     0.08405150473117828
+    ],
+    [
+     0.0933835506439209,
+     0.09243588149547577,
+     0.09227895736694336,
+     0.09134331345558167,
+     0.08833582699298859,
+     0.08678078651428223
+    ],
+    [
+     0.09399080276489258,
+     0.09353238344192505,
+     0.09378893673419952,
+     0.09338073432445526,
+     0.09114865958690643,
+     0.08940592408180237
+    ],
+    [
+     0.0950755774974823,
+     0.09490194916725159,
+     0.09561088681221008,
+     0.09526114165782928,
+     0.09361043572425842,
+     0.09205929934978485
+    ],
+    [
+     0.09572754800319672,
+     0.09582330286502838,
+     0.09714989364147186,
+     0.09776075184345245,
+     0.0961771011352539,
+     0.09513302147388458
+    ],
+    [
+     0.09659874439239502,
+     0.09693655371665955,
+     0.09889796376228333,
+     0.09918390214443207,
+     0.09840993583202362,
+     0.09726561605930328
+    ],
+    [
+     0.09725779294967651,
+     0.09821027517318726,
+     0.10076904296875,
+     0.10150289535522461,
+     0.10119108855724335,
+     0.10040444135665894
+    ],
+    [
+     0.09830640256404877,
+     0.09948338568210602,
+     0.10278432071208954,
+     0.10350295901298523,
+     0.1040472686290741,
+     0.1032848209142685
+    ],
+    [
+     0.09993670880794525,
+     0.10102291405200958,
+     0.10531771183013916,
+     0.10633738338947296,
+     0.10760384798049927,
+     0.10704593360424042
+    ],
+    [
+     0.10112982988357544,
+     0.10249833762645721,
+     0.10761813819408417,
+     0.10938328504562378,
+     0.11143937706947327,
+     0.11133366823196411
+    ],
+    [
+     0.10283708572387695,
+     0.1040298193693161,
+     0.10992288589477539,
+     0.11305633187294006,
+     0.11579376459121704,
+     0.1168515533208847
+    ],
+    [
+     0.10507537424564362,
+     0.10784681141376495,
+     0.11544007062911987,
+     0.12001493573188782,
+     0.12402328848838806,
+     0.12627723813056946
+    ]
+   ],
+   "realized_change": 0.014507696541098,
+   "cal_table": {
+    "rate/medium": 0.03702639475245939,
+    "policy/medium": 0.03702639475245939,
+    "volatility/medium": 0.03702639475245939
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.95,
+      "reason": "Explicitly forecasts inflation trajectory and upcoming rate hikes, directly impacting food-price inflation expectations."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Canada inflation could be at peak, but that is little relief for central bank",
+      "score": 0.9,
+      "reason": "Analyzes the inflation peak and the central bank's limited policy flexibility, crucial for a 6-month outlook."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Bank of Canada not ruling out larger rate increases to fight inflation",
+      "score": 0.85,
+      "reason": "Discusses aggressive central bank policy shifts to combat inflation, which directly influences consumer food pricing."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to new 31-year high of 6.7%",
+      "score": 0.8,
+      "reason": "Identifies a significant surge in headline inflation, providing the current baseline for projecting shifts in food prices."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to 31-year high of 6.7%",
+      "score": 0.8,
+      "reason": "Provides critical data on the accelerating inflation rate, which is a leading indicator for grocery store pricing."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-10-20",
+      "event": "Canadian inflation reaches an 18-year high, placing pressure on the Bank of Canada to adjust interest rate policy."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Annual inflation rises to 4.8%, marking the highest level since 1991 and intensifying calls for central bank intervention."
+     },
+     {
+      "date": "2022-03-17",
+      "event": "Economists forecast inflation peaking at 6% or higher, necessitating a cycle of more aggressive rate hikes."
+     },
+     {
+      "date": "2022-04-20",
+      "event": "Canada's inflation rate accelerates to a 31-year high of 6.7%, significantly exceeding previous expectations."
+     },
+     {
+      "date": "2022-04-21",
+      "event": "The Bank of Canada signals it may pursue larger, more aggressive rate increases to combat persistent inflationary pressure."
+     }
+    ],
+    "story_building": "The Canadian economy is moving toward an environment of heightened monetary tightening, as the Bank of Canada struggles to gain control over inflation that is significantly overshooting its targets. The move toward larger rate increases suggests a period of elevated volatility for consumer pricing in the coming months. This setup indicates that while policy makers are attempting to hit the peak of inflation, the lag effect of these interest rate adjustments suggests that food-price pressures may remain structurally high even if headline inflation begins to plateau."
+   },
+   "crps_B": 0.01512739881140398,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's signalled shift toward more aggressive interest rate hikes as of April 21, 2022, is intended to address persistent inflation that hit a 31-year high of 6.7%.",
+    "driving_trends": [
+     "aggressive rate hikes expected",
+     "persistent inflation momentum",
+     "monetary tightening"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.04648867689779991,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada explicitly signaled on April 21, 2022, that it is not ruling out larger rate increases to combat inflation, which serves as a tightening mechanism intended to cool price pressures including food CPI.",
+    "driving_trends": [
+     "rate hike expected",
+     "inflation fighting"
+    ],
+    "fired": true
+   }
+  },
+  {
+   "episode": "T2",
+   "series": "food_cpi",
+   "origin": "2022-03",
+   "origin_class": "straddle",
+   "crps_A": 0.008468734080106257,
+   "q_A": [
+    [
+     0.07355153560638428,
+     0.06568997353315353,
+     0.061985716223716736,
+     0.05679068714380264,
+     0.05197126045823097,
+     0.04595264419913292
+    ],
+    [
+     0.08002623915672302,
+     0.07464969158172607,
+     0.07192099839448929,
+     0.06770580261945724,
+     0.06292181462049484,
+     0.05815385282039642
+    ],
+    [
+     0.08272058516740799,
+     0.07930086553096771,
+     0.0771997794508934,
+     0.07373945415019989,
+     0.06943804025650024,
+     0.0659504383802414
+    ],
+    [
+     0.08463400602340698,
+     0.08252786844968796,
+     0.08085951954126358,
+     0.07839328050613403,
+     0.07400213181972504,
+     0.07161591202020645
+    ],
+    [
+     0.08636033535003662,
+     0.08503323793411255,
+     0.08379050344228745,
+     0.08207288384437561,
+     0.0778580904006958,
+     0.07617862522602081
+    ],
+    [
+     0.08769717812538147,
+     0.08713266253471375,
+     0.08601920306682587,
+     0.08500230312347412,
+     0.08123178035020828,
+     0.0798761397600174
+    ],
+    [
+     0.08885888010263443,
+     0.0887628048658371,
+     0.08801025152206421,
+     0.08764640241861343,
+     0.08428715169429779,
+     0.08317513763904572
+    ],
+    [
+     0.089349165558815,
+     0.08987995237112045,
+     0.08995898813009262,
+     0.08965827524662018,
+     0.08709511905908585,
+     0.08571592718362808
+    ],
+    [
+     0.09058608114719391,
+     0.09138216078281403,
+     0.09212058037519455,
+     0.09198452532291412,
+     0.08965074270963669,
+     0.08861719816923141
+    ],
+    [
+     0.09136641770601273,
+     0.09269490838050842,
+     0.09382351487874985,
+     0.09424657374620438,
+     0.09276028722524643,
+     0.0913378968834877
+    ],
+    [
+     0.09271396696567535,
+     0.09437859803438187,
+     0.09597598761320114,
+     0.09639829397201538,
+     0.09542844444513321,
+     0.09415269643068314
+    ],
+    [
+     0.09360598772764206,
+     0.09556613117456436,
+     0.09778130054473877,
+     0.09916843473911285,
+     0.09828469157218933,
+     0.09745722264051437
+    ],
+    [
+     0.09472539275884628,
+     0.09697535634040833,
+     0.09983547776937485,
+     0.10096681863069534,
+     0.10084547847509384,
+     0.09991129487752914
+    ],
+    [
+     0.09561394155025482,
+     0.09859500825405121,
+     0.10209138691425323,
+     0.10371749848127365,
+     0.10407539457082748,
+     0.10349114239215851
+    ],
+    [
+     0.09702392667531967,
+     0.10014023631811142,
+     0.10440324991941452,
+     0.10606195777654648,
+     0.10727576166391373,
+     0.10669822245836258
+    ],
+    [
+     0.09909895807504654,
+     0.1022048220038414,
+     0.10752395540475845,
+     0.1096106469631195,
+     0.11148728430271149,
+     0.11114423722028732
+    ],
+    [
+     0.10078369826078415,
+     0.10428622364997864,
+     0.1105460673570633,
+     0.11343169957399368,
+     0.1160266175866127,
+     0.11624699085950851
+    ],
+    [
+     0.10303806513547897,
+     0.10651490092277527,
+     0.1136636808514595,
+     0.11799900233745575,
+     0.12120028585195541,
+     0.12276393175125122
+    ],
+    [
+     0.10634323209524155,
+     0.11178508400917053,
+     0.12089357525110245,
+     0.12680736184120178,
+     0.13121438026428223,
+     0.13448119163513184
+    ]
+   ],
+   "realized_change": 0.0178711826943639,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.9,
+      "reason": "Explicitly mentions inflation peaking and imminent rate hikes, directly impacting food-price inflation outlook."
+     },
+     {
+      "date": "2020-11-18",
+      "title": "Rising food prices push annual rate of inflation 0.7 per cent higher in October",
+      "score": 0.85,
+      "reason": "Directly links food prices as a specific driver of the overall inflation rate."
+     },
+     {
+      "date": "2019-04-17",
+      "title": "Inflation rises 1.9% on higher prices for fresh vegetables, mortgage costs",
+      "score": 0.85,
+      "reason": "Explicitly identifies fresh vegetables as a key component of recent inflation movements."
+     },
+     {
+      "date": "2016-12-22",
+      "title": "Lower food prices help slow Canada's inflation rate in November",
+      "score": 0.8,
+      "reason": "Directly discusses how food price fluctuations influence the overall inflation rate trajectory."
+     },
+     {
+      "date": "2022-01-20",
+      "title": "\u2018Pressing need\u2019 for Bank of Canada to raise interest rates amid inflation, housing prices: economists",
+      "score": 0.7,
+      "reason": "Links inflation and policy pressure, which are central to forecasting future price shifts."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2016-12-22",
+      "event": "Fluctuations in food costs are identified as a primary driver of national inflation rates."
+     },
+     {
+      "date": "2019-04-17",
+      "event": "Rising prices for fresh produce are specifically noted as a contributor to inflationary pressure."
+     },
+     {
+      "date": "2020-11-18",
+      "event": "Increasing food prices are highlighted as a significant factor pushing up the annual inflation rate."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Annual inflation hits 4.8%, the highest level in 30 years, increasing pressure for policy intervention."
+     },
+     {
+      "date": "2022-01-26",
+      "event": "The Bank of Canada signals that interest rate hikes are imminent to combat rising inflation."
+     },
+     {
+      "date": "2022-03-02",
+      "event": "The Bank of Canada officially hikes the key interest rate to 0.5% to begin monetary tightening."
+     },
+     {
+      "date": "2022-03-18",
+      "event": "Canadian inflation reaches levels not seen since 1991, with forecasts suggesting a peak at or above 6%."
+     }
+    ],
+    "story_building": "The current environment suggests a critical tension between historical food-price volatility and the cooling effect of newly implemented monetary policy. While inflation is projected to peak at or above 6%, the impact of the Bank of Canada\u2019s rate hikes will likely begin to filter through the economy in the coming six months. The setup implies that policymakers are attempting to induce a material shift in the inflation trajectory, which will likely dictate whether food-price increases moderate or persist despite tighter credit conditions."
+   },
+   "crps_B": 0.008468734080106257,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada initiated monetary tightening with a March 2022 interest rate hike, which is expected to begin tempering inflationary pressures within the coming six-month forecast window.",
+    "driving_trends": [
+     "monetary tightening",
+     "inflationary cooling efforts"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.008468734080106257,
+   "signal_B_notl": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 3,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada initiated aggressive monetary tightening in March 2022, which is expected to begin exerting cooling effects on headline inflation, including food prices, within the next six months.",
+    "driving_trends": [
+     "monetary tightening",
+     "interest rate hikes",
+     "inflationary cooling policy"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.008468734080106257,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada hiked the key interest rate on March 2, 2022, and analysts expect further rate hikes to combat persistent inflation currently projected at 6% or higher.",
+    "driving_trends": [
+     "rate hike expected",
+     "inflation peaking"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T2",
+   "series": "food_cpi",
+   "origin": "2022-04",
+   "origin_class": "straddle",
+   "crps_A": 0.01056437958534785,
+   "q_A": [
+    [
+     0.07625120133161545,
+     0.06673355400562286,
+     0.06212016940116882,
+     0.05582679063081741,
+     0.04925468564033508,
+     0.04292071610689163
+    ],
+    [
+     0.08289094269275665,
+     0.07601956278085709,
+     0.0722436010837555,
+     0.06706857681274414,
+     0.06038537621498108,
+     0.05484245344996452
+    ],
+    [
+     0.085831418633461,
+     0.08103496581315994,
+     0.07789000868797302,
+     0.07374289631843567,
+     0.06770400702953339,
+     0.06333555281162262
+    ],
+    [
+     0.08768060803413391,
+     0.08424589037895203,
+     0.08155539631843567,
+     0.07855915278196335,
+     0.07278269529342651,
+     0.0695355087518692
+    ],
+    [
+     0.08935821056365967,
+     0.08667002618312836,
+     0.08442142605781555,
+     0.08221018314361572,
+     0.07682137936353683,
+     0.07439306378364563
+    ],
+    [
+     0.09077402949333191,
+     0.08873289823532104,
+     0.0866105854511261,
+     0.0849919319152832,
+     0.08025923371315002,
+     0.0781736820936203
+    ],
+    [
+     0.09194043278694153,
+     0.09022743999958038,
+     0.08848823606967926,
+     0.08747060596942902,
+     0.0832657739520073,
+     0.0814858078956604
+    ],
+    [
+     0.09222100675106049,
+     0.09111018478870392,
+     0.09026774764060974,
+     0.08931227028369904,
+     0.08593311905860901,
+     0.08405150473117828
+    ],
+    [
+     0.0933835506439209,
+     0.09243588149547577,
+     0.09227895736694336,
+     0.09134331345558167,
+     0.08833582699298859,
+     0.08678078651428223
+    ],
+    [
+     0.09399080276489258,
+     0.09353238344192505,
+     0.09378893673419952,
+     0.09338073432445526,
+     0.09114865958690643,
+     0.08940592408180237
+    ],
+    [
+     0.0950755774974823,
+     0.09490194916725159,
+     0.09561088681221008,
+     0.09526114165782928,
+     0.09361043572425842,
+     0.09205929934978485
+    ],
+    [
+     0.09572754800319672,
+     0.09582330286502838,
+     0.09714989364147186,
+     0.09776075184345245,
+     0.0961771011352539,
+     0.09513302147388458
+    ],
+    [
+     0.09659874439239502,
+     0.09693655371665955,
+     0.09889796376228333,
+     0.09918390214443207,
+     0.09840993583202362,
+     0.09726561605930328
+    ],
+    [
+     0.09725779294967651,
+     0.09821027517318726,
+     0.10076904296875,
+     0.10150289535522461,
+     0.10119108855724335,
+     0.10040444135665894
+    ],
+    [
+     0.09830640256404877,
+     0.09948338568210602,
+     0.10278432071208954,
+     0.10350295901298523,
+     0.1040472686290741,
+     0.1032848209142685
+    ],
+    [
+     0.09993670880794525,
+     0.10102291405200958,
+     0.10531771183013916,
+     0.10633738338947296,
+     0.10760384798049927,
+     0.10704593360424042
+    ],
+    [
+     0.10112982988357544,
+     0.10249833762645721,
+     0.10761813819408417,
+     0.10938328504562378,
+     0.11143937706947327,
+     0.11133366823196411
+    ],
+    [
+     0.10283708572387695,
+     0.1040298193693161,
+     0.10992288589477539,
+     0.11305633187294006,
+     0.11579376459121704,
+     0.1168515533208847
+    ],
+    [
+     0.10507537424564362,
+     0.10784681141376495,
+     0.11544007062911987,
+     0.12001493573188782,
+     0.12402328848838806,
+     0.12627723813056946
+    ]
+   ],
+   "realized_change": 0.014507696541098,
+   "cal_table": {
+    "rate/medium": 0.03702639475245939,
+    "policy/medium": 0.03702639475245939,
+    "volatility/medium": 0.03702639475245939
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.95,
+      "reason": "Explicitly forecasts inflation trajectory and upcoming rate hikes, directly impacting food-price inflation expectations."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Canada inflation could be at peak, but that is little relief for central bank",
+      "score": 0.9,
+      "reason": "Analyzes the inflation peak and the central bank's limited policy flexibility, crucial for a 6-month outlook."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Bank of Canada not ruling out larger rate increases to fight inflation",
+      "score": 0.85,
+      "reason": "Discusses aggressive central bank policy shifts to combat inflation, which directly influences consumer food pricing."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to new 31-year high of 6.7%",
+      "score": 0.8,
+      "reason": "Identifies a significant surge in headline inflation, providing the current baseline for projecting shifts in food prices."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to 31-year high of 6.7%",
+      "score": 0.8,
+      "reason": "Provides critical data on the accelerating inflation rate, which is a leading indicator for grocery store pricing."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-10-20",
+      "event": "Canadian inflation reaches an 18-year high, placing pressure on the Bank of Canada to adjust interest rate policy."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Annual inflation rises to 4.8%, marking the highest level since 1991 and intensifying calls for central bank intervention."
+     },
+     {
+      "date": "2022-03-17",
+      "event": "Economists forecast inflation peaking at 6% or higher, necessitating a cycle of more aggressive rate hikes."
+     },
+     {
+      "date": "2022-04-20",
+      "event": "Canada's inflation rate accelerates to a 31-year high of 6.7%, significantly exceeding previous expectations."
+     },
+     {
+      "date": "2022-04-21",
+      "event": "The Bank of Canada signals it may pursue larger, more aggressive rate increases to combat persistent inflationary pressure."
+     }
+    ],
+    "story_building": "The Canadian economy is moving toward an environment of heightened monetary tightening, as the Bank of Canada struggles to gain control over inflation that is significantly overshooting its targets. The move toward larger rate increases suggests a period of elevated volatility for consumer pricing in the coming months. This setup indicates that while policy makers are attempting to hit the peak of inflation, the lag effect of these interest rate adjustments suggests that food-price pressures may remain structurally high even if headline inflation begins to plateau."
+   },
+   "crps_B": 0.01512739881140398,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's signalled shift toward more aggressive interest rate hikes as of April 21, 2022, is intended to address persistent inflation that hit a 31-year high of 6.7%.",
+    "driving_trends": [
+     "aggressive rate hikes expected",
+     "persistent inflation momentum",
+     "monetary tightening"
+    ],
+    "fired": true
+   },
+   "crps_B_notl": 0.01512739881140398,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada signaled on April 21, 2022, that it will pursue larger, more aggressive interest rate hikes to curb the persistent inflation that reached a 31-year high of 6.7% in April.",
+    "driving_trends": [
+     "aggressive monetary tightening",
+     "persistent inflationary pressure"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.04648867689779991,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada explicitly signaled on April 21, 2022, that it is not ruling out larger rate increases to combat inflation, which serves as a tightening mechanism intended to cool price pressures including food CPI.",
+    "driving_trends": [
+     "rate hike expected",
+     "inflation fighting"
+    ],
+    "fired": true
+   }
+  },
+  {
+   "episode": "T2",
+   "series": "food_cpi",
+   "origin": "2022-05",
+   "origin_class": "straddle",
+   "crps_A": 0.005416881659919833,
+   "q_A": [
+    [
+     0.08296268433332443,
+     0.0734444111585617,
+     0.06904157996177673,
+     0.062408436089754105,
+     0.05605108290910721,
+     0.050010401755571365
+    ],
+    [
+     0.09031546115875244,
+     0.08360478281974792,
+     0.0802193284034729,
+     0.07483858615159988,
+     0.06851635873317719,
+     0.06360092759132385
+    ],
+    [
+     0.09330794215202332,
+     0.08876954019069672,
+     0.08607177436351776,
+     0.08174614608287811,
+     0.07613500952720642,
+     0.07239803671836853
+    ],
+    [
+     0.09541001915931702,
+     0.09230022132396698,
+     0.0900825560092926,
+     0.08697141706943512,
+     0.08152273297309875,
+     0.078823983669281
+    ],
+    [
+     0.09734059870243073,
+     0.09498481452465057,
+     0.0932343602180481,
+     0.0910005271434784,
+     0.08592332899570465,
+     0.08393169939517975
+    ],
+    [
+     0.0988229364156723,
+     0.09719404578208923,
+     0.0956304669380188,
+     0.09413078427314758,
+     0.08964140713214874,
+     0.08804844319820404
+    ],
+    [
+     0.10011433064937592,
+     0.09888531267642975,
+     0.09774906933307648,
+     0.0969216376543045,
+     0.09297531843185425,
+     0.09166091680526733
+    ],
+    [
+     0.10060256719589233,
+     0.10001407563686371,
+     0.09978680312633514,
+     0.0989837497472763,
+     0.09598879516124725,
+     0.09440749883651733
+    ],
+    [
+     0.10189241170883179,
+     0.10151518881320953,
+     0.10201981663703918,
+     0.10140696167945862,
+     0.09871947765350342,
+     0.09750394523143768
+    ],
+    [
+     0.10268327593803406,
+     0.10281270742416382,
+     0.10375380516052246,
+     0.10374715924263,
+     0.10198700428009033,
+     0.10039269924163818
+    ],
+    [
+     0.10406924784183502,
+     0.10450614988803864,
+     0.10592536628246307,
+     0.10593046247959137,
+     0.10478504002094269,
+     0.10332861542701721
+    ],
+    [
+     0.10489189624786377,
+     0.10561740398406982,
+     0.10771073400974274,
+     0.10871952772140503,
+     0.10768216848373413,
+     0.10666923224925995
+    ],
+    [
+     0.1059461236000061,
+     0.10692301392555237,
+     0.10970552265644073,
+     0.1104399561882019,
+     0.1102139949798584,
+     0.10908804833889008
+    ],
+    [
+     0.10666412115097046,
+     0.10838767886161804,
+     0.11181457340717316,
+     0.11307549476623535,
+     0.1133589893579483,
+     0.1125413179397583
+    ],
+    [
+     0.10792981088161469,
+     0.10972803831100464,
+     0.11394818127155304,
+     0.11523596942424774,
+     0.11642889678478241,
+     0.11561481654644012
+    ],
+    [
+     0.10982418060302734,
+     0.11151708662509918,
+     0.11682099103927612,
+     0.11849401891231537,
+     0.12046568095684052,
+     0.11983117461204529
+    ],
+    [
+     0.11113020777702332,
+     0.11315539479255676,
+     0.11934010684490204,
+     0.12185648083686829,
+     0.12473030388355255,
+     0.12455332279205322
+    ],
+    [
+     0.11297252774238586,
+     0.11472666263580322,
+     0.12177537381649017,
+     0.12581323087215424,
+     0.1295110434293747,
+     0.1304686814546585
+    ],
+    [
+     0.11536215245723724,
+     0.11882410943508148,
+     0.12768268585205078,
+     0.1333533525466919,
+     0.1384253054857254,
+     0.14071467518806458
+    ]
+   ],
+   "realized_change": 0.0077158796166365146,
+   "cal_table": {
+    "rate/medium": 0.03702639475245939,
+    "policy/medium": 0.03702639475245939,
+    "volatility/medium": 0.03702639475245939
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.9,
+      "reason": "Explicitly forecasts inflation levels and links them to future policy shifts."
+     },
+     {
+      "date": "2022-05-18",
+      "title": "Canada's inflation rate inches up again, to new 31-year high of 6.8%",
+      "score": 0.85,
+      "reason": "Provides the most recent data point on inflation acceleration, critical for identifying a shift."
+     },
+     {
+      "date": "2022-05-31",
+      "title": "Bank of Canada expected to jack up interest rates as inflation persists",
+      "score": 0.8,
+      "reason": "Summarizes the urgent expectation for monetary tightening in response to persistent inflation."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to new 31-year high of 6.7%",
+      "score": 0.8,
+      "reason": "Reports a significant jump in inflation, which is the core target variable."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada inflation surges more than expected in March, hitting 31-year high",
+      "score": 0.8,
+      "reason": "Detailed report on inflation surpassing expectations, signaling a material shift."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2022-01-19",
+      "event": "Canada's annual inflation rate hits 4.8%, the highest level since 1991."
+     },
+     {
+      "date": "2022-03-17",
+      "event": "Economists forecast inflation peaking above 6%, necessitating aggressive central bank rate hikes."
+     },
+     {
+      "date": "2022-04-20",
+      "event": "Inflation surges to a new 31-year high of 6.7%, exceeding market expectations."
+     },
+     {
+      "date": "2022-04-21",
+      "event": "Bank of Canada signals it may implement larger interest rate increases to combat persistent price pressures."
+     },
+     {
+      "date": "2022-05-18",
+      "event": "Inflation continues its upward climb, reaching a new 31-year peak of 6.8%."
+     },
+     {
+      "date": "2022-05-31",
+      "event": "Expectations solidify for significant interest rate hikes as inflation proves more resilient than anticipated."
+     }
+    ],
+    "story_building": "The current environment is defined by a feedback loop where stubbornly high inflation necessitates increasingly hawkish central bank intervention. The focus is shifting toward whether these aggressive interest rate hikes will succeed in cooling demand or if structural price pressures will remain sticky through the remainder of the year. Investors and policymakers are now braced for a period of cooling economic activity as the primary mechanism to combat the ongoing inflationary surge."
+   },
+   "crps_B": 0.005416881659919833,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "up",
+    "magnitude_bucket": "large",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The persistent rise in inflation to 6.8% by May 18, 2022, has solidified expectations for aggressive Bank of Canada interest rate hikes starting immediately in the coming months to curb price pressures.",
+    "driving_trends": [
+     "aggressive rate hikes expected",
+     "persistent inflation",
+     "hawkish monetary policy pivot"
+    ],
+    "fired": false
+   },
+   "crps_B_notl": 0.005416881659919833,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "large",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The consistent surge of Canadian inflation to a 31-year high of 6.8% by May 2022 has forced a consensus pivot toward aggressive, urgent interest rate hikes to combat persistent price pressures.",
+    "driving_trends": [
+     "aggressive rate hike expectations",
+     "persistent inflation",
+     "monetary policy tightening"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.005416881659919833,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada is signaled to 'jack up' interest rates in the immediate term to combat persistent inflation as noted in the May 31, 2022 report.",
+    "driving_trends": [
+     "rate hike expected",
+     "persistent inflation"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T2",
+   "series": "food_cpi",
+   "origin": "2022-06",
+   "origin_class": "straddle",
+   "crps_A": 0.004685950634076606,
+   "q_A": [
+    [
+     0.08721041679382324,
+     0.07660385966300964,
+     0.07132217288017273,
+     0.06415584683418274,
+     0.05828789621591568,
+     0.052378036081790924
+    ],
+    [
+     0.094855397939682,
+     0.08719581365585327,
+     0.08291226625442505,
+     0.07702256739139557,
+     0.07112473249435425,
+     0.06635742634534836
+    ],
+    [
+     0.09793539345264435,
+     0.0925808995962143,
+     0.08898140490055084,
+     0.08421263098716736,
+     0.07889062166213989,
+     0.0751832127571106
+    ],
+    [
+     0.100087970495224,
+     0.09625476598739624,
+     0.09315565228462219,
+     0.08967901766300201,
+     0.08444927632808685,
+     0.08174656331539154
+    ],
+    [
+     0.1020740419626236,
+     0.09903718531131744,
+     0.09643016755580902,
+     0.09390889108181,
+     0.0890016108751297,
+     0.08699391782283783
+    ],
+    [
+     0.10361348092556,
+     0.10133051872253418,
+     0.09895128011703491,
+     0.09721383452415466,
+     0.0928564965724945,
+     0.091246098279953
+    ],
+    [
+     0.10499215126037598,
+     0.10311055183410645,
+     0.10120531916618347,
+     0.10017897188663483,
+     0.09633632004261017,
+     0.09499388933181763
+    ],
+    [
+     0.10551300644874573,
+     0.10430699586868286,
+     0.10337820649147034,
+     0.10237370431423187,
+     0.09949061274528503,
+     0.09786970913410187
+    ],
+    [
+     0.1068573147058487,
+     0.10586713254451752,
+     0.1057203859090805,
+     0.1049482673406601,
+     0.10235640406608582,
+     0.10108022391796112
+    ],
+    [
+     0.10765945911407471,
+     0.10720992088317871,
+     0.10756416618824005,
+     0.10742327570915222,
+     0.10573829710483551,
+     0.10408753156661987
+    ],
+    [
+     0.10906796157360077,
+     0.10895964503288269,
+     0.10983248054981232,
+     0.10971039533615112,
+     0.1086578518152237,
+     0.10710740089416504
+    ],
+    [
+     0.10989399254322052,
+     0.11011777818202972,
+     0.11171533167362213,
+     0.11260172724723816,
+     0.11163990199565887,
+     0.1105327308177948
+    ],
+    [
+     0.11094725131988525,
+     0.11147218942642212,
+     0.1138029545545578,
+     0.1144385039806366,
+     0.11426728963851929,
+     0.11301624774932861
+    ],
+    [
+     0.11164884269237518,
+     0.11298032104969025,
+     0.11600436270236969,
+     0.11718833446502686,
+     0.11749355494976044,
+     0.1165378987789154
+    ],
+    [
+     0.11289472877979279,
+     0.11436343193054199,
+     0.11824019253253937,
+     0.11946432292461395,
+     0.1206408441066742,
+     0.11969533562660217
+    ],
+    [
+     0.11478191614151001,
+     0.11621211469173431,
+     0.12122486531734467,
+     0.12284745275974274,
+     0.12477123737335205,
+     0.12399674952030182
+    ],
+    [
+     0.11603595316410065,
+     0.11786437034606934,
+     0.12383504211902618,
+     0.12633489072322845,
+     0.1291111558675766,
+     0.1288262903690338
+    ],
+    [
+     0.11787658929824829,
+     0.11947742104530334,
+     0.1263955682516098,
+     0.13047347962856293,
+     0.13402408361434937,
+     0.134891539812088
+    ],
+    [
+     0.12033990025520325,
+     0.12369628250598907,
+     0.13257528841495514,
+     0.13830073177814484,
+     0.14317907392978668,
+     0.14540095627307892
+    ]
+   ],
+   "realized_change": 0.0047610563191006205,
+   "cal_table": {
+    "rate/medium": 0.03702639475245939,
+    "policy/medium": 0.03702639475245939,
+    "volatility/medium": 0.03702639475245939
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.9,
+      "reason": "Explicitly forecasts inflation peaks and upcoming rate policy shifts, directly impacting food-price inflation outlook."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Canada inflation could be at peak, but that is little relief for central bank",
+      "score": 0.85,
+      "reason": "Discusses whether inflation has peaked, a critical factor in determining if food prices will shift in the near term."
+     },
+     {
+      "date": "2022-05-18",
+      "title": "Canada's inflation rate inches up again, to new 31-year high of 6.8%",
+      "score": 0.8,
+      "reason": "Reports the most recent (as of date) inflation high, providing the baseline for future shifts in food-price trends."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to new 31-year high of 6.7%",
+      "score": 0.75,
+      "reason": "Significant data point on headline inflation which drives consumer food price expectations."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to 31-year high of 6.7%",
+      "score": 0.75,
+      "reason": "Identical headline to 31, reflecting the immediate economic environment impacting food prices."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-10-20",
+      "event": "Canada's inflation rate hits an 18-year high, initiating pressure on the Bank of Canada (BoC) to adjust policy."
+     },
+     {
+      "date": "2022-01-20",
+      "event": "Economists declare a 'pressing need' for interest rate hikes to combat rising inflation and housing costs."
+     },
+     {
+      "date": "2022-03-02",
+      "event": "The Bank of Canada begins an aggressive tightening cycle by raising interest rates."
+     },
+     {
+      "date": "2022-03-17",
+      "event": "Analysts project inflation will peak at or above 6%, signaling a sustained period of price pressure."
+     },
+     {
+      "date": "2022-04-20",
+      "event": "Inflation surges to a 31-year high of 6.7%, exceeding expectations and increasing volatility."
+     },
+     {
+      "date": "2022-05-18",
+      "event": "Canada's headline inflation rate edges higher to 6.8%, confirming the persistence of price growth."
+     },
+     {
+      "date": "2022-06-01",
+      "event": "The BoC raises the benchmark interest rate to 1.5% and commits to further aggressive hikes."
+     }
+    ],
+    "story_building": "The current environment is characterized by a lag between aggressive monetary tightening and its cooling effect on the real economy. Because interest rate hikes take several months to manifest in consumer pricing, Canada is entering a period of forced volatility where the central bank's restrictive policy must fight against the momentum of high inflation. This setup suggests that while the goal is to stabilize food prices, the next six months will likely feature ongoing tension as previous price shocks work their way through the supply chain before potential relief arrives."
+   },
+   "crps_B": 0.02210998651978108,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada's commitment on 2022-06-01 to further aggressive interest rate hikes following persistent inflation signals that food price inflation will continue to face upward momentum in the immediate forecast window before potential cooling effects manifest.",
+    "driving_trends": [
+     "aggressive tightening cycle",
+     "lagged monetary policy effect",
+     "persistent price growth"
+    ],
+    "fired": true
+   },
+   "crps_B_notl": 0.02210998651978108,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada's aggressive, ongoing interest rate hikes have yet to curb persistent food price acceleration, creating a lag effect where inflation is expected to continue rising before monetary tightening can cool the economy.",
+    "driving_trends": [
+     "monetary tightening lag",
+     "persistent food inflation",
+     "supply chain price momentum"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.004685950634076606,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 0,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada signaled further aggressive rate hikes in June 2022 to combat persistent inflation, which acts as a cooling mechanism for food price growth over the medium term.",
+    "driving_trends": [
+     "monetary tightening",
+     "inflation control"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T2",
+   "series": "food_cpi",
+   "origin": "2022-08",
+   "origin_class": "post",
+   "crps_A": 0.008618104797095894,
+   "q_A": [
+    [
+     0.09727878123521805,
+     0.08744093775749207,
+     0.08293608576059341,
+     0.07782652974128723,
+     0.07400384545326233,
+     0.06693650037050247
+    ],
+    [
+     0.10523000359535217,
+     0.09807612001895905,
+     0.09492013603448868,
+     0.09084043651819229,
+     0.08721809834241867,
+     0.08224523812532425
+    ],
+    [
+     0.10813944786787033,
+     0.10306896269321442,
+     0.1007576584815979,
+     0.0972016230225563,
+     0.09388676285743713,
+     0.09035022556781769
+    ],
+    [
+     0.11017609387636185,
+     0.10653716325759888,
+     0.10482843965291977,
+     0.10219229757785797,
+     0.09858046472072601,
+     0.09642808884382248
+    ],
+    [
+     0.11207334697246552,
+     0.10920494049787521,
+     0.10801570862531662,
+     0.10620260238647461,
+     0.10262267291545868,
+     0.10132833570241928
+    ],
+    [
+     0.11331973224878311,
+     0.1112835705280304,
+     0.1103968545794487,
+     0.10933111608028412,
+     0.1060514822602272,
+     0.10533232986927032
+    ],
+    [
+     0.11455744504928589,
+     0.1130039170384407,
+     0.11261169612407684,
+     0.11224871873855591,
+     0.1093326136469841,
+     0.10893913358449936
+    ],
+    [
+     0.11510548740625381,
+     0.1142474040389061,
+     0.11473651975393295,
+     0.11435557901859283,
+     0.11239473521709442,
+     0.11165726184844971
+    ],
+    [
+     0.1163628026843071,
+     0.11577580124139786,
+     0.11699561774730682,
+     0.11709319055080414,
+     0.11522645503282547,
+     0.1149897575378418
+    ],
+    [
+     0.1172003522515297,
+     0.11715633422136307,
+     0.118813656270504,
+     0.11965040862560272,
+     0.11872132867574692,
+     0.11803380399942398
+    ],
+    [
+     0.11870750039815903,
+     0.11902425438165665,
+     0.1211661621928215,
+     0.12203218787908554,
+     0.12166258692741394,
+     0.12111905962228775
+    ],
+    [
+     0.11953260749578476,
+     0.12019308656454086,
+     0.12306593358516693,
+     0.12497340142726898,
+     0.12460075318813324,
+     0.12451968342065811
+    ],
+    [
+     0.120585598051548,
+     0.1215343102812767,
+     0.1251278817653656,
+     0.12688563764095306,
+     0.12719033658504486,
+     0.12698617577552795
+    ],
+    [
+     0.12119048088788986,
+     0.12300588190555573,
+     0.12722592055797577,
+     0.1296754777431488,
+     0.1303645372390747,
+     0.13037438690662384
+    ],
+    [
+     0.12240541726350784,
+     0.1242266595363617,
+     0.12919101119041443,
+     0.13179971277713776,
+     0.1333182007074356,
+     0.13329018652439117
+    ],
+    [
+     0.12422864884138107,
+     0.12607388198375702,
+     0.13202059268951416,
+     0.13517408072948456,
+     0.13740625977516174,
+     0.13748714327812195
+    ],
+    [
+     0.12523500621318817,
+     0.12755520641803741,
+     0.13424931466579437,
+     0.13843770325183868,
+     0.14155572652816772,
+     0.14209076762199402
+    ],
+    [
+     0.12674184143543243,
+     0.1288696527481079,
+     0.13621000945568085,
+     0.14223720133304596,
+     0.1461344212293625,
+     0.1476905643939972
+    ],
+    [
+     0.12863048911094666,
+     0.1326351910829544,
+     0.14144933223724365,
+     0.1494419425725937,
+     0.15460839867591858,
+     0.1575263887643814
+    ]
+   ],
+   "realized_change": -0.009364375219972867,
+   "cal_table": {
+    "rate/medium": 0.03702639475245939,
+    "policy/medium": 0.03702639475245939,
+    "volatility/medium": 0.03702639475245939
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-03-17",
+      "title": "Canadian inflation seen peaking at or above 6%; more rate hikes in the cards",
+      "score": 0.85,
+      "reason": "Explicitly discusses the trajectory of Canadian inflation and the necessity of policy intervention."
+     },
+     {
+      "date": "2022-04-21",
+      "title": "Canada inflation could be at peak, but that is little relief for central bank",
+      "score": 0.8,
+      "reason": "Evaluates whether inflation has peaked, directly relevant to shifting trends."
+     },
+     {
+      "date": "2022-08-16",
+      "title": "Inflation slowed to 7.6% in July. What does that mean for the Bank of Canada?",
+      "score": 0.8,
+      "reason": "Analyzes the slowdown in inflation and its implications for future central bank policy."
+     },
+     {
+      "date": "2022-01-19",
+      "title": "Inflation hits highest level in 30 years as Bank of Canada decision looms",
+      "score": 0.75,
+      "reason": "Discusses inflation hitting 30-year highs, which triggers policy shifts affecting food prices."
+     },
+     {
+      "date": "2022-04-20",
+      "title": "Canada's inflation rate jumps to new 31-year high of 6.7%",
+      "score": 0.7,
+      "reason": "Reports on a material jump in inflation, a key driver for future price shifts."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-04-21",
+      "event": "Canadian annual inflation rate doubles, prompting central bank growth projections."
+     },
+     {
+      "date": "2021-10-20",
+      "event": "Inflation hits 18-year high, shifting focus to monetary policy tightening."
+     },
+     {
+      "date": "2022-01-19",
+      "event": "Inflation reaches 30-year high, heightening pressure on the Bank of Canada."
+     },
+     {
+      "date": "2022-03-17",
+      "event": "Inflation projections hit 6% or higher, signaling aggressive rate hikes."
+     },
+     {
+      "date": "2022-04-20",
+      "event": "Inflation surges to a 31-year high of 6.7%, exceeding expectations."
+     },
+     {
+      "date": "2022-05-18",
+      "event": "Inflation continues an upward trajectory, reaching 6.8%."
+     },
+     {
+      "date": "2022-08-16",
+      "event": "Inflation slows slightly to 7.6% in July, prompting debate on policy effectiveness."
+     }
+    ],
+    "story_building": "The sustained period of record-breaking inflation has forced the Bank of Canada into a cycle of rapid interest rate hikes, creating a tension between curbing consumer prices and managing economic growth. As we look ahead, the central bank\u2019s ability to dampen demand will be the primary factor in determining if food-price inflation begins to stabilize or remains elevated. The market is currently positioned to watch how aggressively monetary policy continues to offset the systemic price pressures built up over the past 18 months."
+   },
+   "crps_B": 0.014728291095450282,
+   "signal_B": {
+    "shift_type": "policy",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The Bank of Canada is engaged in a cycle of aggressive interest rate hikes following record-high inflation levels, which are expected to dampen demand and eventually exert downward pressure on food price inflation within the forecast window.",
+    "driving_trends": [
+     "aggressive rate hikes",
+     "monetary policy tightening",
+     "demand suppression"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.008618104797095894,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "While the Bank of Canada has implemented a series of rate hikes to combat general inflation, the provided articles do not announce specific future supply-side shocks or policy changes uniquely targeting the food CPI component that have not already been incorporated into recent rate actions.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T3",
+   "series": "smm",
+   "origin": "2024-02",
+   "origin_class": "straddle",
+   "crps_A": 0.0009413309587076383,
+   "q_A": [
+    [
+     0.00247586308978498,
+     0.00203013326972723,
+     0.0017265919595956802,
+     0.0013658625539392233,
+     0.0011381518561393023,
+     0.0007466766983270645
+    ],
+    [
+     0.0027380564715713263,
+     0.0024274936877191067,
+     0.00219563115388155,
+     0.0019538276828825474,
+     0.0017274777637794614,
+     0.0014388356357812881
+    ],
+    [
+     0.002875187434256077,
+     0.0026517247315496206,
+     0.0024586401414126158,
+     0.0022726822644472122,
+     0.0020562727004289627,
+     0.0018153688870370388
+    ],
+    [
+     0.002967134118080139,
+     0.002806494478136301,
+     0.002639660146087408,
+     0.002496906090527773,
+     0.002285618335008621,
+     0.0020734965801239014
+    ],
+    [
+     0.003037913702428341,
+     0.0029282651375979185,
+     0.002785865683108568,
+     0.002667780965566635,
+     0.0024718958884477615,
+     0.002279269974678755
+    ],
+    [
+     0.0030957364942878485,
+     0.0030299678910523653,
+     0.0029141881968826056,
+     0.002817524829879403,
+     0.002633253578096628,
+     0.0024535334669053555
+    ],
+    [
+     0.0031461806502193213,
+     0.0031149787828326225,
+     0.0030289865098893642,
+     0.002944477368146181,
+     0.0027779284864664078,
+     0.0026108622550964355
+    ],
+    [
+     0.003192607080563903,
+     0.003194374730810523,
+     0.0031367228366434574,
+     0.0030650757253170013,
+     0.002915390534326434,
+     0.0027594943530857563
+    ],
+    [
+     0.003231194568797946,
+     0.0032634399831295013,
+     0.0032353978604078293,
+     0.003176609054207802,
+     0.0030444844160228968,
+     0.002898114500567317
+    ],
+    [
+     0.0032702796161174774,
+     0.003333385568112135,
+     0.0033366642892360687,
+     0.003293741261586547,
+     0.0031750285997986794,
+     0.003041984746232629
+    ],
+    [
+     0.0033130249939858913,
+     0.003404457587748766,
+     0.0034396019764244556,
+     0.0034109815023839474,
+     0.0033073266968131065,
+     0.0031867839861661196
+    ],
+    [
+     0.0033582374453544617,
+     0.003475629026070237,
+     0.003538892138749361,
+     0.0035271397791802883,
+     0.0034392604138702154,
+     0.0033319315407425165
+    ],
+    [
+     0.003401732537895441,
+     0.003543995786458254,
+     0.0036341878585517406,
+     0.0036450685001909733,
+     0.003566320287063718,
+     0.0034746306482702494
+    ],
+    [
+     0.0034598715137690306,
+     0.0036308998242020607,
+     0.003742845030501485,
+     0.003777425969019532,
+     0.003715828061103821,
+     0.003640788374468684
+    ],
+    [
+     0.003526555374264717,
+     0.0037276609800755978,
+     0.0038663004525005817,
+     0.003925001248717308,
+     0.0038827972020953894,
+     0.003826496656984091
+    ],
+    [
+     0.0036055217497050762,
+     0.0038413782604038715,
+     0.00400946568697691,
+     0.0041031306609511375,
+     0.004078946076333523,
+     0.0040470208041369915
+    ],
+    [
+     0.0037082836497575045,
+     0.003989695105701685,
+     0.004195629619061947,
+     0.004329252056777477,
+     0.004327199887484312,
+     0.004320170730352402
+    ],
+    [
+     0.0038412492722272873,
+     0.004181760363280773,
+     0.004439476411789656,
+     0.004616004414856434,
+     0.004636473022401333,
+     0.004656350705772638
+    ],
+    [
+     0.004101809114217758,
+     0.0045447684824466705,
+     0.004913438577204943,
+     0.0051469961181283,
+     0.005219183396548033,
+     0.005277147516608238
+    ]
+   ],
+   "realized_change": 0.00145607766733815,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-10-02",
+      "title": "Canada housing market outlook: Surging interest rates and the housing market\u2019s coming lull",
+      "score": 0.95,
+      "reason": "Directly links surging interest rates to a coming lull in the housing market, highly relevant to mortgage attrition."
+     },
+     {
+      "date": "2022-06-15",
+      "title": "A Tale of a split market: Home prices decrease as interest rates increase leaving homeowners fearful of unaffordable mortgage payments",
+      "score": 0.9,
+      "reason": "Discusses homeowner fear of unaffordable payments due to rising rates, a primary driver of prepayment and delinquency shifts."
+     },
+     {
+      "date": "2023-04-12",
+      "title": "Borrowers to \u201cfeel the strain\u201d of high interest rates for several quarters to come, says BoC",
+      "score": 0.85,
+      "reason": "BoC forecast of sustained strain on borrowers indicates a high probability of material shifts in attrition behavior."
+     },
+     {
+      "date": "2023-06-21",
+      "title": "A guide to the mortgage market in Canada",
+      "score": 0.8,
+      "reason": "Provides a comprehensive guide to the current mortgage market, essential for assessing shifts in behavior."
+     },
+     {
+      "date": "2022-01-20",
+      "title": "\u2018Pressing need\u2019 for Bank of Canada to raise interest rates amid inflation, housing prices: economists",
+      "score": 0.75,
+      "reason": "Highlights the pressure on interest rates and housing prices, linking policy to structural mortgage shifts."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2021-04-22",
+      "event": "Bank of Canada signals imminent interest rate hikes to address economic shifts."
+     },
+     {
+      "date": "2022-03-16",
+      "event": "The Canadian housing market begins facing its first major interest-rate test."
+     },
+     {
+      "date": "2022-06-15",
+      "event": "Rising interest rates begin driving homeowner fear regarding mortgage affordability."
+     },
+     {
+      "date": "2023-02-27",
+      "event": "Fixed mortgage rates trend upward, altering refinancing and prepayment incentives."
+     },
+     {
+      "date": "2023-04-12",
+      "event": "Bank of Canada warns that borrowers will face sustained financial strain for several quarters."
+     },
+     {
+      "date": "2023-07-13",
+      "event": "Bank of Canada acknowledges an economic turning point while continuing to hike rates."
+     },
+     {
+      "date": "2023-12-19",
+      "event": "Detailed analysis confirms significant payment shock for borrowers facing mortgage renewals."
+     }
+    ],
+    "story_building": "The sustained period of high interest rates has created a 'lock-in' environment where traditional prepayment behavior is stifled by the high cost of refinancing. Looking ahead, the market is set up for a potential uptick in involuntary attrition as the lag effect of these rates fully hits households at renewal. The environment is now defined by a precarious balance between borrower financial exhaustion and the lack of viable exit strategies for those trapped in higher-cost mortgages."
+   },
+   "crps_B": 0.0012222093486346302,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The persistent high-rate environment and anticipated payment shocks from the 2023-12-19 analysis are expected to further stifle voluntary prepayments while potentially increasing involuntary attrition over the next six months.",
+    "driving_trends": [
+     "lock-in effect",
+     "payment shock at renewal",
+     "stifled refinancing incentives"
+    ],
+    "fired": true
+   },
+   "crps_B_notl": 0.0012222093486346302,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The sustained high-interest rate environment and 'lock-in' effect, compounded by upcoming renewal-related payment shocks, are expected to significantly suppress voluntary prepayments while forcing households toward financial exhaustion.",
+    "driving_trends": [
+     "lock-in effect",
+     "mortgage renewal payment shock",
+     "stifled refinancing incentives"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.0009413309587076383,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "The provided articles focus on Bank of Canada monetary policy, which does not directly dictate Freddie Mac (US) single-month mortgage prepayment rates, and no articles provide forward-looking shocks that would impact the US mortgage market as of February 2024.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T3",
+   "series": "smm",
+   "origin": "2024-03",
+   "origin_class": "straddle",
+   "crps_A": 0.0005859347475042322,
+   "q_A": [
+    [
+     0.0030317441560328007,
+     0.002624071203172207,
+     0.0022497426252812147,
+     0.0017806949326768517,
+     0.0015084001934155822,
+     0.0009987480007112026
+    ],
+    [
+     0.0033123439643532038,
+     0.003022107994183898,
+     0.0027814768254756927,
+     0.002427294384688139,
+     0.002141580916941166,
+     0.0017103356076404452
+    ],
+    [
+     0.0034676180221140385,
+     0.0032550932373851538,
+     0.0030885690357536077,
+     0.002782174851745367,
+     0.002496210625395179,
+     0.00210677576251328
+    ],
+    [
+     0.003579402808099985,
+     0.0034264614805579185,
+     0.003307490376755595,
+     0.003034403081983328,
+     0.002751008840277791,
+     0.0023874391335994005
+    ],
+    [
+     0.0036689124535769224,
+     0.003565866034477949,
+     0.0034815603867173195,
+     0.003228431800380349,
+     0.0029568851459771395,
+     0.002613396616652608
+    ],
+    [
+     0.0037435756530612707,
+     0.003687279997393489,
+     0.0036316802725195885,
+     0.003398490371182561,
+     0.0031381328590214252,
+     0.0028090779669582844
+    ],
+    [
+     0.003810063237324357,
+     0.003791066585108638,
+     0.003763007465749979,
+     0.003542587859556079,
+     0.003302582772448659,
+     0.002985525643453002
+    ],
+    [
+     0.0038721871096640825,
+     0.003889520885422826,
+     0.0038843245711177588,
+     0.003679468296468258,
+     0.0034605024848133326,
+     0.00315308291465044
+    ],
+    [
+     0.003925624769181013,
+     0.003978540189564228,
+     0.003994375001639128,
+     0.0038030212745070457,
+     0.0036085220053792,
+     0.0033077828120440245
+    ],
+    [
+     0.003981460817158222,
+     0.0040697031654417515,
+     0.0041083721444010735,
+     0.0039343941025435925,
+     0.0037578116171061993,
+     0.003466505091637373
+    ],
+    [
+     0.004037131555378437,
+     0.004158538766205311,
+     0.004221216309815645,
+     0.004065326415002346,
+     0.003906773403286934,
+     0.0036242650821805
+    ],
+    [
+     0.004095031879842281,
+     0.004248475655913353,
+     0.004331630188971758,
+     0.004196909721940756,
+     0.0040537090972065926,
+     0.0037814907263964415
+    ],
+    [
+     0.0041495379991829395,
+     0.004332612734287977,
+     0.004438642878085375,
+     0.004330027382820845,
+     0.004194991663098335,
+     0.003939205314964056
+    ],
+    [
+     0.004216428380459547,
+     0.004432548303157091,
+     0.0045546130277216434,
+     0.0044813090935349464,
+     0.004362105391919613,
+     0.00412551686167717
+    ],
+    [
+     0.004286058712750673,
+     0.004543260671198368,
+     0.004693015478551388,
+     0.004652493167668581,
+     0.0045495834201574326,
+     0.004334889817982912
+    ],
+    [
+     0.0043693226762115955,
+     0.00466963229700923,
+     0.004851581063121557,
+     0.004860554821789265,
+     0.0047655715607106686,
+     0.004583363421261311
+    ],
+    [
+     0.004476743750274181,
+     0.004833363927900791,
+     0.005058933515101671,
+     0.005120579618960619,
+     0.0050332555547356606,
+     0.004887690767645836
+    ],
+    [
+     0.004615454934537411,
+     0.00504694739356637,
+     0.005332062020897865,
+     0.00544807780534029,
+     0.005359606351703405,
+     0.005265011917799711
+    ],
+    [
+     0.00488733546808362,
+     0.005456623621284962,
+     0.0058824447914958,
+     0.006050708703696728,
+     0.005981528200209141,
+     0.005962558090686798
+    ]
+   ],
+   "realized_change": 0.000880132077503067,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2024-03-07",
+      "title": "Making sense of the Bank of Canada interest rate decision on March 6, 2024",
+      "score": 0.9,
+      "reason": "Analyzes the most recent BoC decision, essential for projecting near-term prepayment trends."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "Bank of Canada Leaves Rates Unchanged",
+      "score": 0.85,
+      "reason": "Latest central bank rate status directly informs mortgage renewal and attrition behavior."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "For The Fifth Time, Bank Of Canada Holds Interest Rate At 5%",
+      "score": 0.85,
+      "reason": "Current interest rate environment is the primary driver of mortgage prepayment and renewal decisions."
+     },
+     {
+      "date": "2024-01-25",
+      "title": "Bank of Canada holds rates steady for fourth consecutive decision",
+      "score": 0.8,
+      "reason": "Provides context on the extended 'hold' period which influences borrower behavior and attrition."
+     },
+     {
+      "date": "2024-01-24",
+      "title": "No change on interest rate as Bank of Canada sticks to 5%",
+      "score": 0.8,
+      "reason": "Recent decision confirming rate stability is highly relevant to prepayment modeling."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2022-06-15",
+      "event": "Rising interest rates begin driving homeowner anxiety regarding mortgage affordability."
+     },
+     {
+      "date": "2022-10-02",
+      "event": "Market outlook forecasts a housing lull as elevated rates suppress turnover and prepayments."
+     },
+     {
+      "date": "2023-02-27",
+      "event": "Upward pressure on fixed mortgage rates alters prepayment incentives."
+     },
+     {
+      "date": "2023-04-12",
+      "event": "Bank of Canada confirms that borrowers will face financial strain for several upcoming quarters."
+     },
+     {
+      "date": "2024-01-25",
+      "event": "Bank of Canada maintains the 5% policy rate for the fourth consecutive decision."
+     },
+     {
+      "date": "2024-03-06",
+      "event": "Bank of Canada holds rates at 5% for the fifth time, signaling a sustained high-rate environment."
+     }
+    ],
+    "story_building": "The sustained 5% policy rate is creating a period of prolonged inertia in the mortgage market, as the incentive to prepay or refinance remains dampened by high borrowing costs. As borrowers continue to face payment shock upon renewal, we are building toward a scenario of 'forced attrition' versus 'strategic movement.' This suggests that prepayment trends will likely remain muted in the coming six months unless the Bank of Canada signals a definitive shift toward easing."
+   },
+   "crps_B": 0.0005859347475042322,
+   "signal_B": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "The sustained 5% policy rate maintained through the 2024-03-06 decision confirms a continued environment of mortgage market inertia with no anticipated policy easing to stimulate prepayment activity.",
+    "driving_trends": [],
+    "fired": false
+   },
+   "crps_B_notl": 0.0005859347475042322,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's decision to maintain a 5% policy rate through March 2024 reinforces the 'lock-in' effect, suppressing mortgage turnover and keeping prepayment rates at historically low levels for the next six months.",
+    "driving_trends": [
+     "sustained high-rate environment",
+     "mortgage lock-in effect",
+     "suppressed housing market liquidity"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.0005859347475042322,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "All provided articles regarding Bank of Canada interest rate decisions report on past actions or status quo holds, with no forward-looking policy shifts announced that would impact Freddie Mac mortgage prepayment rates as of the current date.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T3",
+   "series": "smm",
+   "origin": "2024-04",
+   "origin_class": "straddle",
+   "crps_A": 0.0008193129139321058,
+   "q_A": [
+    [
+     0.003520647995173931,
+     0.0030248963739722967,
+     0.0024717594496905804,
+     0.001937681226991117,
+     0.0015177876921370625,
+     0.0010082318913191557
+    ],
+    [
+     0.0037828320637345314,
+     0.003419199027121067,
+     0.0029923419933766127,
+     0.0025760051794350147,
+     0.002141679637134075,
+     0.0016873913118615746
+    ],
+    [
+     0.0039369938895106316,
+     0.003660387359559536,
+     0.0033067038748413324,
+     0.0029396035242825747,
+     0.0025019627064466476,
+     0.0020751263946294785
+    ],
+    [
+     0.004057225771248341,
+     0.003845898201689124,
+     0.0035413855221122503,
+     0.0032084952108561993,
+     0.0027696655597537756,
+     0.002360008656978607
+    ],
+    [
+     0.004161043092608452,
+     0.004001040942966938,
+     0.0037321134004741907,
+     0.0034213396720588207,
+     0.0029898970387876034,
+     0.002595052123069763
+    ],
+    [
+     0.004253368824720383,
+     0.004141653887927532,
+     0.0039006671868264675,
+     0.003613170003518462,
+     0.003189833601936698,
+     0.0028054798021912575
+    ],
+    [
+     0.004336205311119556,
+     0.004258810076862574,
+     0.004047497641295195,
+     0.0037782087456434965,
+     0.003372219391167164,
+     0.002997069153934717
+    ],
+    [
+     0.00441094720736146,
+     0.004364001099020243,
+     0.004182371310889721,
+     0.003936366643756628,
+     0.003550000488758087,
+     0.0031823592726141214
+    ],
+    [
+     0.004476970061659813,
+     0.004458957351744175,
+     0.004303014371544123,
+     0.004076982382684946,
+     0.0037164667155593634,
+     0.0033537731505930424
+    ],
+    [
+     0.004542012698948383,
+     0.004554334562271833,
+     0.0044264355674386024,
+     0.004226020071655512,
+     0.003886528080329299,
+     0.0035329246893525124
+    ],
+    [
+     0.004603792913258076,
+     0.004649144597351551,
+     0.004549582954496145,
+     0.004374660551548004,
+     0.004055795259773731,
+     0.0037121656350791454
+    ],
+    [
+     0.004670150578022003,
+     0.004746350459754467,
+     0.0046724677085876465,
+     0.004523933865129948,
+     0.004223523661494255,
+     0.0038923844695091248
+    ],
+    [
+     0.004735768772661686,
+     0.0048409877344965935,
+     0.004795480985194445,
+     0.004670499358326197,
+     0.004384471103549004,
+     0.004073770716786385
+    ],
+    [
+     0.004815869033336639,
+     0.004952830262482166,
+     0.004931864328682423,
+     0.004839113913476467,
+     0.004574418533593416,
+     0.004289119970053434
+    ],
+    [
+     0.0048971232026815414,
+     0.00507976533845067,
+     0.005096148699522018,
+     0.0050277188420295715,
+     0.004785613156855106,
+     0.004528087563812733
+    ],
+    [
+     0.004992985166609287,
+     0.0052177817560732365,
+     0.005279265344142914,
+     0.005252494476735592,
+     0.005024784244596958,
+     0.004808682482689619
+    ],
+    [
+     0.005111115984618664,
+     0.005392786115407944,
+     0.0055099306628108025,
+     0.0055277589708566666,
+     0.0053186723962426186,
+     0.0051493518985807896
+    ],
+    [
+     0.005263043567538261,
+     0.005622252821922302,
+     0.005812520161271095,
+     0.005878127180039883,
+     0.005674252286553383,
+     0.0055719222873449326
+    ],
+    [
+     0.005548474378883839,
+     0.006051084026694298,
+     0.006408368237316608,
+     0.00651674997061491,
+     0.006347990594804287,
+     0.006338795647025108
+    ]
+   ],
+   "realized_change": 0.0008830068837831322,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2024-04-10",
+      "title": "Bank of Canada holds target interest rate at 5% in April 2024 announcement",
+      "score": 0.95,
+      "reason": "Latest April 2024 policy data is highly relevant to current 6-month prepayment/attrition trends."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "Bank of Canada Leaves Rates Unchanged",
+      "score": 0.9,
+      "reason": "March 2024 decision provides critical current context for mortgage behavior."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "For The Fifth Time, Bank Of Canada Holds Interest Rate At 5%",
+      "score": 0.9,
+      "reason": "Explicitly analyzes the 'hold' environment relevant to immediate borrower behavior."
+     },
+     {
+      "date": "2024-03-07",
+      "title": "Making sense of the Bank of Canada interest rate decision on March 6, 2024",
+      "score": 0.85,
+      "reason": "Analysis of the March 2024 decision provides directional insight for the next 6 months."
+     },
+     {
+      "date": "2024-01-24",
+      "title": "No change on interest rate as Bank of Canada sticks to 5%",
+      "score": 0.8,
+      "reason": "January 2024 data marks the start of the current period of rate plateauing."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2023-04-12",
+      "event": "Bank of Canada warns that elevated interest rates will cause significant borrower strain for several quarters."
+     },
+     {
+      "date": "2023-09-20",
+      "event": "BoC expresses concern over market expectations for early rate cuts, signaling a 'higher for longer' environment."
+     },
+     {
+      "date": "2023-12-06",
+      "event": "Bank of Canada maintains the target interest rate at 5% to close out 2023."
+     },
+     {
+      "date": "2024-01-24",
+      "event": "BoC holds rates at 5% again, marking the beginning of a prolonged plateau period."
+     },
+     {
+      "date": "2024-03-06",
+      "event": "BoC leaves interest rates unchanged for the fifth consecutive time, solidifying borrower strategy."
+     },
+     {
+      "date": "2024-04-10",
+      "event": "Bank of Canada maintains the 5% rate in April, extending the current monetary policy stance."
+     }
+    ],
+    "story_building": "The sustained 5% rate environment is building a scenario of locked-in behavior, where prepayment activity remains muted due to the lack of attractive refinancing opportunities. As the period of high interest rates extends into the coming six months, the cumulative financial strain may eventually force a shift, either through increased attrition among vulnerable borrowers or a sudden spike in activity if market sentiment shifts toward impending rate cuts. The market is currently set for a potential inflection point where borrower fatigue meets the first real signs of monetary easing."
+   },
+   "crps_B": 0.0008193129139321058,
+   "signal_B": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "The narrative indicates a prolonged plateau of interest rates at 5% with no specific policy shift or rate cut announced, maintaining the current muted environment for mortgage prepayments.",
+    "driving_trends": [],
+    "fired": false
+   },
+   "crps_B_notl": 0.0008193129139321058,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 4,
+    "timing_confidence": "medium",
+    "rationale": "The narrative indicates that borrowers are currently in a holding pattern due to the prolonged 5% rate plateau, but anticipates a potential inflection point where cumulative financial fatigue meets the first signs of monetary easing, likely suppressing prepayments further until relief arrives.",
+    "driving_trends": [
+     "higher for longer",
+     "refinancing disincentive",
+     "borrower fatigue"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.0008193129139321058,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "low",
+    "rationale": "None of the provided articles announce a future policy change or economic shift that has not already been reflected in the interest rate environment as of April 2024.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T3",
+   "series": "smm",
+   "origin": "2024-05",
+   "origin_class": "straddle",
+   "crps_A": 0.0008262335438290767,
+   "q_A": [
+    [
+     0.004005097784101963,
+     0.003440835978835821,
+     0.0027991405222564936,
+     0.0020476756617426872,
+     0.001609285012818873,
+     0.0012196446768939495
+    ],
+    [
+     0.0042837997898459435,
+     0.00380431255325675,
+     0.003283290658146143,
+     0.002665984909981489,
+     0.0022019874304533005,
+     0.0018605981022119522
+    ],
+    [
+     0.004438500851392746,
+     0.004027374554425478,
+     0.0035815155133605003,
+     0.003017519833520055,
+     0.0025425939820706844,
+     0.002220466500148177
+    ],
+    [
+     0.00455286493524909,
+     0.004197981674224138,
+     0.0038065332919359207,
+     0.003274484071880579,
+     0.0027975591365247965,
+     0.0024833492934703827
+    ],
+    [
+     0.004649084061384201,
+     0.004339984152466059,
+     0.00399116100743413,
+     0.00347908609546721,
+     0.003010350978001952,
+     0.0027009062469005585
+    ],
+    [
+     0.004733702167868614,
+     0.0044692582450807095,
+     0.0041534206829965115,
+     0.003663473529741168,
+     0.0032059599179774523,
+     0.002897852100431919
+    ],
+    [
+     0.004807391669601202,
+     0.004575801081955433,
+     0.004292714409530163,
+     0.0038221552968025208,
+     0.003385414369404316,
+     0.0030774010811001062
+    ],
+    [
+     0.004868417978286743,
+     0.00466983811929822,
+     0.004418051801621914,
+     0.0039742859080433846,
+     0.003560638288035989,
+     0.003252764930948615
+    ],
+    [
+     0.004928598180413246,
+     0.004757299087941647,
+     0.004530999809503555,
+     0.004110305570065975,
+     0.0037247249856591225,
+     0.0034162176307290792
+    ],
+    [
+     0.004984324797987938,
+     0.0048453714698553085,
+     0.004644669126719236,
+     0.0042569818906486034,
+     0.0038937916979193687,
+     0.003588506020605564
+    ],
+    [
+     0.005038032773882151,
+     0.004934139084070921,
+     0.004759548231959343,
+     0.004403544124215841,
+     0.0040627759881317616,
+     0.0037616335321217775
+    ],
+    [
+     0.005097503308206797,
+     0.00502496212720871,
+     0.0048746382817626,
+     0.004550321958959103,
+     0.004229323472827673,
+     0.003934326581656933
+    ],
+    [
+     0.005157459061592817,
+     0.005114903673529625,
+     0.004993034992367029,
+     0.004693899303674698,
+     0.004389895126223564,
+     0.004107411485165358
+    ],
+    [
+     0.005231407471001148,
+     0.00521822227165103,
+     0.005122728645801544,
+     0.004858073312789202,
+     0.004574082791805267,
+     0.0043086581863462925
+    ],
+    [
+     0.0053045302629470825,
+     0.005337013863027096,
+     0.005278919357806444,
+     0.005037844646722078,
+     0.004777618683874607,
+     0.004527367185801268
+    ],
+    [
+     0.005392751190811396,
+     0.00546029768884182,
+     0.005445727147161961,
+     0.00524605717509985,
+     0.005003361031413078,
+     0.004778603557497263
+    ],
+    [
+     0.005498769227415323,
+     0.005613922141492367,
+     0.005647095385938883,
+     0.0054957009851932526,
+     0.005275076720863581,
+     0.005079388618469238
+    ],
+    [
+     0.005642631556838751,
+     0.005812892224639654,
+     0.0059064957313239574,
+     0.005814731121063232,
+     0.005605949088931084,
+     0.00545161496847868
+    ],
+    [
+     0.005918680224567652,
+     0.006195998750627041,
+     0.006422135513275862,
+     0.006398014724254608,
+     0.0062306541949510574,
+     0.006137717515230179
+    ]
+   ],
+   "realized_change": 0.000573960736100867,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2024-04-10",
+      "title": "Bank of Canada holds target interest rate at 5% in April 2024 announcement",
+      "score": 0.9,
+      "reason": "Highly relevant as it covers the most recent April 2024 policy stance, critical for 6-month outlook."
+     },
+     {
+      "date": "2024-01-24",
+      "title": "No change on interest rate as Bank of Canada sticks to 5%",
+      "score": 0.85,
+      "reason": "Covers Jan 2024 policy, signaling the 'hold' environment relevant to near-term prepayment risks."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "Bank of Canada Leaves Rates Unchanged",
+      "score": 0.85,
+      "reason": "Covers March 2024 decision; essential for predicting shifting rate expectations."
+     },
+     {
+      "date": "2024-03-06",
+      "title": "For The Fifth Time, Bank Of Canada Holds Interest Rate At 5%",
+      "score": 0.85,
+      "reason": "Directly tracks the persistence of the 5% rate which dictates current borrower behavior."
+     },
+     {
+      "date": "2024-03-07",
+      "title": "Making sense of the Bank of Canada interest rate decision on March 6, 2024",
+      "score": 0.8,
+      "reason": "Analysis of the March 2024 decision provides context on future policy trajectory."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2023-09-20",
+      "event": "Bank of Canada expresses concern over prematurely raising market expectations for rate cuts."
+     },
+     {
+      "date": "2023-12-06",
+      "event": "Bank of Canada concludes 2023 by holding the key interest rate steady at 5%."
+     },
+     {
+      "date": "2024-01-24",
+      "event": "Bank of Canada maintains the 5% target rate, continuing the hold pattern into 2024."
+     },
+     {
+      "date": "2024-03-06",
+      "event": "Bank of Canada holds interest rates at 5% for the fifth consecutive time."
+     },
+     {
+      "date": "2024-04-10",
+      "event": "Bank of Canada announces no change to the 5% policy rate, sustaining borrower strain."
+     }
+    ],
+    "story_building": "The sustained 5% rate environment is creating a 'lock-in' effect where borrowers are discouraged from prepaying or refinancing due to the lack of attractive lower-rate alternatives. As the period of high-interest rates extends, the financial strain on mortgage holders is likely to test their resilience, potentially triggering attrition not through choice, but through forced necessity. The market is now set for a critical pivot point where the duration of this policy plateau will determine whether attrition remains stagnant or begins to accelerate due to exhaustion of borrower liquidity."
+   },
+   "crps_B": 0.0008262335438290767,
+   "signal_B": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "high",
+    "rationale": "The narrative describes a sustained 'higher for longer' policy environment that has been consistently maintained through 2024-04-10, with no specific upcoming policy changes announced in the provided timeline.",
+    "driving_trends": [],
+    "fired": false
+   },
+   "crps_B_notl": 0.0008262335438290767,
+   "signal_B_notl": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The persistent 'higher for longer' interest rate environment, maintained at 5% through April 2024, creates a sustained lock-in effect that discourages voluntary prepayments and refinancings.",
+    "driving_trends": [
+     "lock-in effect",
+     "high interest rate environment",
+     "limited refinancing incentives"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.0008262335438290767,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "low",
+    "rationale": "None of the provided articles contain forward-looking statements announcing specific, pending interest rate changes that would shift prepayment behavior for Freddie Mac mortgages as of May 2024.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "T3",
+   "series": "smm",
+   "origin": "2024-07",
+   "origin_class": "post",
+   "crps_A": 0.0006579910196472434,
+   "q_A": [
+    [
+     0.0037339108530431986,
+     0.003025804413482547,
+     0.002343873493373394,
+     0.001865220139734447,
+     0.0015508548822253942,
+     0.0014093420468270779
+    ],
+    [
+     0.004043395631015301,
+     0.0034496604930609465,
+     0.002908178837969899,
+     0.0024726528208702803,
+     0.002149693900719285,
+     0.0020566752646118402
+    ],
+    [
+     0.00423447648063302,
+     0.0037147540133446455,
+     0.0032511733006685972,
+     0.002835772465914488,
+     0.002523621544241905,
+     0.002451730892062187
+    ],
+    [
+     0.004382373299449682,
+     0.003920453600585461,
+     0.0035086048301309347,
+     0.003115073312073946,
+     0.002819162793457508,
+     0.0027599590830504894
+    ],
+    [
+     0.004505587741732597,
+     0.004092472139745951,
+     0.0037197114434093237,
+     0.003339930670335889,
+     0.0030701635405421257,
+     0.003017672337591648
+    ],
+    [
+     0.00461333803832531,
+     0.004246058873832226,
+     0.003903725417330861,
+     0.0035406698007136583,
+     0.0032956022769212723,
+     0.0032448587007820606
+    ],
+    [
+     0.004708420485258102,
+     0.0043752617202699184,
+     0.004065641667693853,
+     0.003714927239343524,
+     0.003497864818200469,
+     0.0034493766725063324
+    ],
+    [
+     0.004793113097548485,
+     0.004496035166084766,
+     0.004218715708702803,
+     0.003885725513100624,
+     0.0036922399885952473,
+     0.0036458109971135855
+    ],
+    [
+     0.004872266668826342,
+     0.004605846479535103,
+     0.004358550533652306,
+     0.00403989851474762,
+     0.0038709028158336878,
+     0.003823194419965148
+    ],
+    [
+     0.004945158027112484,
+     0.004714734852313995,
+     0.0045006610453128815,
+     0.004203666001558304,
+     0.004050480201840401,
+     0.0040071564726531506
+    ],
+    [
+     0.005016168113797903,
+     0.004821138456463814,
+     0.004640967585146427,
+     0.004369429312646389,
+     0.004231018479913473,
+     0.0041925543919205666
+    ],
+    [
+     0.005091295577585697,
+     0.004926642868667841,
+     0.004779071547091007,
+     0.004536154214292765,
+     0.004409085959196091,
+     0.00438115606084466
+    ],
+    [
+     0.00516080716624856,
+     0.005023805424571037,
+     0.004909699782729149,
+     0.004695238079875708,
+     0.004579175729304552,
+     0.0045625315979123116
+    ],
+    [
+     0.005244451109319925,
+     0.005136342253535986,
+     0.005049731582403183,
+     0.004877365194261074,
+     0.004774806555360556,
+     0.004778565838932991
+    ],
+    [
+     0.005328793078660965,
+     0.005269655026495457,
+     0.005216552875936031,
+     0.005080822389572859,
+     0.0049955518916249275,
+     0.005017146002501249
+    ],
+    [
+     0.005433604121208191,
+     0.0054159145802259445,
+     0.005400690715759993,
+     0.005318184848874807,
+     0.005242782179266214,
+     0.005290893372148275
+    ],
+    [
+     0.005559006705880165,
+     0.005598156712949276,
+     0.005629293620586395,
+     0.005604303441941738,
+     0.005537977442145348,
+     0.005620410665869713
+    ],
+    [
+     0.005726361181586981,
+     0.0058382730931043625,
+     0.005926335230469704,
+     0.005970378406345844,
+     0.005901235155761242,
+     0.006043442990630865
+    ],
+    [
+     0.006035801023244858,
+     0.006288295611739159,
+     0.006505655124783516,
+     0.006640927866101265,
+     0.006596890278160572,
+     0.006828506477177143
+    ]
+   ],
+   "realized_change": 0.00013665686217366729,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2024-07-25",
+      "title": "Bank of Canada Rate Cut July 2024: Impact on Mortgages and Economy",
+      "score": 0.95,
+      "reason": "Directly addresses the impact of the July 2024 rate cut on mortgage behavior, which is critical for forecasting prepayment/attrition."
+     },
+     {
+      "date": "2024-06-05",
+      "title": "Making sense of the Bank of Canada interest rate cut on June 5, 2024",
+      "score": 0.9,
+      "reason": "Analyzes the June 2024 rate cut, a major catalyst for potential shifts in mortgage prepayment/attrition trends."
+     },
+     {
+      "date": "2024-06-05",
+      "title": "Bank of Canada Interest Rate Announcement",
+      "score": 0.85,
+      "reason": "Primary documentation of the pivotal shift to an interest rate cut in June 2024."
+     },
+     {
+      "date": "2024-06-05",
+      "title": "Text of the Bank of Canada's decision to cut its key interest rate target",
+      "score": 0.85,
+      "reason": "Official text of the June 2024 rate cut decision, necessary for understanding the policy shift impacting mortgages."
+     },
+     {
+      "date": "2024-04-11",
+      "title": "How the Bank of Canada\u2019s Monetary Policy Influences Mortgage Rates",
+      "score": 0.8,
+      "reason": "Provides a clear framework for how BoC policy directly dictates mortgage rate movements and borrower behavior."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2022-06-15",
+      "event": "Rising interest rates trigger home price declines and increased homeowner financial stress."
+     },
+     {
+      "date": "2023-04-12",
+      "event": "Bank of Canada warns that borrowers will face significant financial strain for several quarters."
+     },
+     {
+      "date": "2024-04-10",
+      "event": "Bank of Canada maintains the target interest rate at 5%, prolonging the high-rate environment."
+     },
+     {
+      "date": "2024-06-05",
+      "event": "Bank of Canada initiates a pivot, implementing the first interest rate cut of the cycle."
+     },
+     {
+      "date": "2024-07-24",
+      "event": "Bank of Canada confirms a second consecutive interest rate cut, signaling a broader easing trend."
+     }
+    ],
+    "story_building": "The market is moving from a period of defensive survival to one of potential liquidity and recalibration as rate cuts begin to flow through to mortgage products. We are building toward a window where borrowers, previously locked in by prohibitive costs, may begin to proactively address their mortgage positions. The combination of consecutive cuts suggests that prepayment and attrition activity will likely accelerate as the gap between existing high-rate contracts and prevailing market rates continues to narrow."
+   },
+   "crps_B": 0.0005709796108936847,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's consecutive interest rate cuts on 2024-06-05 and 2024-07-24 signal an easing cycle that narrows the gap between high existing contract rates and market rates, incentivizing increased mortgage prepayment/refinancing.",
+    "driving_trends": [
+     "monetary policy easing",
+     "refinancing incentive buildup"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.0006579910196472434,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "small",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada cut interest rates in July 2024, which typically incentivizes mortgage refinancing and increases prepayment rates for Freddie Mac single-family mortgage securities as homeowners take advantage of lower borrowing costs.",
+    "driving_trends": [
+     "rate cut cycle",
+     "mortgage refinancing incentive"
+    ],
+    "fired": false
+   }
+  },
+  {
+   "episode": "placebo",
+   "series": "food_cpi",
+   "origin": "2018-06",
+   "origin_class": "placebo",
+   "crps_A": 0.0035993480143668437,
+   "q_A": [
+    [
+     0.008241264149546623,
+     0.006308574229478836,
+     0.004310066811740398,
+     0.0020848382264375687,
+     -0.0008779577910900116,
+     -0.002441469579935074
+    ],
+    [
+     0.009272279217839241,
+     0.007506980560719967,
+     0.0058619119226932526,
+     0.003749691881239414,
+     0.0011261757463216782,
+     -0.0006216578185558319
+    ],
+    [
+     0.009862814098596573,
+     0.008251812309026718,
+     0.006812849082052708,
+     0.004756808280944824,
+     0.0024256184697151184,
+     0.0005540922284126282
+    ],
+    [
+     0.010290218517184258,
+     0.008838525041937828,
+     0.0075223976746201515,
+     0.005568400025367737,
+     0.003405076451599598,
+     0.0015468783676624298
+    ],
+    [
+     0.010651722550392151,
+     0.009339671581983566,
+     0.00813342072069645,
+     0.0062072183936834335,
+     0.004202635958790779,
+     0.002404075115919113
+    ],
+    [
+     0.010972833260893822,
+     0.009803682565689087,
+     0.008658927865326405,
+     0.006770935840904713,
+     0.004895157180726528,
+     0.003086274489760399
+    ],
+    [
+     0.011245425790548325,
+     0.010180473327636719,
+     0.009140610694885254,
+     0.007245635613799095,
+     0.005475856363773346,
+     0.00373975932598114
+    ],
+    [
+     0.011490482836961746,
+     0.010550811886787415,
+     0.009601137600839138,
+     0.0077314721420407295,
+     0.005988283082842827,
+     0.004373976960778236
+    ],
+    [
+     0.01173936016857624,
+     0.010909108445048332,
+     0.010043095797300339,
+     0.00816684402525425,
+     0.00645085796713829,
+     0.004936873912811279
+    ],
+    [
+     0.011972183361649513,
+     0.011244356632232666,
+     0.010469756089150906,
+     0.008627365343272686,
+     0.006925076246261597,
+     0.005545038729906082
+    ],
+    [
+     0.01222148910164833,
+     0.011577926576137543,
+     0.010900722816586494,
+     0.009087571874260902,
+     0.007408189587295055,
+     0.006136328913271427
+    ],
+    [
+     0.012478668242692947,
+     0.011887753382325172,
+     0.011311961337924004,
+     0.00958724319934845,
+     0.007930906489491463,
+     0.006773711182177067
+    ],
+    [
+     0.01274509634822607,
+     0.01219666376709938,
+     0.011743558570742607,
+     0.01003655232489109,
+     0.008450542576611042,
+     0.007325423881411552
+    ],
+    [
+     0.013057271018624306,
+     0.012559240683913231,
+     0.012209281325340271,
+     0.010556453838944435,
+     0.009076667949557304,
+     0.008000911213457584
+    ],
+    [
+     0.013400590047240257,
+     0.012956004589796066,
+     0.012748990207910538,
+     0.011107772588729858,
+     0.009784522466361523,
+     0.008712714537978172
+    ],
+    [
+     0.013797234743833542,
+     0.013420164585113525,
+     0.013375993818044662,
+     0.01177922822535038,
+     0.010623850859701633,
+     0.009544906206429005
+    ],
+    [
+     0.014305058866739273,
+     0.014019818045198917,
+     0.014172946102917194,
+     0.012609295547008514,
+     0.011643549427390099,
+     0.01055729016661644
+    ],
+    [
+     0.014946488663554192,
+     0.014803864061832428,
+     0.015183468349277973,
+     0.013673755340278149,
+     0.012914435938000679,
+     0.011861233040690422
+    ],
+    [
+     0.01623760536313057,
+     0.016388848423957825,
+     0.017089255154132843,
+     0.015699489042162895,
+     0.01523631438612938,
+     0.01438896358013153
+    ]
+   ],
+   "realized_change": 0.0005758542725065405,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2014-11-21",
+      "title": "Canada Inflation Exceeds All Forecasts on Gas and Clothes",
+      "score": 0.85,
+      "reason": "Directly reports on Canada inflation exceeding forecasts, essential for gauging short-term trends."
+     },
+     {
+      "date": "2014-11-21",
+      "title": "Canada\u2019s inflation rate at 2.4% in October: Statistics Canada",
+      "score": 0.75,
+      "reason": "Provides historical Canadian inflation data point useful for establishing baseline trends."
+     },
+     {
+      "date": "2018-05-14",
+      "title": "Canadian Inflation Is the Highest It\u2019s Been in Years",
+      "score": 0.75,
+      "reason": "Highlights high inflation levels, a critical indicator of material shifts in consumer prices."
+     },
+     {
+      "date": "2012-05-18",
+      "title": "Canada\u2019s annual inflation rate rises to 2 per cent in April",
+      "score": 0.7,
+      "reason": "Inflation rate reporting is highly relevant to future price trajectory expectations."
+     },
+     {
+      "date": "2014-08-22",
+      "title": "Canada's inflation rate lower in July at 2.1 per cent, down from June",
+      "score": 0.7,
+      "reason": "Inflation data updates are fundamental for forecasting future material shifts."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "1990-09-19",
+      "event": "Global supply shocks from the Gulf crisis trigger sharp increases in domestic inflation."
+     },
+     {
+      "date": "2009-08-19",
+      "event": "Canadian inflation hits a 56-year low, establishing a baseline for post-recession recovery."
+     },
+     {
+      "date": "2014-11-21",
+      "event": "Inflation surges past forecasts, driven by volatility in consumer goods and energy prices."
+     },
+     {
+      "date": "2016-01-19",
+      "event": "The Bank of Canada holds interest rates at 0.5% to manage economic stability and inflation targets."
+     },
+     {
+      "date": "2018-05-08",
+      "event": "Major Canadian banks raise mortgage rates, signaling a shift toward a tightening monetary environment."
+     },
+     {
+      "date": "2018-05-14",
+      "event": "Canadian inflation reaches its highest level in years, putting upward pressure on consumer prices."
+     }
+    ],
+    "story_building": "The convergence of multi-year high inflation and rising mortgage rates suggests that Canadian households are facing increased cost-of-living pressures. As monetary policy begins to tighten in response, these factors create a setup for potential upward pressure on food prices due to higher input and transportation costs. The stage is set for a period where material shifts in inflation may occur as the economy reacts to the transition away from long-term low interest rates."
+   },
+   "crps_B": 0.0035993480143668437,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "small",
+    "months_from_now": 1,
+    "timing_confidence": "medium",
+    "rationale": "The trend of rising mortgage rates observed on 2018-05-08 and the multi-year high inflation reported on 2018-05-14 indicate a tightening monetary environment expected to translate into higher food input and transportation costs in the immediate forecast window.",
+    "driving_trends": [
+     "tightening credit conditions",
+     "upward pressure on input costs"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.0035993480143668437,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "low",
+    "rationale": "None of the provided articles contain forward-looking policy or supply disruption announcements specifically targeting the Canadian Food CPI that would result in a shift after 2018-06-30.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "placebo",
+   "series": "food_cpi",
+   "origin": "2018-07",
+   "origin_class": "placebo",
+   "crps_A": 0.004006136402615404,
+   "q_A": [
+    [
+     0.008680861443281174,
+     0.005947724916040897,
+     0.003250247798860073,
+     0.000803554430603981,
+     -0.0015816055238246918,
+     -0.0026298314332962036
+    ],
+    [
+     0.00966192502528429,
+     0.0072018057107925415,
+     0.00494701974093914,
+     0.002621423453092575,
+     0.0004715658724308014,
+     -0.000668209046125412
+    ],
+    [
+     0.010202198289334774,
+     0.007983040064573288,
+     0.005992300808429718,
+     0.003710152581334114,
+     0.0017747823148965836,
+     0.0005721636116504669
+    ],
+    [
+     0.010591298341751099,
+     0.008603310212492943,
+     0.006756271235644817,
+     0.0045833950862288475,
+     0.002765139564871788,
+     0.0016115270555019379
+    ],
+    [
+     0.010918715968728065,
+     0.009124990552663803,
+     0.007397506386041641,
+     0.005266772583127022,
+     0.0035856543108820915,
+     0.002512892708182335
+    ],
+    [
+     0.011208080686628819,
+     0.009591939859092236,
+     0.007934711873531342,
+     0.005878704600036144,
+     0.0043102651834487915,
+     0.0032555758953094482
+    ],
+    [
+     0.011460433714091778,
+     0.009976317174732685,
+     0.008421704173088074,
+     0.006390254944562912,
+     0.00494974572211504,
+     0.003973877057433128
+    ],
+    [
+     0.011708548292517662,
+     0.010360383428633213,
+     0.008876836858689785,
+     0.006913975812494755,
+     0.005540669895708561,
+     0.004678543657064438
+    ],
+    [
+     0.011945175938308239,
+     0.01071440801024437,
+     0.00930156372487545,
+     0.0073901014402508736,
+     0.006096839904785156,
+     0.0053179943934082985
+    ],
+    [
+     0.012183327227830887,
+     0.011053834110498428,
+     0.009724470786750317,
+     0.007899874821305275,
+     0.0066674575209617615,
+     0.006005512550473213
+    ],
+    [
+     0.012448618188500404,
+     0.011394067667424679,
+     0.010164652019739151,
+     0.008413100615143776,
+     0.0072530098259449005,
+     0.006679764948785305
+    ],
+    [
+     0.012721842154860497,
+     0.011711591854691505,
+     0.010598836466670036,
+     0.008965656161308289,
+     0.007866282016038895,
+     0.007391269318759441
+    ],
+    [
+     0.01300755888223648,
+     0.012035074643790722,
+     0.011073998175561428,
+     0.009501734748482704,
+     0.008482449688017368,
+     0.008056784979999065
+    ],
+    [
+     0.013346741907298565,
+     0.012437965720891953,
+     0.011605797335505486,
+     0.010130204260349274,
+     0.009231043979525566,
+     0.008865917101502419
+    ],
+    [
+     0.013735070824623108,
+     0.01288656797260046,
+     0.012234309688210487,
+     0.01081589050590992,
+     0.010078196413815022,
+     0.009746537543833256
+    ],
+    [
+     0.01419278234243393,
+     0.013439133763313293,
+     0.012984227389097214,
+     0.011679157614707947,
+     0.011095991358160973,
+     0.010808397084474564
+    ],
+    [
+     0.014801794663071632,
+     0.014169547706842422,
+     0.013943662866950035,
+     0.012756026349961758,
+     0.012352090328931808,
+     0.01210780069231987
+    ],
+    [
+     0.015582500956952572,
+     0.015129072591662407,
+     0.015160812065005302,
+     0.014120266772806644,
+     0.013913862407207489,
+     0.013732319697737694
+    ],
+    [
+     0.017169106751680374,
+     0.01705228164792061,
+     0.017451582476496696,
+     0.01667935959994793,
+     0.016804726794362068,
+     0.016925368458032608
+    ]
+   ],
+   "realized_change": 0.0010053822048640502,
+   "cal_table": {},
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2014-11-21",
+      "title": "Canada Inflation Exceeds All Forecasts on Gas and Clothes",
+      "score": 0.85,
+      "reason": "Directly reports on Canada inflation exceeding forecasts, essential for gauging short-term trends."
+     },
+     {
+      "date": "2014-11-21",
+      "title": "Canada\u2019s inflation rate at 2.4% in October: Statistics Canada",
+      "score": 0.75,
+      "reason": "Provides historical Canadian inflation data point useful for establishing baseline trends."
+     },
+     {
+      "date": "2018-05-14",
+      "title": "Canadian Inflation Is the Highest It\u2019s Been in Years",
+      "score": 0.75,
+      "reason": "Highlights high inflation levels, a critical indicator of material shifts in consumer prices."
+     },
+     {
+      "date": "2012-05-18",
+      "title": "Canada\u2019s annual inflation rate rises to 2 per cent in April",
+      "score": 0.7,
+      "reason": "Inflation rate reporting is highly relevant to future price trajectory expectations."
+     },
+     {
+      "date": "2014-08-22",
+      "title": "Canada's inflation rate lower in July at 2.1 per cent, down from June",
+      "score": 0.7,
+      "reason": "Inflation data updates are fundamental for forecasting future material shifts."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "1990-09-19",
+      "event": "Gulf crisis supply shock triggers a sharp spike in Canadian inflation."
+     },
+     {
+      "date": "2009-08-19",
+      "event": "Canadian inflation hits a 56-year low, establishing a baseline for post-recession recovery."
+     },
+     {
+      "date": "2015-10-21",
+      "event": "Bank of Canada maintains a steady policy stance as inflation aligns with expectations."
+     },
+     {
+      "date": "2016-01-19",
+      "event": "Bank of Canada holds interest rates at 0.5 per cent, prioritizing economic stability."
+     },
+     {
+      "date": "2018-05-08",
+      "event": "Major Canadian banks hike mortgage rates, signaling a shift toward a tighter monetary environment."
+     },
+     {
+      "date": "2018-05-14",
+      "event": "Canadian inflation climbs to multi-year highs, raising concerns regarding price stability."
+     }
+    ],
+    "story_building": "The convergence of multi-year high inflation data and rising mortgage rates creates a setup for potential cost-push dynamics in the Canadian retail sector. This environment suggests that the Bank of Canada may face increased pressure to use monetary levers to cool the economy, which could further influence food-price volatility. Stakeholders should monitor whether these tightening credit conditions will sufficiently temper consumer prices or if supply-side pressures will force a material shift in food inflation over the coming six months."
+   },
+   "crps_B": 0.004006136402615404,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "up",
+    "magnitude_bucket": "medium",
+    "months_from_now": 2,
+    "timing_confidence": "medium",
+    "rationale": "The convergence of multi-year high inflation reported on 2018-05-14 and the trend of rising mortgage rates observed in May 2018 indicates persistent inflationary pressure on consumer goods within the forecast window.",
+    "driving_trends": [
+     "inflationary pressure",
+     "tightening credit environment"
+    ],
+    "fired": false
+   },
+   "crps_C": 0.004006136402615404,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "low",
+    "rationale": "None of the provided articles announce specific upcoming policy changes or supply shocks that would directly shift the Canada Food CPI forward from the current date of July 2018.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "placebo",
+   "series": "smm",
+   "origin": "2023-06",
+   "origin_class": "placebo",
+   "crps_A": 0.00131397347860623,
+   "q_A": [
+    [
+     0.0033946437761187553,
+     0.0033604351337999105,
+     0.003307183738797903,
+     0.003158268751576543,
+     0.002944196807220578,
+     0.002783722709864378
+    ],
+    [
+     0.0037896744906902313,
+     0.003831420559436083,
+     0.003841746598482132,
+     0.0037879974115639925,
+     0.0036156766582280397,
+     0.0034833340905606747
+    ],
+    [
+     0.004036149941384792,
+     0.0041417526081204414,
+     0.004204112105071545,
+     0.0042079356499016285,
+     0.0040750447660684586,
+     0.003953950479626656
+    ],
+    [
+     0.004194766748696566,
+     0.004355509299784899,
+     0.004457986913621426,
+     0.00450501311570406,
+     0.0044049727730453014,
+     0.004297696985304356
+    ],
+    [
+     0.004318911582231522,
+     0.004527530167251825,
+     0.004664125852286816,
+     0.0047288089990615845,
+     0.004662763327360153,
+     0.004565398674458265
+    ],
+    [
+     0.004426790867000818,
+     0.004680543672293425,
+     0.0048422543331980705,
+     0.004920021165162325,
+     0.00488175917416811,
+     0.004780456889420748
+    ],
+    [
+     0.004515485838055611,
+     0.004803533665835857,
+     0.004989678971469402,
+     0.005082343704998493,
+     0.005065817851573229,
+     0.004965715575963259
+    ],
+    [
+     0.004589839838445187,
+     0.004910691641271114,
+     0.005126030184328556,
+     0.005234917625784874,
+     0.005233348347246647,
+     0.005136649124324322
+    ],
+    [
+     0.004661141894757748,
+     0.005011548288166523,
+     0.005257482640445232,
+     0.005363926291465759,
+     0.00538319256156683,
+     0.005281548015773296
+    ],
+    [
+     0.0047279540449380875,
+     0.005113447085022926,
+     0.0053798733279109,
+     0.005506590940058231,
+     0.005525723099708557,
+     0.0054367962293326855
+    ],
+    [
+     0.004792650230228901,
+     0.005204389337450266,
+     0.005495577119290829,
+     0.0056389374658465385,
+     0.00566937355324626,
+     0.0055845435708761215
+    ],
+    [
+     0.004859753418713808,
+     0.005301888100802898,
+     0.005617204122245312,
+     0.005794720724225044,
+     0.005815533921122551,
+     0.00575451273471117
+    ],
+    [
+     0.004927800502628088,
+     0.005398033186793327,
+     0.005743871442973614,
+     0.005922041833400726,
+     0.005958201363682747,
+     0.005896448157727718
+    ],
+    [
+     0.0050139217637479305,
+     0.0055112531408667564,
+     0.00589012261480093,
+     0.006091704126447439,
+     0.006134390830993652,
+     0.006086835637688637
+    ],
+    [
+     0.005102476105093956,
+     0.005648077465593815,
+     0.0060718003660440445,
+     0.006281097885221243,
+     0.006342743523418903,
+     0.006297660060226917
+    ],
+    [
+     0.005214786622673273,
+     0.005801030434668064,
+     0.006278916262090206,
+     0.006501238793134689,
+     0.0065765827894210815,
+     0.006540248170495033
+    ],
+    [
+     0.005357971880584955,
+     0.006003580987453461,
+     0.00653503742069006,
+     0.0067806970328092575,
+     0.006855344399809837,
+     0.006850068923085928
+    ],
+    [
+     0.005562993697822094,
+     0.006287672556936741,
+     0.006884186528623104,
+     0.00716220960021019,
+     0.007230655290186405,
+     0.007300484459847212
+    ],
+    [
+     0.006017387844622135,
+     0.00692710792645812,
+     0.007685174234211445,
+     0.008025693707168102,
+     0.008112067356705666,
+     0.008281374350190163
+    ]
+   ],
+   "realized_change": -0.0009229184284989833,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-09-07",
+      "title": "Bank of Canada hikes interest rate to 3.25%, triggering higher payments for more borrowers",
+      "score": 0.95,
+      "reason": "Directly links interest rate hikes to the specific consequence of higher mortgage payments for borrowers."
+     },
+     {
+      "date": "2022-06-15",
+      "title": "A Tale of a split market: Home prices decrease as interest rates increase leaving homeowners fearful of unaffordable mortgage payments",
+      "score": 0.92,
+      "reason": "Explicitly connects rising interest rates to borrower stress and the potential for mortgage default/prepayment shifts."
+     },
+     {
+      "date": "2022-06-09",
+      "title": "Typical mortgage payment could be 30% higher in 5 years, Bank of Canada warns",
+      "score": 0.9,
+      "reason": "Official BoC warning on future payment increases, which is a primary driver for mortgage behavior shifts."
+     },
+     {
+      "date": "2023-04-12",
+      "title": "Borrowers to \u201cfeel the strain\u201d of high interest rates for several quarters to come, says BoC",
+      "score": 0.88,
+      "reason": "BoC directly addresses the prolonged strain on borrowers, a key metric for predicting attrition/prepayment."
+     },
+     {
+      "date": "2022-10-02",
+      "title": "Canada housing market outlook: Surging interest rates and the housing market\u2019s coming lull",
+      "score": 0.85,
+      "reason": "Discusses the housing market's coming lull due to rates, a precursor to prepayments or forced sales."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2022-01-26",
+      "event": "Bank of Canada signals upcoming interest rate hikes to combat inflation."
+     },
+     {
+      "date": "2022-06-09",
+      "event": "BoC warns that typical mortgage payments could rise 30% within five years."
+     },
+     {
+      "date": "2022-06-15",
+      "event": "Home prices begin to cool as rising interest rates trigger homeowner financial anxiety."
+     },
+     {
+      "date": "2022-09-07",
+      "event": "Bank of Canada hikes rates to 3.25%, directly increasing mortgage payment burdens."
+     },
+     {
+      "date": "2022-12-08",
+      "event": "Big banks raise prime lending rates to 6.45%, further elevating mortgage costs."
+     },
+     {
+      "date": "2023-02-27",
+      "event": "Fixed mortgage rates resume an upward trajectory, limiting refinancing options."
+     },
+     {
+      "date": "2023-04-12",
+      "event": "BoC confirms borrowers will face continued financial strain for several quarters."
+     }
+    ],
+    "story_building": "The sustained period of high interest rates is creating a 'lock-in' effect where the incentive to prepay mortgages is offset by the inability to qualify for new, cheaper debt. Borrowers are increasingly trapped by the high cost of entry into the current market, suggesting that attrition will likely remain muted as households prioritize keeping existing, lower-rate loans over selling. The setup for the next six months points toward a stalemate where liquidity remains low and financial strain reaches a critical point of endurance."
+   },
+   "crps_B": 0.0010363098558602288,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "high",
+    "rationale": "The persistent high-interest rate environment described in the 2023-04-12 report forces households to retain existing, lower-rate loans, effectively suppressing prepayment activity through the forecast window.",
+    "driving_trends": [
+     "lock-in effect",
+     "refinancing disincentive",
+     "sustained financial strain"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.00131397347860623,
+   "signal_C": {
+    "shift_type": "none",
+    "direction": "none",
+    "magnitude_bucket": "none",
+    "months_from_now": null,
+    "timing_confidence": "low",
+    "rationale": "None of the provided articles contain forward-looking guidance on future Bank of Canada rate changes that have not yet occurred or been accounted for in the current mortgage prepayment environment.",
+    "driving_trends": [],
+    "fired": false
+   }
+  },
+  {
+   "episode": "placebo",
+   "series": "smm",
+   "origin": "2023-07",
+   "origin_class": "placebo",
+   "crps_A": 0.0006918598324926283,
+   "q_A": [
+    [
+     0.0028765080496668816,
+     0.0025525048840790987,
+     0.002261863090097904,
+     0.0019779582507908344,
+     0.001814661780372262,
+     0.001595536363311112
+    ],
+    [
+     0.0032426936086267233,
+     0.0030300826765596867,
+     0.002854098565876484,
+     0.002667111111804843,
+     0.002511627972126007,
+     0.002328468021005392
+    ],
+    [
+     0.0034566812682896852,
+     0.0033210974652320147,
+     0.0032115806825459003,
+     0.0030678045004606247,
+     0.0029165574815124273,
+     0.002758895745500922
+    ],
+    [
+     0.0036093895323574543,
+     0.003534154500812292,
+     0.0034699994139373302,
+     0.0033608851954340935,
+     0.003207538975402713,
+     0.003072006395086646
+    ],
+    [
+     0.0037295084912329912,
+     0.003704225877299905,
+     0.003676957217976451,
+     0.00358913978561759,
+     0.003442206420004368,
+     0.0033232143614441156
+    ],
+    [
+     0.0038326759822666645,
+     0.0038542579859495163,
+     0.0038566836155951023,
+     0.0037913897540420294,
+     0.003648536978289485,
+     0.0035432528238743544
+    ],
+    [
+     0.003922277595847845,
+     0.0039789448492228985,
+     0.004011127632111311,
+     0.0039649419486522675,
+     0.0038311071693897247,
+     0.003739743260666728
+    ],
+    [
+     0.004004335962235928,
+     0.0040975334122776985,
+     0.004156473092734814,
+     0.004130641929805279,
+     0.004009012132883072,
+     0.003926982171833515
+    ],
+    [
+     0.004077821504324675,
+     0.004205538425594568,
+     0.004289199598133564,
+     0.004274304024875164,
+     0.004172459244728088,
+     0.004092796705663204
+    ],
+    [
+     0.00415151147171855,
+     0.004316268488764763,
+     0.004425386432558298,
+     0.004425710998475552,
+     0.00433369493111968,
+     0.004264093469828367
+    ],
+    [
+     0.004224418196827173,
+     0.004421515855938196,
+     0.004556396976113319,
+     0.004570798948407173,
+     0.004496138077229261,
+     0.0044268397614359856
+    ],
+    [
+     0.004297586623579264,
+     0.004527810961008072,
+     0.0046853963285684586,
+     0.004716972820460796,
+     0.004652651492506266,
+     0.004589695483446121
+    ],
+    [
+     0.004363924264907837,
+     0.004628854338079691,
+     0.004812574479728937,
+     0.004852543119341135,
+     0.004802512004971504,
+     0.004743232391774654
+    ],
+    [
+     0.004445324186235666,
+     0.004743875935673714,
+     0.00495151337236166,
+     0.005008223000913858,
+     0.004974944517016411,
+     0.004926228430122137
+    ],
+    [
+     0.004529586527496576,
+     0.004876548890024424,
+     0.005114659667015076,
+     0.005183489061892033,
+     0.0051678819581866264,
+     0.005130440462380648
+    ],
+    [
+     0.004631728399544954,
+     0.005029730498790741,
+     0.005297339987009764,
+     0.005386359989643097,
+     0.005384012591093779,
+     0.005365408957004547
+    ],
+    [
+     0.004759145900607109,
+     0.005219683051109314,
+     0.005518214777112007,
+     0.005634252447634935,
+     0.0056350016966462135,
+     0.00565058458596468
+    ],
+    [
+     0.004934052471071482,
+     0.005470112897455692,
+     0.005806087516248226,
+     0.005951561499387026,
+     0.005949558690190315,
+     0.00603203009814024
+    ],
+    [
+     0.005295162089169025,
+     0.005976288579404354,
+     0.006413533352315426,
+     0.0065977745689451694,
+     0.006608928088098764,
+     0.006779281888157129
+    ]
+   ],
+   "realized_change": -0.0005812695328222162,
+   "cal_table": {
+    "rate/medium": 0.00033566484036685017,
+    "policy/medium": 0.00033566484036685017,
+    "volatility/medium": 0.00033566484036685017
+   },
+   "debug_B": {
+    "n_retrieved": 60,
+    "ranked": [
+     {
+      "date": "2022-09-07",
+      "title": "Bank of Canada hikes interest rate to 3.25%, triggering higher payments for more borrowers",
+      "score": 0.95,
+      "reason": "Directly links interest rate hikes to the mechanism of higher payments and borrower stress, impacting attrition."
+     },
+     {
+      "date": "2022-06-09",
+      "title": "Typical mortgage payment could be 30% higher in 5 years, Bank of Canada warns",
+      "score": 0.95,
+      "reason": "Explicitly connects policy rate path to a 30% increase in mortgage payments, a primary driver of prepayment/attrition."
+     },
+     {
+      "date": "2022-06-15",
+      "title": "A Tale of a split market: Home prices decrease as interest rates increase leaving homeowners fearful of unaffordable mortgage payments",
+      "score": 0.92,
+      "reason": "Directly discusses the link between rising rates and homeowner ability to meet mortgage obligations."
+     },
+     {
+      "date": "2022-10-02",
+      "title": "Canada housing market outlook: Surging interest rates and the housing market\u2019s coming lull",
+      "score": 0.9,
+      "reason": "Analyzes the impact of surging rates on housing market liquidity and mortgage churn."
+     },
+     {
+      "date": "2023-04-12",
+      "title": "Borrowers to \u201cfeel the strain\u201d of high interest rates for several quarters to come, says BoC",
+      "score": 0.88,
+      "reason": "BoC commentary on sustained high rates directly impacts long-term borrower prepayment and default behavior."
+     }
+    ],
+    "story_timeline": [
+     {
+      "date": "2022-03-16",
+      "event": "Bank of Canada initiates interest rate tightening cycle, testing the housing market's resilience."
+     },
+     {
+      "date": "2022-06-09",
+      "event": "Bank of Canada warns of 30% payment increases and insists rates must rise despite record household debt."
+     },
+     {
+      "date": "2022-09-07",
+      "event": "Rate hikes reach 3.25%, directly triggering higher monthly obligations for variable-rate borrowers."
+     },
+     {
+      "date": "2023-01-25",
+      "event": "BoC combines rate hikes with quantitative tightening, further squeezing liquidity in the mortgage market."
+     },
+     {
+      "date": "2023-02-27",
+      "event": "Fixed mortgage rates begin a renewed upward trend, limiting refinancing options for struggling homeowners."
+     },
+     {
+      "date": "2023-04-12",
+      "event": "Bank of Canada officially warns that borrowers will face significant financial strain for several quarters."
+     },
+     {
+      "date": "2023-07-12",
+      "event": "Key interest rate hits 5%, marking a critical threshold for borrower affordability and potential attrition."
+     }
+    ],
+    "story_building": "The sustained high-interest-rate environment is creating a structural pressure cooker for mortgage holders, where the 'wait-and-see' approach of the past year is rapidly eroding. The convergence of peak policy rates and the exhaustion of borrower financial buffers suggests that we are approaching a period of material change in mortgage behavior. Moving forward, the market is set up for a potential shift as the inability to absorb these costs likely compels homeowners to choose between forced liquidation or significant changes in their mortgage structure."
+   },
+   "crps_B": 0.0005290803869980127,
+   "signal_B": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "medium",
+    "months_from_now": 1,
+    "timing_confidence": "medium",
+    "rationale": "The attainment of a 5% interest rate threshold on 2023-07-12, combined with the exhaustion of borrower financial buffers mentioned in the narrative, is expected to reduce mortgage prepayments as refinancing becomes prohibitively expensive and homeowners face forced liquidation.",
+    "driving_trends": [
+     "refinancing incentive collapse",
+     "borrower financial exhaustion",
+     "liquidity squeeze"
+    ],
+    "fired": true
+   },
+   "crps_C": 0.0006918598324926283,
+   "signal_C": {
+    "shift_type": "rate",
+    "direction": "down",
+    "magnitude_bucket": "small",
+    "months_from_now": 0,
+    "timing_confidence": "high",
+    "rationale": "The Bank of Canada's July 2023 interest rate hike to 5% reinforces the elevated rate environment, which historically suppresses mortgage prepayment (attrition) rates due to the 'lock-in' effect preventing refinancing.",
+    "driving_trends": [
+     "rate hike",
+     "mortgage lock-in effect"
+    ],
+    "fired": false
+   }
+  }
+ ]
+}

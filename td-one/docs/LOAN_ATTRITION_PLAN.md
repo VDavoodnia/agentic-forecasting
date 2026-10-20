@@ -279,6 +279,29 @@ without failure evidence.
   −5.0% rel., win 5.6%): corroborating context dilutes timing precision.
   The unannounced-shock case (converging signals only) is untested, not
   refuted. Full report: `experiments/exp69b_report.md`.
+- **Variant (exp69c):** real-data anticipatory adjustment — the user's
+  counter-hypothesis that richer real news rescues the idea. Multi-call
+  story pipeline (`src/td_one/agent/story_pipeline.py`: retrieve → rank →
+  story → classify) with timeline anchors, on real episodes (2022 first
+  hike, 2022 100bp super-hike on Food CPI; 2024 first cut on SMM),
+  Chronos-2 baseline, calibration from past episodes only (strict PIT,
+  absolute |Δ|). Pre-registered kill; per the researcher-mindset
+  instruction the kill triggered diagnosis + variants (V_abstain,
+  V_timing, V_size, V_timing+size from stored artifacts).
+- **exp69c FAILED too:** B vs A +23.7% (p=0.231, win 0%); B vs C −10.5%
+  n.s. Failure anatomy: (1) strict-PIT calibration starved 5/12 rows
+  (empty tables — T1's past wasn't observable yet); (2) the classifier
+  missed the June 2024 cut at 3/4 T3 origins (ranker favored "hold"
+  headlines over the one "cut possible" pivot); (3) where it fired,
+  direction was right 2/3 but size overshot 2.6× and timing ran +1.5mo
+  early; (4) timeline anchors changed 5/12 classifications but 0
+  forecasts — unresolved, not refuted. Even with both diagnosed errors
+  corrected (V_timing+size, partly post-hoc), the overlay is −4.3%
+  (p=0.53) — not a rescue. The news-reading is good; the one-episode
+  median size × fragile timing is too blunt an instrument. Standing
+  result: no tested intervention beats Chronos-2 alone on shifted
+  series — synthetic or real, reactive or anticipatory, single-call or
+  scaffolded. Full report: `experiments/exp69c_report.md`.
 
 ## Integration (exp70)
 Track 2's shift scenarios stress-test Track 1's group forecaster.

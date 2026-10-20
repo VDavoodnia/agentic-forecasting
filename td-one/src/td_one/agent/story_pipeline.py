@@ -38,13 +38,32 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import Any, Protocol
 
 from td_one.agent.anticipatory_adjuster import (
     NULL_SIGNAL,
+    LLMClient,
     ShiftSignal,
     _extract_json,
     _validate_signal,
 )
+
+
+class ScoredItem(Protocol):
+    """One retrieval hit (matches rag.semantic.ScoredArticle)."""
+
+    pub_date: str
+    title: str
+    url: str
+    source: str
+    score: float
+
+
+class RetrievalIndex(Protocol):
+    """PIT-gated semantic index (matches rag.semantic.SemanticNewsIndex)."""
+
+    def search(self, query: str, before: str, top_k: int = 50) -> list[ScoredItem]: ...
+
 
 logger = logging.getLogger(__name__)
 
@@ -79,9 +98,9 @@ class PipelineDebug:
 
     n_retrieved: int = 0
     n_ranked: int = 0
-    ranked_reasons: list[dict] = field(default_factory=list)
+    ranked_reasons: list[dict[str, Any]] = field(default_factory=list)
     story: NewsStory | None = None
-    raw_signal: dict = field(default_factory=dict)
+    raw_signal: dict[str, Any] = field(default_factory=dict)
 
 
 def render_timeline_anchors(
@@ -120,11 +139,11 @@ def render_timeline_anchors(
 def retrieve_candidates(
     queries: list[str],
     before_ymd: str,
-    index: object,
-    extra_articles: list[dict] | None = None,
+    index: RetrievalIndex,
+    extra_articles: list[dict[str, Any]] | None = None,
     per_query_k: int = RETRIEVE_PER_QUERY_K,
     cap: int = RETRIEVE_CAP,
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """Call 1: semantic retrieval, PIT-gated, with the corpus seam.
 
     Args:
@@ -142,9 +161,9 @@ def retrieve_candidates(
         ``pub_date < before_ymd`` for every row (asserted — PIT gate).
 
     """
-    seen: dict[str, dict] = {}
+    seen: dict[str, dict[str, Any]] = {}
     for q in queries:
-        for c in index.search(q, before_ymd, top_k=per_query_k):  # type: ignore[union-attr]
+        for c in index.search(q, before_ymd, top_k=per_query_k):
             key = (c.title or "").strip().lower()
             if not key or key in seen:
                 continue
@@ -194,12 +213,12 @@ Score every article; the caller keeps the top {keep_k}.
 
 
 def rank_articles(
-    client: object,
-    candidates: list[dict],
+    client: LLMClient,
+    candidates: list[dict[str, Any]],
     question: str,
     horizon: int,
     keep_k: int = RANK_KEEP_K,
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """Call 2: LLM ranker — relevance scores + reasons, keep top-k."""
     if not candidates:
         return []
@@ -211,10 +230,10 @@ def rank_articles(
         keep_k=keep_k,
     )
     try:
-        raw = client.complete(prompt)  # type: ignore[union-attr]
+        raw = client.complete(prompt)
         obj = _extract_json(raw)
-        ranked = obj.get("ranked", [])
-        scored: list[dict] = []
+        ranked: Any = obj.get("ranked", [])
+        scored: list[dict[str, Any]] = []
         for r in ranked:
             if not isinstance(r, dict):
                 continue
@@ -256,8 +275,8 @@ Reply with JSON only:
 
 
 def build_story(
-    client: object,
-    ranked: list[dict],
+    client: LLMClient,
+    ranked: list[dict[str, Any]],
     today_ymd: str,
     question: str,
 ) -> NewsStory:
@@ -275,9 +294,9 @@ def build_story(
         articles=lines,
     )
     try:
-        raw = client.complete(prompt)  # type: ignore[union-attr]
+        raw = client.complete(prompt)
         obj = _extract_json(raw)
-        tl = obj.get("timeline", [])
+        tl: Any = obj.get("timeline", [])
         events = []
         for t in tl:
             if isinstance(t, dict) and t.get("date") and t.get("event"):
@@ -334,7 +353,7 @@ What's building: {building}
 
 
 def classify_from_story(
-    client: object,
+    client: LLMClient,
     story: NewsStory,
     target_desc: str,
     origin_ymd: str,
@@ -366,7 +385,7 @@ def classify_from_story(
         building=story.building or "(none)",
     )
     try:
-        raw = client.complete(prompt)  # type: ignore[union-attr]
+        raw = client.complete(prompt)
         return _validate_signal(_extract_json(raw))
     except (ValueError, TypeError, AttributeError):
         return NULL_SIGNAL
@@ -381,8 +400,8 @@ class StoryPipeline:
 
     def __init__(
         self,
-        client: object,
-        index: object,
+        client: LLMClient,
+        index: RetrievalIndex,
         queries: list[str],
         question: str,
         target_desc: str,
@@ -399,7 +418,7 @@ class StoryPipeline:
 
     def _complete(self, prompt: str) -> str:
         self.llm_calls += 1
-        return self._client.complete(prompt)  # type: ignore[union-attr,no-any-return]
+        return self._client.complete(prompt)
 
     def run(
         self,
@@ -408,7 +427,7 @@ class StoryPipeline:
         window_start_ym: str,
         window_end_ym: str,
         use_timeline: bool = True,
-        extra_articles: list[dict] | None = None,
+        extra_articles: list[dict[str, Any]] | None = None,
     ) -> tuple[ShiftSignal, PipelineDebug]:
         """Run retrieve -> rank -> story -> classify (cached)."""
         key = "|".join(
@@ -462,11 +481,11 @@ class StoryPipeline:
         self._mem[key] = (signal, dbg)
         return signal, dbg
 
-    def _ranked(self, cands: list[dict]) -> list[dict]:
+    def _ranked(self, cands: list[dict[str, Any]]) -> list[dict[str, Any]]:
         client = _CountingClient(self)
         return rank_articles(client, cands, self._question, self._horizon, RANK_KEEP_K)
 
-    def _storied(self, ranked: list[dict], origin_ymd: str) -> NewsStory:
+    def _storied(self, ranked: list[dict[str, Any]], origin_ymd: str) -> NewsStory:
         client = _CountingClient(self)
         return build_story(client, ranked, origin_ymd, self._question)
 
