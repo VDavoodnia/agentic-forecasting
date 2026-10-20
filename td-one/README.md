@@ -56,11 +56,11 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 |---|---|
 | [docs/](docs/) | All documentation. Start with [docs/README.md](docs/README.md). |
 | [docs/METHODOLOGY.md](docs/METHODOLOGY.md) | Methodology reference (problem, ladder, PIT, metrics). |
-| [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md) | Final results: all tracks, exp1–exp81 era. |
+| [docs/FINAL_RESULTS.md](docs/FINAL_RESULTS.md) | Final results: all tracks, exp1–exp88 era. |
 | [docs/REDESIGN.md](docs/REDESIGN.md) | Design decisions: what we keep/kill/try next. |
 | [docs/DIAGRAMS.md](docs/DIAGRAMS.md) | Architecture diagrams. |
 | [docs/plots/](docs/plots/) | Result plots — regenerate via `docs/plots/make_plots.py`. |
-| [experiments/](experiments/) | All experiments (exp1–exp81). See [experiments/README.md](experiments/README.md). |
+| [experiments/](experiments/) | All experiments (exp1–exp88). See [experiments/README.md](experiments/README.md). |
 | [src/td_one/](src/td_one/) | Main package (see structure below; each subpackage has a README). |
 | [scripts/](scripts/) | Data fetchers, model bootstrap, pipelines. |
 | [configs/](configs/) | Run configs (reserved). |
@@ -102,8 +102,12 @@ See [experiments/REPRODUCIBILITY.md](experiments/REPRODUCIBILITY.md) for full re
 | Conformal M0 | ✅ Strong baseline — nothing beats it cleanly on synthetic |
 | Uncertainty layer (exp74–76) | ✅ CQR on the TSFM quantile grid is the default UQ layer (coverage→nominal, no CRPS cost); ACI regime-conditional; story-feature uncertainty meta-model real (exp76 PIT-corrected re-measurement: −2.8% vs numeric-only, p=1.9e-06 — exp74's p=2e-11 was leak-inflated and is retired) |
 | Pooled conformal banks (exp81) | ✅ Ships, family-gated — signed-score shrinkage banks (n0=24) activate on families with ≥8 series: M4 conformal no-op → cov80 0.805; Tourism CRPS −1.0% and cov80 0.806. Pooling contraindicated on OSFI (4 heterogeneous segments) — per-series CQR kept there |
+| Segment scout (exp88) | ✅ Bar passed — LLM proposes segment rules from feature statistics + policy/news context: planted-cohort recovery ARI 0.204/0.454/0.424 (seeds 7/42/123) vs SHAP-clustering incumbent 0.091; planted low_rate rule recovered verbatim by the flash variant. SHAP context hurts the proposer (0.052) and outcome-rate aggregates fail (0.077) — segments come from the domain prior |
+| Manager risk reports (exp87) | ✅ Bar passed — reporter runs end-to-end with real news: OSFI + Freddie SMM monthly reports, citation contract 100%, news citations in 100% of flagged explanations, judged relevance 100% (19 RELEVANT + 1 PARTIAL / 20); retrieval density + jurisdiction-scoped queries are the operative levers |
+| Competitor spread, loan level (exp84) | ✅ Bar passed — the exp71b aggregate negative reverses in the SFLLD cross-section: origination spread vs PMMS predicts 24m prepayment, same positive sign in all 3 eras (+0.56/+0.49/+1.06 per 100bp), pooled cross-era OOS Δlog-loss +0.056; robust across horizons, references, and vintage FE. Signal's home is loan-level attrition/SMM features |
 | Integration (exp72) | ⚠️ Mixed — Track-2 shifts stress-test Track-1 groups: Q1 regional-isolation not supported (p=0.22, 5 seeds; oracle geography identical — the limit is the forecaster); Q2 fallback a working but blunt safety valve; Q3 Layer-2 protects in the thin-group regime (p<1e-8). Flagged: v2_forecaster_fn emits flat point-mass quantiles |
 | Group forecaster (exp78–80) | ⚠️ Fixed + settled — point-mass defect root-caused and fixed (exp78: Gaussian spread, cov80 0.075→0.714); trailing-mean center ships, the real fitted v2 router loses inside the group forecaster (exp79); thin/dead fallback split ships (exp80b: dead groups use their own mean, pooled CRPS improves in every world, p≤0.008); CQR conformal range layer available but NOT the default (exp80a: nominal control coverage, S1 fresh-seed replication failed its pre-registered bar — structural bank-blindness) |
+| Chronos-2 as segment engine (exp86) | ❌ Honest negative — zero-shot Chronos-2 per segment loses the member-weighted endpoint to the shipped device (protocol 0.09024 vs 0.08849; fresh seeds tie-to-lose; its unweighted protocol win was seed noise). It wins only on aggregate-smooth series (portfolio scope, fallback cells): TSFM strength is scale-dependent. exp81 pooled conformal over Chronos replicates as a coverage repair (cov80 0.82–0.83 vs 0.76–0.77) |
 | TSFMs | ✅ Beat m0 30% on 63-mo real SMM (exp18, p=0.0012); beat classical ~20% on M4 |
 | Macro (FRED overlay) | ❌ Closed — 5-seed, no evidence macro helps (classical or TSFM) |
 | M5 router | ❌ Dead — loses to inverse-CRPS even constrained |
