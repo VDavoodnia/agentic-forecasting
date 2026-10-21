@@ -14,6 +14,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 | [METHODOLOGY.md](METHODOLOGY.md) | The full methodology: problem, glossary, all tracks (exp1–exp63 + LLM ladder). The reference spine. |
 | [PROPOSED_METHOD.md](PROPOSED_METHOD.md) | The exp47 method: architecture, implementation (`src/td_one/agent/proposed_method.py`), verdict. |
 | [MACRO_SIGNAL.md](MACRO_SIGNAL.md) | Macro Signal Service: LLM-read monthly categorical macro signals, calibrated against realized data. |
+| [DATA_REPLICATION.md](DATA_REPLICATION.md) | **Preservation & replication map (2026-10-20).** Every dataset, model, and produced artifact classified (shared / produced / downloaded), where its archived snapshot lives in git, and the exact script + command that replicates it. Executable half: `scripts/replicate_setup.py`. |
 
 ## Presentations
 

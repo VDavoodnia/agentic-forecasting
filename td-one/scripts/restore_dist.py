@@ -4,15 +4,16 @@
 Each ``td-one/data/<group>_dist/`` directory holds a large produced
 artifact as a zip split into numbered parts. Because the git push
 channel is text-only, each part file (``<archive>.zip.001.b64``, ...)
-is the base64 encoding of one 3 MiB slice of the zip. A
-``MANIFEST.json`` records the sha256 of every original file, of the
-reassembled zip, and of each binary part slice.
+is the base64 encoding of one slice of the zip (slice size varies by
+group and is recorded per part in the manifest). A ``MANIFEST.json``
+records the sha256 of every original file, of the reassembled zip,
+and of each binary part slice; this script reads the part list,
+sizes, and hashes from the manifest, never from hardcoded values.
 
 Usage:
     cd td-one
     .venv/bin/python scripts/restore_dist.py data/news_dist --target data/news
     .venv/bin/python scripts/restore_dist.py data/freddie_exp84_dist --target data/freddie
-    .venv/bin/python scripts/restore_dist.py data/scale_up_dist --target data/scale_up
 
 The restore decodes and joins the parts in manifest order, verifies
 the zip's sha256, extracts it into the target directory, and verifies
