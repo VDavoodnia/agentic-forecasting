@@ -1,7 +1,7 @@
 # Multi-Dataset Benchmarking Plan: Real Data 0 to 100
 
 **Date:** 2026-10-17
-**Status:** Approved — executing
+**Status:** Complete — validated on M4, Tourism (exp60), M3 (exp61); finalized 2026-10-19. HISTORICAL plan record (results live in [../FINAL_RESULTS.md](../FINAL_RESULTS.md) and [../../experiments/README.md](../../experiments/README.md))
 **Strategy:** B primary (real data), A in background (calibrate synthetic), C nudge (tighter FP control)
 
 ---

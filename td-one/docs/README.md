@@ -4,6 +4,8 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 
 **Cleanup 2026-10-20:** every doc now carries a status stamp — `CURRENT` (living, trust it), `HISTORICAL` (dated point-in-time record, kept in place for provenance), or `ARCHIVED` (superseded, frozen in [archive/](archive/)). If a doc has no stamp, it predates the cleanup — treat its claims accordingly.
 
+**Evening pass 2026-10-20:** plans/ index repaired (rows pointing at three plan drafts that are not in this repo removed; MULTI_DATASET_PLAN marked complete), plots/ index stamped and its repo state noted, DATA_REPLICATION FRED row corrected (19 fetcher series). No new archive moves — the morning pass had already archived everything superseded.
+
 ## Start with these (5 min)
 
 | Doc | What you get |
@@ -22,6 +24,7 @@ Start here. This page maps every document in `td-one/docs/` — what it is, who 
 |---|---|
 | [slides/TD-One-Slides.html](slides/TD-One-Slides.html) | The Final Report (HTML, deck of record): 8 exec slides + the full paper (general architecture, datasets, models, per-dataset final results, visualizations) + Appendices A–D (ablations, prompts and parameters, glossary, failed experiments). Final 2026-10-20 — all experiments landed. |
 | [slides/TD-One-Context.md](slides/TD-One-Context.md) | Full context for continuing the deck work: ground truth, verdicts, messaging rules, what changed, open work. |
+| [presentations/](presentations/) | Parked PPTX decks (2026-10-20), preserved as `.pptx.b64` + build scripts. The HTML report above is the deck of record. |
 
 ## Current program docs
 
@@ -76,7 +79,7 @@ Point-in-time audits, surveys, and design records. Each is stamped `HISTORICAL` 
 | Doc | Status |
 |---|---|
 | [LOAN_ATTRITION_PLAN.md](LOAN_ATTRITION_PLAN.md) | Active (see Current program docs) |
-| [plans/](plans/) | Folder of dated plans; see its [index](plans/README.md). Includes [plans/MULTI_DATASET_PLAN.md](plans/MULTI_DATASET_PLAN.md) (2026-10-17: real-data benchmarking plan). |
+| [plans/](plans/) | Folder of dated plans; see its [index](plans/README.md). Includes [plans/MULTI_DATASET_PLAN.md](plans/MULTI_DATASET_PLAN.md) (2026-10-17 plan; complete 2026-10-19 — validated on M4, Tourism (exp60), M3 (exp61)). |
 
 ## Archive (superseded — frozen, do not revive)
 
@@ -102,7 +105,7 @@ Point-in-time audits, surveys, and design records. Each is stamped `HISTORICAL` 
 
 | Asset | Location | Notes |
 |---|---|---|
-| News corpus | `../data/news/` (gitignored) | Articles 2025–2026, FTS5 SQLite. Enriched on every fetcher hit. |
+| News corpus | `../data/news/` (gitignored) | 21,234 articles, 1979–2026 (Perplexity backfill + GDELT), FTS5 SQLite. Enriched on every fetcher hit. Archived snapshot: `../data/news_dist/` — see [DATA_REPLICATION.md](DATA_REPLICATION.md). |
 | SMM series | `../data/freddie/smm_monthly_2021_2026.csv` | 63 months of Freddie Mac prepayment rates. |
 | FRED cache | `../data/fred/` (gitignored) | 19 series. Rebuild via `../scripts/fetch_fred.py`. |
 | M4 data | `../data/m4/` | M4 competition series used by the agentic track. |

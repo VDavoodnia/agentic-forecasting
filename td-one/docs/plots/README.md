@@ -1,7 +1,16 @@
 # TD-One Plots
 
+> **Status: CURRENT — living plot index (generator: `make_plots.py`)**
+
 Figures for the docs. **Every plot is generated, never hand-drawn** — rerun the
 generator after any result it depicts changes.
+
+**Repo state (2026-10-20):** 3 of the 6 generated plots are committed here
+(`rag_recall_precision.png`, `agent_m4_m5.png`, `smm_2021_2026.png`).
+`trilogy_m4.png`, `reasoning_sweep.png`, and `tool_usage.png` are NOT
+currently in the repo — rerun the generator below to recreate them. Until
+then, the embeds of those three in `docs/TOOL_AUDIT.md` and
+`docs/archive/RESULTS.md` (both frozen records) render as broken images.
 
 ## Regenerate
 
